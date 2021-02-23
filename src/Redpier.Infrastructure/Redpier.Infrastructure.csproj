@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Context\" />
+    <Folder Include="Persistence\Migrations\" />
     <Folder Include="Persistence\Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>

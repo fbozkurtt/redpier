@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Redpier.Application.Commands.Containers
+{
+    public class RemoveContainersCommand
+    {
+        public string[] ContainerIds { get; set; }
+
+        public string[] ContainerNames { get; set; }
+    }
+}

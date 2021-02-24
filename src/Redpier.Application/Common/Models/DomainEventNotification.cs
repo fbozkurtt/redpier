@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Redpier.Domain.Common;
 
 namespace Redpier.Application.Common.Models
 {
-    class DomainEventNotification
+    public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
     {
+        public DomainEventNotification(TDomainEvent domainEvent)
+        {
+            DomainEvent = domainEvent;
+        }
+
+        public TDomainEvent DomainEvent { get; }
     }
 }

@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using Redpier.Domain.Entities;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Common.Interfaces
 {
-    class IApplicationDbContext
+    public interface IApplicationDbContext
     {
+        DbSet<Container> Containers { get; set; }
+
+        DbSet<Image> Images { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

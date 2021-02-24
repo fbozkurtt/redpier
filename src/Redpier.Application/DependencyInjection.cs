@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
+using Docker.DotNet;
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Redpier.Application
 {
@@ -12,6 +13,17 @@ namespace Redpier.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddSingleton<IDockerClient>(
+                    new DockerClientConfiguration(
+                        new Uri(configuration.GetValue<string>("DockerUri"))
+                        ).CreateClient());
+
             return services;
         }
     }

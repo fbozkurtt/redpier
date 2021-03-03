@@ -24,9 +24,10 @@ namespace Redpier.Application.Commands.Containers
         public async Task<bool> Handle(KillContainerCommand request, CancellationToken cancellationToken)
         {
             await _client.Containers.KillContainerAsync(
-                request.Id, 
+                request.Id,
                 request.Parameters,
                 cancellationToken);
+
             return true;
         }
     }

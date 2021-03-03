@@ -19,7 +19,7 @@ namespace Redpier.Application.Commands.Images
         private readonly IDockerClient _client;
         private readonly IMapper _mapper;
 
-        public RemoveImageCommandHandler(IDockerClient client,, IMapper mapper)
+        public RemoveImageCommandHandler(IDockerClient client, IMapper mapper)
         {
             _client = client;
             _mapper = mapper;

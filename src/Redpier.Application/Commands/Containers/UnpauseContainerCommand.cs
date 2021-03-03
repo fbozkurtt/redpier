@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Docker.DotNet;
+﻿using Docker.DotNet;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +21,7 @@ namespace Redpier.Application.Commands.Containers
         public async Task<bool> Handle(UnpauseContainerCommand request, CancellationToken cancellationToken)
         {
             await _client.Containers.UnpauseContainerAsync(
-                request.Id, 
+                request.Id,
                 cancellationToken);
             return true;
         }

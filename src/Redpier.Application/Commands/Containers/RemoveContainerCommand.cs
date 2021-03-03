@@ -24,8 +24,9 @@ namespace Redpier.Application.Commands.Containers
         public async Task<bool> Handle(RemoveContainerCommand request, CancellationToken cancellationToken)
         {
             await _client.Containers.RemoveContainerAsync(request.Id,
-                request.Parameters, 
+                request.Parameters,
                 cancellationToken);
+
             return true;
         }
     }

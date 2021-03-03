@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Application.Common.Interfaces;
-using Redpier.Infrastructure.Identity;
-using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Services;
 
 namespace Redpier.Infrastructure

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Domain.Common;
-using Redpier.Domain.Entities;
 using Redpier.Infrastructure.Identity;
 using System;
 using System.Linq;

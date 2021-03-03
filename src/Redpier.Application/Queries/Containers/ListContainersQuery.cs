@@ -27,7 +27,9 @@ namespace Redpier.Application.Queries.Containers
         public async Task<List<ContainerListResponse>> Handle(ListContainersQuery request, CancellationToken cancellationToken)
         {
 
-            var response = await _client.Containers.ListContainersAsync(request.Parameters, cancellationToken);
+            var response = await _client.Containers.ListContainersAsync(
+                request.Parameters,
+                cancellationToken);
 
             return _mapper.Map<List<ContainerListResponse>>(response);
         }

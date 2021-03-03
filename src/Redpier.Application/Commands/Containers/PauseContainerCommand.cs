@@ -24,6 +24,7 @@ namespace Redpier.Application.Commands.Containers
             await _client.Containers.PauseContainerAsync(
                 request.Id,
                 cancellationToken);
+
             return true;
         }
     }

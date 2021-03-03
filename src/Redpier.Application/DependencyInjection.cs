@@ -1,5 +1,4 @@
-﻿
-using Docker.DotNet;
+﻿using Docker.DotNet;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;

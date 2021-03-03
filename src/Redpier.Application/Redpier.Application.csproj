@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Swarm\" />
     <Folder Include="Common\Exceptions\" />
     <Folder Include="EventHandlers\Containers\" />
     <Folder Include="EventHandlers\Images\" />
+    <Folder Include="Queries\Images\" />
   </ItemGroup>
 
   <ItemGroup>

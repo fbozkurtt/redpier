@@ -19,7 +19,8 @@ namespace Redpier.Infrastructure.Persistence.Context
         private readonly ICurrentUserService _currentUserService;
         private readonly IDomainEventService _domainEventService;
 
-        public ApplicationDbContext(DbContextOptions options,
+        public ApplicationDbContext(
+            DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
             IDomainEventService domainEventService) : base(options, operationalStoreOptions)
@@ -28,8 +29,8 @@ namespace Redpier.Infrastructure.Persistence.Context
             _domainEventService = domainEventService;
         }
 
-        public DbSet<Container> Containers { get; set; }
-        public DbSet<Image> Images { get; set; }
+        //public DbSet<Container> Containers { get; set; }
+        //public DbSet<Image> Images { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

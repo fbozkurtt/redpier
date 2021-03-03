@@ -7,30 +7,29 @@ using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Images
 {
-    public class PushImageCommand : IRequest<bool>
+    public class CreateImageCommand : IRequest<bool>
     {
-        public string Name { get; set; }
+        public ImagesCreateParameters Parameters { get; set; }
         public AuthConfig AuthConfig { get; set; }
-        public ImagePushParameters Parameters { get; set; }
     }
 
-    public class PushImageCommandHandler : IRequestHandler<PushImageCommand, bool>
+    public class CreateImageCommandHandler : IRequestHandler<CreateImageCommand, bool>
     {
         private readonly IDockerClient _client;
 
-        public PushImageCommandHandler(IDockerClient client)
+        public CreateImageCommandHandler(IDockerClient client)
         {
             _client = client;
         }
 
-        public async Task<bool> Handle(PushImageCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateImageCommand request, CancellationToken cancellationToken)
         {
-            await _client.Images.PushImageAsync(
-                request.Name,
+            await _client.Images.CreateImageAsync(
                 request.Parameters,
                 request.AuthConfig,
                 new Progress<JSONMessage>(),
-                cancellationToken);
+                cancellationToken
+                );
             return true;
         }
     }

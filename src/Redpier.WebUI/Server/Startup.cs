@@ -57,6 +57,7 @@ namespace Redpier.WebUI.Server
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -77,7 +78,7 @@ namespace Redpier.WebUI.Server
 
             app.UseAuthentication();
 
-            app.UseIdentityServer();
+            //app.UseIdentityServer();
 
             app.UseAuthorization();
 

@@ -12,11 +12,11 @@ namespace Redpier.Domain.Common
     {
         protected DomainEvent()
         {
-            DateOccured = DateTimeOffset.UtcNow;
+            DateOccurred = DateTimeOffset.UtcNow;
         }
 
         public bool IsPublished { get; set; }
 
-        public DateTimeOffset DateOccured { get; set; }
+        public DateTimeOffset DateOccurred { get; protected set; } = DateTime.UtcNow;
     }
 }

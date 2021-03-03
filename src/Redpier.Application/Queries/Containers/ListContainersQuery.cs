@@ -10,9 +10,7 @@ namespace Redpier.Application.Queries.Containers
 {
     public class ListContainersQuery : IRequest<List<ContainerListResponse>>
     {
-        public bool ListAll { get; set; } = false;
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public ContainersListParameters Parameters { get; set; }
     }
 
     public class ListContainersQueryHandler : IRequestHandler<ListContainersQuery, List<ContainerListResponse>>
@@ -29,12 +27,9 @@ namespace Redpier.Application.Queries.Containers
         public async Task<List<ContainerListResponse>> Handle(ListContainersQuery request, CancellationToken cancellationToken)
         {
 
-            var containers = await _client.Containers.ListContainersAsync(new ContainersListParameters()
-            {
-                All = false
-            }, cancellationToken);
+            var response = await _client.Containers.ListContainersAsync(request.Parameters, cancellationToken);
 
-            return _mapper.Map<List<ContainerListResponse>>(containers);
+            return _mapper.Map<List<ContainerListResponse>>(response);
         }
     }
 }

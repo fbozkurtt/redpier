@@ -7,9 +7,9 @@ namespace Redpier.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<Container> Containers { get; set; }
+        //DbSet<Container> Containers { get; set; }
 
-        DbSet<Image> Images { get; set; }
+        //DbSet<Image> Images { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

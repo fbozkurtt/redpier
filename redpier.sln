@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Application", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Infrastructure", "src\Redpier.Infrastructure\Redpier.Infrastructure.csproj", "{6EF40370-4605-4303-B075-1390683DE922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redpier.WebUI.Server", "src\Redpier.WebUI\Server\Redpier.WebUI.Server.csproj", "{25EFD5BD-71BD-4E7F-A165-B8950B469BB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.WebUI.Server", "src\Redpier.WebUI\Server\Redpier.WebUI.Server.csproj", "{25EFD5BD-71BD-4E7F-A165-B8950B469BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redpier.WebUI.Client", "src\Redpier.WebUI\Client\Redpier.WebUI.Client.csproj", "{706AAB36-7318-40FA-9FE7-9DAB34B92B00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.WebUI.Client", "src\Redpier.WebUI\Client\Redpier.WebUI.Client.csproj", "{706AAB36-7318-40FA-9FE7-9DAB34B92B00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

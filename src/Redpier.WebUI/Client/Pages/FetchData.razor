@@ -1,0 +1,47 @@
+﻿@page "/containers"
+@using Docker.DotNet.Models;
+@inject HttpClient Http
+
+<h1>Containers</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (containers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var container in containers)
+            {
+                <tr>
+                    <td>@container.ID</td>
+                    <td>@container.Image</td>
+                    <td>@string.Join("", container.Names)</td>
+                    <td>@container.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<ContainerListResponse> containers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        containers = await Http.GetFromJsonAsync<IList<ContainerListResponse>>("api/Container");
+        //containers = await Http.PostAsJsonAsync<IList<ContainerListResponse>>("api/Container", new ListContainersQuery());
+    }
+
+}

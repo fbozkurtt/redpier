@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Redpier.WebUI.Server.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public abstract class ApiControllerBase : ControllerBase
     {
         private ISender _mediator;

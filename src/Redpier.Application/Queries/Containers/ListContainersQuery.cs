@@ -8,30 +8,25 @@ using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.Containers
 {
-    public class ListContainersQuery : IRequest<List<ContainerListResponse>>
+    public class ListContainersQuery : IRequest<IList<ContainerListResponse>>
     {
         public ContainersListParameters Parameters { get; set; }
     }
 
-    public class ListContainersQueryHandler : IRequestHandler<ListContainersQuery, List<ContainerListResponse>>
+    public class ListContainersQueryHandler : IRequestHandler<ListContainersQuery, IList<ContainerListResponse>>
     {
         private readonly IDockerClient _client;
-        private readonly IMapper _mapper;
 
-        public ListContainersQueryHandler(IDockerClient client, IMapper mapper)
+        public ListContainersQueryHandler(IDockerClient client)
         {
             _client = client;
-            _mapper = mapper;
         }
 
-        public async Task<List<ContainerListResponse>> Handle(ListContainersQuery request, CancellationToken cancellationToken)
+        public async Task<IList<ContainerListResponse>> Handle(ListContainersQuery request, CancellationToken cancellationToken)
         {
-
-            var response = await _client.Containers.ListContainersAsync(
-                request.Parameters,
+            return await _client.Containers.ListContainersAsync(
+                request.Parameters ??= new ContainersListParameters(),
                 cancellationToken);
-
-            return _mapper.Map<List<ContainerListResponse>>(response);
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Redpier.Application
                         new Uri(configuration.GetValue<string>("DockerUri"))
                         ).CreateClient());
 
+            //services.AddScoped<IDockerClient, DockerClient>();
+
             return services;
         }
     }

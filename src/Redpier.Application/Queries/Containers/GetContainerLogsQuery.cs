@@ -1,18 +1,19 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.Containers
 {
-    public class GetContainerLogsQuery : IRequest<MultiplexedStream>
+    public class GetContainerLogsQuery : IRequest<Unit>
     {
         public string Id { get; set; }
-        public bool Tty { get; set; }
+        public IProgress<string> Progress { get; set; }
         public ContainerLogsParameters Parameters { get; set; }
     }
-    public class GetContainerLogsQueryHandler : IRequestHandler<GetContainerLogsQuery, MultiplexedStream>
+    public class GetContainerLogsQueryHandler : IRequestHandler<GetContainerLogsQuery, Unit>
     {
         private readonly IDockerClient _client;
 
@@ -21,16 +22,16 @@ namespace Redpier.Application.Queries.Containers
             _client = client;
         }
 
-        public async Task<MultiplexedStream> Handle(GetContainerLogsQuery request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(GetContainerLogsQuery request, CancellationToken cancellationToken)
         {
 
-            var response = await _client.Containers.GetContainerLogsAsync(
+            await _client.Containers.GetContainerLogsAsync(
                 request.Id,
-                request.Tty,
                 request.Parameters,
-                cancellationToken);
+                cancellationToken,
+                request.Progress);
 
-            return response;
+            return new Unit();
         }
     }
 }

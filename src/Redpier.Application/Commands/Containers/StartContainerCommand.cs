@@ -25,7 +25,7 @@ namespace Redpier.Application.Commands.Containers
         {
             await _client.Containers.StartContainerAsync(
                 request.Id,
-                request.Parameters,
+                request.Parameters ??= new ContainerStartParameters(),
                 cancellationToken);
 
             return true;

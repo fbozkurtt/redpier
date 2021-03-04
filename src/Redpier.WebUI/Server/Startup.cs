@@ -30,7 +30,7 @@ namespace Redpier.WebUI.Server
 
             services.AddInfrastructure(Configuration);
 
-            //services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
@@ -85,9 +85,7 @@ namespace Redpier.WebUI.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

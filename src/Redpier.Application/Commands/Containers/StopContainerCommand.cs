@@ -25,7 +25,7 @@ namespace Redpier.Application.Commands.Containers
         {
             await _client.Containers.StopContainerAsync(
                 request.Id,
-                request.Parameters,
+                request.Parameters ??= new ContainerStopParameters(),
                 cancellationToken);
 
             return true;

@@ -1,0 +1,77 @@
+﻿@page "/containers"
+@inject HttpClient Http
+
+<h1>Containers</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (containers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>State</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var container in containers)
+            {
+                <tr>
+                    <td>@container.ID.Substring(0, 12)</td>
+                    <td>@container.Image</td>
+                    <td>@string.Join("", container.Names)</td>
+                    <td>@container.State</td>
+                    <td>@container.Created.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                    <td><button class="btn btn-primary" @onclick="() => Start(container.ID)">Start</button></td>
+                    <td><button class="btn btn-primary" @onclick="() => Stop(container.ID)">Stop</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<ContainerListResponse> containers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //containers = await Http.GetFromJsonAsync<IList<ContainerListResponse>>("api/Container");
+        var request = new
+        {
+            Parameters = new ContainersListParameters()
+            {
+                All = true
+            }
+        };
+        using var response = await Http.PostAsJsonAsync("api/Container", request);
+
+        containers = await response.Content.ReadFromJsonAsync<IList<ContainerListResponse>>();
+    }
+
+    private async void Start(string id)
+    {
+        var request = new
+        {
+            Id = id
+        };
+        await Http.PutAsJsonAsync("api/Container/Start", request);
+    }
+
+    private async void Stop(string id)
+    {
+        var request = new
+        {
+            Id = id
+        };
+        await Http.PutAsJsonAsync("api/Container/Stop", request);
+    }
+
+}

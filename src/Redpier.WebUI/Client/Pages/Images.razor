@@ -1,0 +1,57 @@
+﻿@page "/images"
+@inject HttpClient Http
+
+<h1>Images</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (images == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Parend Id</th>
+                <th>Labels</th>
+                <th>Tags</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var image in images)
+            {
+                <tr>
+                    <td>@image.ID</td>
+                    <td>@image.ParentID</td>
+                    <td>@string.Join("", image.Labels)</td>
+                    <td>@string.Join("", image.RepoTags)</td>
+                    <td>@image.Size</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<ImagesListResponse> images;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //containers = await Http.GetFromJsonAsync<IList<ContainerListResponse>>("api/Container");
+        var request = new
+        {
+            Parameters = new ImagesListParameters()
+            {
+                All = true
+            }
+        };
+        using var response = await Http.PostAsJsonAsync("api/Image", request);
+
+        images = await response.Content.ReadFromJsonAsync<IList<ImagesListResponse>>();
+    }
+
+}

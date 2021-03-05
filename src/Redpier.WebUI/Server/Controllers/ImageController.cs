@@ -13,7 +13,13 @@ namespace Redpier.WebUI.Server.Controllers
     public class ImageController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<IList<ImagesListResponse>> Images (ListImagesQuery query)
+        public async Task<IList<ImagesListResponse>> GetImages()
+        {
+            return await Mediator.Send(new ListImagesQuery());
+        }
+
+        [HttpPost]
+        public async Task<IList<ImagesListResponse>> GetImages (ListImagesQuery query)
         {
             return await Mediator.Send(query);
         }

@@ -44,10 +44,10 @@ namespace Redpier.WebUI.Server
 
             services.AddRazorPages();
 
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,8 +56,8 @@ namespace Redpier.WebUI.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
                 app.UseMigrationsEndPoint();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -76,9 +76,9 @@ namespace Redpier.WebUI.Server
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.UseIdentityServer();
 
-            //app.UseIdentityServer();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

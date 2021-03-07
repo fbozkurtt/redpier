@@ -1,6 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Application.Common.Interfaces;
+using Redpier.Infrastructure.Identity;
+using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Services;
 
 namespace Redpier.Infrastructure
@@ -9,45 +14,42 @@ namespace Redpier.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            //string connectionString = configuration.GetValue<bool>("UseSqlite") ? configuration.GetConnectionString("SqliteConnection") : configuration.GetConnectionString("SqlServerConnection");
-            //string migrationAssembly = typeof(ApplicationDbContext).Assembly.FullName;
+            string connectionString = configuration.GetValue<bool>("UseSqlite") ? configuration.GetConnectionString("SqliteConnection") : configuration.GetConnectionString("SqlServerConnection");
+            string migrationAssembly = typeof(ApplicationDbContext).Assembly.FullName;
 
-            //if (configuration.GetValue<bool>("UseSqlite"))
-            //{
-            //    services.AddDbContext<ApplicationDbContext>(options =>
-            //        options.UseSqlite(
-            //            connectionString,
-            //            b => b.MigrationsAssembly(migrationAssembly)));
-            //}
-            //else
-            //{
-            //    services.AddDbContext<ApplicationDbContext>(options =>
-            //        options.UseSqlServer(
-            //            connectionString,
-            //            b => b.MigrationsAssembly(migrationAssembly)));
-            //}
+            if (configuration.GetValue<bool>("UseSqlite"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(
+                        connectionString,
+                        b => b.MigrationsAssembly(migrationAssembly)));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                        connectionString,
+                        b => b.MigrationsAssembly(migrationAssembly)));
+            }
 
-            //services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddScoped<IDomainEventService, DomainEventService>();
 
-            //services
-            //    .AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
+            services
+                .AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddIdentityServer()
-            //    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-            //services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IIdentityService, IdentityService>();
 
-            //services.AddAuthentication()
-            //    .AddIdentityServerJwt();
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
-            //});
+            //services.AddAuthorization();
 
             return services;
         }

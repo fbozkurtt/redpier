@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Redpier.Infrastructure.Identity;
+using Redpier.Infrastructure.Persistence.Context;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -35,17 +39,17 @@ namespace Redpier.WebUI.Server
 
                     try
                     {
-                        //var context = services.GetRequiredService<ApplicationDbContext>();
+                        var context = services.GetRequiredService<ApplicationDbContext>();
 
-                        ////if (context.Database.IsSqlServer())
-                        ////{
-                        //    context.Database.Migrate();
-                        ////}
+                        //if (context.Database.IsSqlServer())
+                        //{
+                        context.Database.Migrate();
+                        //}
 
-                        //var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                        //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                        //await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
+                        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                     }
 
                     catch (Exception ex)

@@ -1,11 +1,10 @@
 ﻿@page "/containers"
-@inject HttpClient Http
-
+@*@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]*@
 <h1>Containers</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
-
-@if (containers == null)
+@if (ContainerList == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -22,7 +21,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var container in containers)
+            @foreach (var container in ContainerList)
             {
                 <tr>
                     <td>@container.ID.Substring(0, 12)</td>
@@ -36,42 +35,4 @@ else
             }
         </tbody>
     </table>
-}
-
-@code {
-    private IList<ContainerListResponse> containers;
-
-    protected override async Task OnInitializedAsync()
-    {
-        //containers = await Http.GetFromJsonAsync<IList<ContainerListResponse>>("api/Container");
-        var request = new
-        {
-            Parameters = new ContainersListParameters()
-            {
-                All = true
-            }
-        };
-        using var response = await Http.PostAsJsonAsync("api/Container", request);
-
-        containers = await response.Content.ReadFromJsonAsync<IList<ContainerListResponse>>();
-    }
-
-    private async void Start(string id)
-    {
-        var request = new
-        {
-            Id = id
-        };
-        await Http.PutAsJsonAsync("api/Container/Start", request);
-    }
-
-    private async void Stop(string id)
-    {
-        var request = new
-        {
-            Id = id
-        };
-        await Http.PutAsJsonAsync("api/Container/Stop", request);
-    }
-
 }

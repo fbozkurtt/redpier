@@ -1,4 +1,5 @@
-﻿using IdentityServer4.EntityFramework.Options;
+﻿using IdentityServer4.EntityFramework.Extensions;
+using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -58,7 +59,7 @@ namespace Redpier.Infrastructure.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
         }

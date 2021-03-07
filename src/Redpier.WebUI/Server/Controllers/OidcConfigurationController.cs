@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 namespace Redpier.WebUI.Server.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class OpenIdConfigurationController : Controller
+    public class OidcConfigurationController : Controller
     {
-        private readonly ILogger<OpenIdConfigurationController> _logger;
+        private readonly ILogger<OidcConfigurationController> _logger;
 
-        public OpenIdConfigurationController(ILogger<OpenIdConfigurationController> logger, IClientRequestParametersProvider clientRequestParametersProvider)
+        public OidcConfigurationController(ILogger<OidcConfigurationController> logger, IClientRequestParametersProvider clientRequestParametersProvider)
         {
             ClientRequestParametersProvider = clientRequestParametersProvider;
             _logger = logger;

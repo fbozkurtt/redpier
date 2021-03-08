@@ -339,3 +339,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /src/Redpier.WebUI/Server/logs
+/src/Redpier.WebUI/Server/RedpierDb.db
+/src/Redpier.WebUI/Server/RedpierDb.db-shm
+/src/Redpier.WebUI/Server/RedpierDb.db-wal

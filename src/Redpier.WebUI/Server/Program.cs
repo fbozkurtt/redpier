@@ -41,10 +41,7 @@ namespace Redpier.WebUI.Server
                     {
                         var context = services.GetRequiredService<ApplicationDbContext>();
 
-                        //if (context.Database.IsSqlServer())
-                        //{
                         context.Database.Migrate();
-                        //}
 
                         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();

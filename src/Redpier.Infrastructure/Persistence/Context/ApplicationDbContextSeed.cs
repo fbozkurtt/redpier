@@ -16,11 +16,11 @@ namespace Redpier.Infrastructure.Persistence.Context
                 await roleManager.CreateAsync(administratorRole);
             }
 
-            var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
+            var administrator = new ApplicationUser { UserName = "admin" };
 
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
-                await userManager.CreateAsync(administrator, "Administrator1!");
+                await userManager.CreateAsync(administrator, "admin");
                 await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             }
         }

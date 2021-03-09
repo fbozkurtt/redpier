@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\Exec\" />
+    <Folder Include="Commands\Secrets\" />
     <Folder Include="Common\Exceptions\" />
     <Folder Include="DataTransferObjects\" />
     <Folder Include="EventHandlers\Containers\" />

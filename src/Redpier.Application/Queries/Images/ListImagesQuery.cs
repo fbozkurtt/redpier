@@ -26,9 +26,11 @@ namespace Redpier.Application.Queries.Images
 
         public async Task<IList<ImagesListResponse>> Handle(ListImagesQuery request, CancellationToken cancellationToken)
         {
-            return await _client.Images.ListImagesAsync(
+            var response = await _client.Images.ListImagesAsync(
                 request.parameters,
                 cancellationToken);
+
+            return response;
         }
     }
 }

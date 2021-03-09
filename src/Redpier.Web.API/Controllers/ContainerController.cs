@@ -6,7 +6,7 @@ using Redpier.Application.Queries.Containers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Redpier.WebUI.Server.Controllers
+namespace Redpier.Web.API.Controllers
 {
     [Authorize]
     public class ContainerController : ApiControllerBase
@@ -47,60 +47,70 @@ namespace Redpier.WebUI.Server.Controllers
             return await Mediator.Send(query);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Start(StartContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Stop(StopContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Restart(RestartContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Pause(PauseContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Unpause(UnpauseContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Kill(KillContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<bool> Rename(RenameContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<ContainerUpdateResponse> Update(UpdateContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public async Task<bool> Remove(RemoveContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public async Task<ContainersPruneResponse> Prune(PruneContainersCommand command)
         {

@@ -1,5 +1,4 @@
-﻿using IdentityServer4.EntityFramework.Extensions;
-using IdentityServer4.EntityFramework.Options;
+﻿using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,7 +7,6 @@ using Redpier.Domain.Common;
 using Redpier.Infrastructure.Identity;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 

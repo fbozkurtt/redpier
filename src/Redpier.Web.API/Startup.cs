@@ -1,16 +1,23 @@
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Redpier.Application;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Infrastructure;
-using Redpier.Infrastructure.Persistence.Context;
-using Redpier.WebUI.Server.Services;
+using Redpier.Web.API.Services;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Redpier.WebUI.Server
+namespace Redpier.Web.API
 {
     public class Startup
     {
@@ -22,31 +29,28 @@ namespace Redpier.WebUI.Server
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration);
 
             services.AddInfrastructure(Configuration);
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
-            services.AddHttpContextAccessor();
+            services.AddControllers();
 
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
-
-            services.AddControllersWithViews()
-                .AddFluentValidation();
-
-            services.AddRazorPages();
-
-            //services.Configure<ApiBehaviorOptions>(options =>
-            //{
-            //    options.SuppressModelStateInvalidFilter = true;
-            //});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Redpier.Web.API", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,23 +59,19 @@ namespace Redpier.WebUI.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
                 app.UseMigrationsEndPoint();
-                app.UseWebAssemblyDebugging();
+
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Redpier.Web.API v1"));
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            app.UseHealthChecks("/health");
-
             app.UseHttpsRedirection();
-
-            app.UseBlazorFrameworkFiles();
-
-            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -83,9 +83,7 @@ namespace Redpier.WebUI.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
             });
         }
     }

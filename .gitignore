@@ -342,3 +342,5 @@ healthchecksdb
 /src/Redpier.WebUI/Server/RedpierDb.db
 /src/Redpier.WebUI/Server/RedpierDb.db-shm
 /src/Redpier.WebUI/Server/RedpierDb.db-wal
+/src/Redpier.Web.API/logs
+/src/Redpier.Web.API/RedpierDb.db

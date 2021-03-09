@@ -5,7 +5,7 @@ using Redpier.Application.Queries.Networks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Redpier.WebUI.Server.Controllers
+namespace Redpier.Web.API.Controllers
 {
     public class NetworkController : ApiControllerBase
     {

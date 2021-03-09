@@ -9,7 +9,7 @@ namespace Redpier.Infrastructure.Persistence.Context
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            var administratorRole = new IdentityRole("Administrator");
+            var administratorRole = new IdentityRole("Admin");
 
             if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
             {

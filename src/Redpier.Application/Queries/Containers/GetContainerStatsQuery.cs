@@ -2,7 +2,6 @@
 using Docker.DotNet.Models;
 using MediatR;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 

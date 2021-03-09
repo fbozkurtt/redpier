@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Docker.DotNet;
+﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
 using System.Collections.Generic;

@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Services;
 using System;
+using System.Text;
 
 namespace Redpier.Infrastructure
 {
@@ -34,7 +37,7 @@ namespace Redpier.Infrastructure
             services.AddScoped<IDomainEventService, DomainEventService>();
 
             services
-                .AddDefaultIdentity<ApplicationUser>(options =>
+                .AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.Lockout.MaxFailedAccessAttempts = 3;
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
@@ -47,7 +50,6 @@ namespace Redpier.Infrastructure
                     options.Password.RequiredUniqueChars = 0;
 
                 })
-                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
@@ -57,6 +59,24 @@ namespace Redpier.Infrastructure
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //    .AddJwtBearer(options =>
+            //{
+            //    options.SaveToken = true;
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+            //            .GetBytes(configuration["SecretKey"])),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false
+            //    };
+            //});
 
             return services;
         }

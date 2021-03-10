@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Redpier.Infrastructure.Identity;
+using Redpier.Domain.Entities;
 using Redpier.Infrastructure.Persistence.Context;
 using Serilog;
 using Serilog.Events;
@@ -29,7 +29,7 @@ namespace Redpier.Web.API
                    .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
                    .Enrich.FromLogContext()
                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
-                   .WriteTo.File("logs/redpierlogs", rollingInterval: RollingInterval.Day)
+                   .WriteTo.File("logs/redpierAPIlogs", rollingInterval: RollingInterval.Day)
                    .CreateLogger();
 
             var host = CreateHostBuilder(args).Build();
@@ -45,12 +45,10 @@ namespace Redpier.Web.API
                     {
                         var context = services.GetRequiredService<ApplicationDbContext>();
 
-                        context.Database.Migrate();
+                        await context.Database.MigrateAsync();
 
-                        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                        await ApplicationDbContextSeed.SeedDatabase(context);
 
-                        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                     }
 
                     catch (Exception ex)

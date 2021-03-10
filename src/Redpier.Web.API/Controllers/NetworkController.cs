@@ -1,7 +1,7 @@
 ﻿using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
-using Redpier.Application.Commands.Networks;
-using Redpier.Application.Queries.Networks;
+using Redpier.Application.Commands.Docker.Networks;
+using Redpier.Application.Queries.Docker.Networks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,21 +28,27 @@ namespace Redpier.Web.API.Controllers
         }
 
         [HttpPut("[action]")]
-        public async Task<bool> Connect(ConnectNetworkCommand command)
+        public async Task<ActionResult> Connect(ConnectNetworkCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [HttpPut("[action]")]
-        public async Task<bool> DisConnect(DisconnectNetworkCommand command)
+        public async Task<ActionResult> DisConnect(DisconnectNetworkCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [HttpDelete]
-        public async Task<bool> Delete(DeleteNetworkCommand command)
+        public async Task<ActionResult> Delete(DeleteNetworkCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [HttpDelete("[action]")]

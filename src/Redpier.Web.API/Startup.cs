@@ -14,42 +14,50 @@ using Redpier.Web.API.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Redpier.Web.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
+            ProductVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostEnvironment Environment { get; }
+        public string ProductVersion { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration);
 
-            services.AddInfrastructure(Configuration);
+            services.AddInfrastructure(Configuration, Environment);
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
+            services.AddHttpContextAccessor();
+
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Redpier.Web.API", Version = "v1" });
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+                options.SwaggerDoc(ProductVersion, new OpenApiInfo { Title = "Redpier.Web.API", Version = ProductVersion });
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
         }
 
@@ -64,7 +72,11 @@ namespace Redpier.Web.API
 
                 app.UseSwagger();
 
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Redpier.Web.API v1"));
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint($"/swagger/{ProductVersion}/swagger.json", $"Redpier API {ProductVersion}");
+                    options.RoutePrefix = string.Empty;
+                });
             }
             else
             {
@@ -74,8 +86,6 @@ namespace Redpier.Web.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseIdentityServer();
 
             app.UseAuthentication();
 

@@ -1,0 +1,32 @@
+﻿using Docker.DotNet;
+using Docker.DotNet.Models;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Redpier.Application.Commands.Docker.Swarm
+{
+    public class UpdateSwarmCommand : IRequest
+    {
+        public SwarmUpdateParameters Parameters { get; set; }
+    }
+
+    public class UpdateSwarmCommandHandler : IRequestHandler<UpdateSwarmCommand>
+    {
+        private readonly IDockerClient _client;
+
+        public UpdateSwarmCommandHandler(IDockerClient client)
+        {
+            _client = client;
+        }
+
+        public async Task<Unit> Handle(UpdateSwarmCommand request, CancellationToken cancellationToken)
+        {
+            await _client.Swarm.UpdateSwarmAsync(
+                   request.Parameters,
+                   cancellationToken);
+
+            return Unit.Value;
+        }
+    }
+}

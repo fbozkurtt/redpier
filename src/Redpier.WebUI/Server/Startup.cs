@@ -9,17 +9,23 @@ using Redpier.Application.Common.Interfaces;
 using Redpier.Infrastructure;
 using Redpier.Infrastructure.Persistence.Context;
 using Redpier.WebUI.Server.Services;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Redpier.WebUI.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
+            ProductVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostEnvironment Environment { get; }
+        public string ProductVersion { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -27,7 +33,7 @@ namespace Redpier.WebUI.Server
         {
             services.AddApplication(Configuration);
 
-            services.AddInfrastructure(Configuration);
+            services.AddInfrastructure(Configuration, Environment);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

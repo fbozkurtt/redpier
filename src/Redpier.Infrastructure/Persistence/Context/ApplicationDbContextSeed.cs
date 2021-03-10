@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Redpier.Infrastructure.Identity;
+using Redpier.Application.Common.Interfaces;
+using Redpier.Application.Common.Interfaces.Repositories;
+using Redpier.Domain.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,22 +9,34 @@ namespace Redpier.Infrastructure.Persistence.Context
 {
     public static class ApplicationDbContextSeed
     {
-        public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedDatabase(IApplicationDbContext dbContext)
         {
-            var administratorRole = new IdentityRole("Admin");
+            var administratorRole = new Role() { Name = "Admin"};
 
-            if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
+            if (dbContext.Roles.All(r => r.Name != administratorRole.Name))
             {
-                await roleManager.CreateAsync(administratorRole);
+                dbContext.Roles.Add(administratorRole);
             }
 
-            var administrator = new ApplicationUser { UserName = "admin" };
+            var administrator = new User { Username = "admin", PasswordHash = BCrypt.Net.BCrypt.HashPassword("!Admin1")};
 
-            if (userManager.Users.All(u => u.UserName != administrator.UserName))
+            if (dbContext.Users.All(u => u.Username != administrator.Username))
             {
-                await userManager.CreateAsync(administrator, "admin");
-                await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
+                dbContext.Users.Add(administrator);
             }
+
+            var UserRole = new UserRole
+            {
+                UserId = dbContext.Users.First(u => u.Username == administrator.Username).Id,
+                RoleId = dbContext.Roles.First(w => w.Name == administratorRole.Name).Id
+            };
+
+            if (!dbContext.UserRoles.Contains(UserRole))
+            {
+                dbContext.UserRoles.Add(UserRole);
+            }
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

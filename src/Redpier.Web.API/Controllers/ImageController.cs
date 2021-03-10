@@ -1,8 +1,8 @@
 ﻿using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Redpier.Application.Commands.Images;
-using Redpier.Application.Queries.Images;
+using Redpier.Application.Commands.Docker.Images;
+using Redpier.Application.Queries.Docker.Images;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -42,35 +42,43 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
-        public async Task<bool> Build(BuildImageCommand command)
+        public async Task<ActionResult> Build(BuildImageCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
-        public async Task<bool> Create(CreateImageCommand command)
+        public async Task<ActionResult> Create(CreateImageCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Push(PushImageCommand command)
+        public async Task<ActionResult> Push(PushImageCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Tag(TagImageCommand command)
+        public async Task<ActionResult> Tag(TagImageCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
-        public async Task<List<Dictionary<string, string>>> Remove(RemoveImageCommand command)
+        public async Task<IList<IDictionary<string, string>>> Remove(RemoveImageCommand command)
         {
             return await Mediator.Send(command);
         }

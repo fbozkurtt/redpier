@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Redpier.Application.Common.Interfaces;
+using System;
 using System.Security.Claims;
 
 namespace Redpier.Web.API.Services
@@ -13,6 +14,6 @@ namespace Redpier.Web.API.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        public Guid UserId => Guid.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
     }
 }

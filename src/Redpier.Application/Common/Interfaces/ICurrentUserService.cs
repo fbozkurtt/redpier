@@ -1,7 +1,9 @@
-﻿namespace Redpier.Application.Common.Interfaces
+﻿using System;
+
+namespace Redpier.Application.Common.Interfaces
 {
     public interface ICurrentUserService
     {
-        public string UserId { get; }
+        public Guid UserId { get; }
     }
 }

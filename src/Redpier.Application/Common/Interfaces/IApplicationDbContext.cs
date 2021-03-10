@@ -1,14 +1,23 @@
-﻿using System.Threading;
+﻿using Microsoft.EntityFrameworkCore;
+using Redpier.Domain.Entities;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        //DbSet<Container> Containers { get; set; }
+        public DbSet<User> Users { get; set; }
 
-        //DbSet<Image> Images { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        public DbSet<UserRole> UserRoles { get; set; }
+
+        public DbSet<RoleClaim> RoleClaims { get; set; }
+
+        public DbSet<DockerEndpoint> DockerEndpoints { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
     }
 }

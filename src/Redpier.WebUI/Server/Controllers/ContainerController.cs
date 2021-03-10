@@ -47,60 +47,86 @@ namespace Redpier.WebUI.Server.Controllers
             return await Mediator.Send(query);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Start(StartContainerCommand command)
+        public async Task<ActionResult> Start(StartContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Stop(StopContainerCommand command)
+        public async Task<ActionResult> Stop(StopContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Restart(RestartContainerCommand command)
+        public async Task<ActionResult> Restart(RestartContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Pause(PauseContainerCommand command)
+        public async Task<ActionResult> Pause(PauseContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Unpause(UnpauseContainerCommand command)
+        public async Task<ActionResult> Unpause(UnpauseContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Kill(KillContainerCommand command)
+        public async Task<ActionResult> Kill(KillContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<bool> Rename(RenameContainerCommand command)
+        public async Task<ActionResult> Rename(RenameContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         public async Task<ContainerUpdateResponse> Update(UpdateContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
-        public async Task<bool> Remove(RemoveContainerCommand command)
+        public async Task<ActionResult> Remove(RemoveContainerCommand command)
         {
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+
+            return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public async Task<ContainersPruneResponse> Prune(PruneContainersCommand command)
         {

@@ -1,23 +1,28 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityServer4.EntityFramework.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Redpier.Application.Common.Interfaces;
-using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Services;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Redpier.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             string migrationAssembly = typeof(ApplicationDbContext).Assembly.FullName;
 
@@ -36,47 +41,7 @@ namespace Redpier.Infrastructure
 
             services.AddScoped<IDomainEventService, DomainEventService>();
 
-            services
-                .AddIdentity<ApplicationUser, IdentityRole>(options =>
-                {
-                    options.Lockout.MaxFailedAccessAttempts = 3;
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-
-                    options.Password.RequiredLength = 5;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequiredUniqueChars = 0;
-
-                })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-            services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
-
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //    .AddJwtBearer(options =>
-            //{
-            //    options.SaveToken = true;
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-            //            .GetBytes(configuration["SecretKey"])),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
+            services.AddAuthentication();
 
             return services;
         }

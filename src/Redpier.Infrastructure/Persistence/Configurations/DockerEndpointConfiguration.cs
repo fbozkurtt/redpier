@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Redpier.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Redpier.Infrastructure.Persistence.Configurations
 {
@@ -19,13 +15,15 @@ namespace Redpier.Infrastructure.Persistence.Configurations
             builder.HasData(new DockerEndpoint()
             {
                 Uri = "npipe://./pipe/docker_engine",
-                Description = "Default Docker Desktop endpoint for Windows."
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now
             });
 
             builder.HasData(new DockerEndpoint()
             {
                 Uri = "/var/run/docker.sock",
-                Description = "Default Docker endpoint for Linux."
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now
             });
         }
     }

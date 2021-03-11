@@ -1,10 +1,9 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Redpier.Application.Common.Interfaces;
+using Redpier.Application.Common.Interfaces.Identity;
 using Redpier.Application.Common.Interfaces.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,16 +21,17 @@ namespace Redpier.Application.Commands.User
         private readonly IUserRepository _userRepository;
         private readonly ICurrentUserService _currentUserService;
 
-        public UpdateUserCommandHandler(IUserRepository userRepository)
+        public UpdateUserCommandHandler(IUserRepository userRepository, ICurrentUserService currentUserService)
         {
             _userRepository = userRepository;
+            _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userRepository.UpdateAsync(
-                request.Username,
-                request.Password);
+            var user = await _userRepository.GetAsync(_currentUserService.UserId);
+
+            return await _userRepository.UpdateAsync(user, request.Username, request.Password);
         }
     }
 }

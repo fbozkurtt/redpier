@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <None Remove="RedpierDb.db" />
+    <None Remove="RedpierDb.db-shm" />
+    <None Remove="RedpierDb.db-wal" />
   </ItemGroup>
 
   <ItemGroup>

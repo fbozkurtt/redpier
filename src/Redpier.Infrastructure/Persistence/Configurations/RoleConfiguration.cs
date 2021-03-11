@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Redpier.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Redpier.Infrastructure.Persistence.Configurations
 {
@@ -16,9 +12,19 @@ namespace Redpier.Infrastructure.Persistence.Configurations
             builder.HasIndex(w => new { w.Name })
                    .IsUnique();
 
-            builder.HasData(new Role() { Name = "Admin" });
+            builder.HasData(new Role()
+            {
+                Name = "Admin",
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now
+            });
 
-            builder.HasData(new Role() { Name = "User" });
+            builder.HasData(new Role()
+            {
+                Name = "User",
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now
+            });
         }
     }
 }

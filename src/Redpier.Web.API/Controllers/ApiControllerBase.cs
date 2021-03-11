@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Mime;
 
 namespace Redpier.Web.API.Controllers
 {
+    [Produces(MediaTypeNames.Application.Json)]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

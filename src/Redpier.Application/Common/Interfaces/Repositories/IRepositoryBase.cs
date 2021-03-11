@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Common.Interfaces.Repositories
@@ -15,10 +14,13 @@ namespace Redpier.Application.Common.Interfaces.Repositories
 
         Task<bool> CreateAsync(TEntity entity);
 
-        Task<TEntity> GetByIdAsync(Guid id);
+        Task<TEntity> GetAsync(Guid id);
 
         Task<bool> UpdateAsync(TEntity entity);
 
         Task<bool> DeleteAsync(Guid id);
+
+
+        Task<bool> DeleteAsync(TEntity entity);
     }
 }

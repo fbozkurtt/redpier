@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Redpier.Application.Common.Interfaces.Repositories;
-using Redpier.Application.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Redpier.Domain.Entities;
 
 namespace Redpier.Application.Commands.User
 {

@@ -1,22 +1,16 @@
-﻿using IdentityServer4.EntityFramework.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Redpier.Application.Common.Interfaces;
+using Redpier.Application.Common.Interfaces.Identity;
+using Redpier.Application.Common.Interfaces.Repositories;
+using Redpier.Domain.Common;
+using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
+using Redpier.Infrastructure.Persistence.Repositories;
 using Redpier.Infrastructure.Services;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Redpier.Infrastructure
 {
@@ -34,12 +28,16 @@ namespace Redpier.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
-                    connectionString.ToString(),
+                    "Data source=RedpierDb.db",
                     b => b.MigrationsAssembly(migrationAssembly)));
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddScoped<IDomainEventService, DomainEventService>();
+
+            services.AddTransient<IRepositoryBase<BaseEntity>, RepositoryBase<BaseEntity>>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddAuthentication();
 

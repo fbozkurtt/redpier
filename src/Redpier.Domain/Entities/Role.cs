@@ -1,11 +1,7 @@
 ﻿using Redpier.Domain.Common;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Redpier.Domain.Entities
 {
@@ -17,5 +13,9 @@ namespace Redpier.Domain.Entities
 
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
+
+        public virtual IList<User> Users { get; set; }
+
+        //public virtual IList<UserRole> UserRoles { get; set; }
     }
 }

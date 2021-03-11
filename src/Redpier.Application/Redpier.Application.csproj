@@ -14,7 +14,7 @@
     <Folder Include="Commands\Docker\Exec\" />
     <Folder Include="Commands\Docker\Secrets\" />
     <Folder Include="Common\Exceptions\" />
-    <Folder Include="Common\Interfaces\Services\" />
+    <Folder Include="Queries\Identity\" />
   </ItemGroup>
 
   <ItemGroup>

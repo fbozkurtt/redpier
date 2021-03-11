@@ -14,6 +14,8 @@ namespace Redpier.Web.API.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Guid UserId => Guid.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+        public string UserId => (_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public string Username => (_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name));
     }
 }

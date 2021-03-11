@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Redpier.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Redpier.Infrastructure.Persistence.Configurations
 {
@@ -15,6 +10,12 @@ namespace Redpier.Infrastructure.Persistence.Configurations
         {
             builder.HasIndex(w => new { w.Username })
                 .IsUnique();
+
+            builder.Property(w => w.LockoutEnabled)
+                .HasDefaultValue(true);
+
+            builder.Property(w => w.AccessFailedCount)
+                .HasDefaultValue(0);
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Redpier.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Common.Interfaces.Repositories
@@ -11,17 +9,15 @@ namespace Redpier.Application.Common.Interfaces.Repositories
     {
         Task<bool> CreateAsync(string userName, string password);
 
-        Task<User> GetByUsernameAsync(string userName);
+        Task<User> GetAsync(string userName);
 
-        Task<bool> UpdateAsync(string userName, string password);
+        Task<bool> UpdateAsync(User user, string userName, string password);
 
-        Task<bool> DeleteByUsernameAsync(string userName);
+        Task<bool> DeleteAsync(string userName);
 
-        Task<string> GetUserNameAsync(Guid userId);
+        Task<string> GetUsernameAsync(Guid userId);
 
-        Task<bool> IsInRoleAsync(string userName, string roleName);
-
-        Task<IList<Role>> GetRolesAsync(string userName);
+        Task<Guid> GetIdAsync(string userName);
 
         Task<bool> AddToRoleAsync(string userName, string roleName);
     }

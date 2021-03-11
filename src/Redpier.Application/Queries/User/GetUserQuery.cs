@@ -3,9 +3,6 @@ using MediatR;
 using Redpier.Application.Common.Interfaces.Repositories;
 using Redpier.Application.DataTransferObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,8 +29,8 @@ namespace Redpier.Application.Queries.User
         public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
             var user = request.Id.HasValue
-                ? await _userRepository.GetByIdAsync(request.Id.Value)
-                : await _userRepository.GetByUsernameAsync(request.Username);
+                ? await _userRepository.GetAsync(request.Id.Value)
+                : await _userRepository.GetAsync(request.Username);
 
             return _mapper.Map<UserDto>(user);
         }

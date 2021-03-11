@@ -1,8 +1,5 @@
-﻿using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Options;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Domain.Common;
 using Redpier.Domain.Entities;
@@ -27,12 +24,15 @@ namespace Redpier.Infrastructure.Persistence.Context
             _currentUserService = currentUserService;
             _domainEventService = domainEventService;
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
 
+            base.OnConfiguring(optionsBuilder);
+        }
         public DbSet<User> Users { get; set; }
 
         public DbSet<Role> Roles { get; set; }
-
-        public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<RoleClaim> RoleClaims { get; set; }
 
@@ -45,13 +45,13 @@ namespace Redpier.Infrastructure.Persistence.Context
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
+                        entry.Entity.CreatedBy = !String.IsNullOrEmpty(_currentUserService.UserId) ? Guid.Parse(_currentUserService.UserId) : null;
                         entry.Entity.Created = DateTime.Now;
                         entry.Entity.Id = Guid.NewGuid();
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        entry.Entity.LastModifiedBy = !String.IsNullOrEmpty(_currentUserService.UserId) ? Guid.Parse(_currentUserService.UserId) : null;
                         entry.Entity.LastModified = DateTime.Now;
                         break;
                 }

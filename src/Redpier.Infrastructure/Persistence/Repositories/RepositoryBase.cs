@@ -1,19 +1,17 @@
-﻿using Redpier.Application.Common.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using Redpier.Application.Common.Interfaces.Repositories;
 using Redpier.Domain.Common;
 using Redpier.Infrastructure.Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Redpier.Infrastructure.Persistence.Repositories
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : BaseEntity
     {
-        private readonly ApplicationDbContext _dbContext;
+        protected readonly ApplicationDbContext _dbContext;
 
         public RepositoryBase(ApplicationDbContext dbContext)
         {
@@ -24,9 +22,7 @@ namespace Redpier.Infrastructure.Persistence.Repositories
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);
 
-            await _dbContext.SaveChangesAsync();
-
-            return true;
+            return await _dbContext.SaveChangesAsync() > 1;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -35,9 +31,7 @@ namespace Redpier.Infrastructure.Persistence.Repositories
 
             _dbContext.Set<TEntity>().Remove(entity);
 
-            await _dbContext.SaveChangesAsync();
-
-            return true;
+            return await _dbContext.SaveChangesAsync() > 1;
         }
 
         public async Task<IList<TEntity>> GetAllAsync()
@@ -53,7 +47,7 @@ namespace Redpier.Infrastructure.Persistence.Repositories
             .Take(limit);
         }
 
-        public async Task<TEntity> GetByIdAsync(Guid id)
+        public async Task<TEntity> GetAsync(Guid id)
         {
             return await _dbContext.Set<TEntity>()
                 .SingleOrDefaultAsync(w => w.Id == id);
@@ -63,9 +57,15 @@ namespace Redpier.Infrastructure.Persistence.Repositories
         {
             _dbContext.Set<TEntity>()
                 .Update(entity);
-            await _dbContext.SaveChangesAsync();
 
-            return true;
+            return await _dbContext.SaveChangesAsync() > 1;
+        }
+
+        public async Task<bool> DeleteAsync(TEntity entity)
+        {
+            _dbContext.Set<TEntity>().Remove(entity);
+
+            return await _dbContext.SaveChangesAsync() > 1;
         }
     }
 }

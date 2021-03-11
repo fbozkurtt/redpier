@@ -11,7 +11,7 @@ namespace Redpier.Application.Common.Interfaces
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<UserRole> UserRoles { get; set; }
+        //public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<RoleClaim> RoleClaims { get; set; }
 

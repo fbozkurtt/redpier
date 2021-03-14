@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Identity;
-using Redpier.Application.Commands.User;
+using Redpier.Shared.Constants;
 using System;
 using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ namespace Redpier.Web.API.Controllers
     public class IdentityController : ApiControllerBase
     {
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPost("[action]")]
         public string Admin()
         {

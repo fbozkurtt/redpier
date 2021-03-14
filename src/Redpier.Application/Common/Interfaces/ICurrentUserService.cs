@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Redpier.Application.Common.Interfaces
+﻿namespace Redpier.Application.Common.Interfaces
 {
     public interface ICurrentUserService
     {

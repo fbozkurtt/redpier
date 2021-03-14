@@ -1,11 +1,14 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Containers
 {
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class UpdateContainerCommand : IRequest<ContainerUpdateResponse>
     {
         public string Id { get; set; }

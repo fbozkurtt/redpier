@@ -3,12 +3,32 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Version>1.0.0</Version>
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <PackageIcon>Icon.ico</PackageIcon>
+    <PackageId>Redpier</PackageId>
+    <Authors>Furkan Bozkurt</Authors>
+    <Company>Redpier</Company>
+    <Product>Redpier</Product>
+    <RepositoryUrl>https://github.com/fbozkurtt/redpier.git</RepositoryUrl>
+    <AssemblyName>Redpier</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="logs\**" />
+    <Content Remove="logs\**" />
+    <EmbeddedResource Remove="logs\**" />
+    <None Remove="logs\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="RedpierDb.db" />
     <None Remove="RedpierDb.db-shm" />
     <None Remove="RedpierDb.db-wal" />
+    <None Include="Resources\Icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +45,21 @@
   <ItemGroup>
     <ProjectReference Include="..\Redpier.Application\Redpier.Application.csproj" />
     <ProjectReference Include="..\Redpier.Infrastructure\Redpier.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

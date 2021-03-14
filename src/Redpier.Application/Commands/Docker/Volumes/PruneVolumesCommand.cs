@@ -2,12 +2,13 @@
 using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Volumes
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class PruneVolumesCommand : IRequest<VolumesPruneResponse>
     {
         public VolumesPruneParameters Parameters { get; set; }

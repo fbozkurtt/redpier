@@ -1,12 +1,13 @@
 ﻿using Docker.DotNet;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Volumes
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RemoveVolumeCommand : IRequest
     {
         public string Name { get; set; }

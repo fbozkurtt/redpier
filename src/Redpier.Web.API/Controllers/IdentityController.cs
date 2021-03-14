@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Identity;
+using Redpier.Application.Commands.User;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Controllers
@@ -12,9 +10,30 @@ namespace Redpier.Web.API.Controllers
     [Authorize]
     public class IdentityController : ApiControllerBase
     {
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("[action]")]
+        public string Admin()
+        {
+            return new string("you are admin");
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<string> Token(GetTokenCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<Guid> Create(CreateUserCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<bool> Delete(DeleteUserCommand command)
         {
             return await Mediator.Send(command);
         }

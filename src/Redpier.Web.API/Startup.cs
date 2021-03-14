@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Redpier.Application;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Infrastructure;
+using Redpier.Web.API.Filters;
 using Redpier.Web.API.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Diagnostics;
@@ -38,11 +39,12 @@ namespace Redpier.Web.API
 
             services.AddHttpContextAccessor();
 
-            services.AddControllers();
+            services.AddControllers(options =>
+                options.Filters.Add<ApiExceptionFilterAttribute>());
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc(ProductVersion, new OpenApiInfo { Title = "Redpier.Web.API", Version = ProductVersion });
+                options.SwaggerDoc(ProductVersion, new OpenApiInfo { Title = "Redpier API", Version = ProductVersion });
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
@@ -62,14 +64,6 @@ namespace Redpier.Web.API
                 app.UseDeveloperExceptionPage();
 
                 app.UseMigrationsEndPoint();
-
-                app.UseSwagger();
-
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint($"/swagger/{ProductVersion}/swagger.json", $"Redpier API {ProductVersion}");
-                    options.RoutePrefix = string.Empty;
-                });
             }
             else
             {
@@ -80,9 +74,19 @@ namespace Redpier.Web.API
 
             app.UseRouting();
 
+            //app.UseApplicationResponse();
+
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint($"/swagger/{ProductVersion}/swagger.json", $"Redpier API {ProductVersion}");
+                options.RoutePrefix = string.Empty;
+            });
 
             app.UseEndpoints(endpoints =>
             {

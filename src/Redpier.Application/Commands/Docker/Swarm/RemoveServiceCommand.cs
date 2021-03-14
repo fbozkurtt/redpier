@@ -1,10 +1,13 @@
 ﻿using Docker.DotNet;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Swarm
 {
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RemoveServiceCommand : IRequest
     {
         public string Id { get; set; }

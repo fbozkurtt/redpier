@@ -1,12 +1,15 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Images
 {
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateImageCommand : IRequest
     {
         public ImagesCreateParameters Parameters { get; set; }

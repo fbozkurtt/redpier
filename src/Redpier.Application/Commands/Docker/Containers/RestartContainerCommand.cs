@@ -1,15 +1,18 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Containers
 {
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RestartContainerCommand : IRequest
     {
         public string Id { get; set; }
-        public ContainerRestartParameters Parameters { get; set; }
+        public uint? WaitBeforeKillSeconds { get; set; }
     }
     public class RestartContainerCommandHandler : IRequestHandler<RestartContainerCommand>
     {
@@ -24,7 +27,7 @@ namespace Redpier.Application.Commands.Docker.Containers
         {
             await _client.Containers.RestartContainerAsync(
                 request.Id,
-                request.Parameters,
+                new ContainerRestartParameters() { WaitBeforeKillSeconds = request.WaitBeforeKillSeconds },
                 cancellationToken);
 
             return Unit.Value;

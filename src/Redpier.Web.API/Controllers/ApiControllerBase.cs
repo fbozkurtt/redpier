@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Mime;
@@ -7,6 +8,7 @@ using System.Net.Mime;
 namespace Redpier.Web.API.Controllers
 {
     [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

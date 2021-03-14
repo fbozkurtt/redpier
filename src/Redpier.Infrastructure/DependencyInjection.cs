@@ -1,16 +1,17 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Redpier.Application.Common.Interfaces;
-using Redpier.Application.Common.Interfaces.Identity;
-using Redpier.Application.Common.Interfaces.Repositories;
-using Redpier.Domain.Common;
 using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
-using Redpier.Infrastructure.Persistence.Repositories;
 using Redpier.Infrastructure.Services;
+using System;
+using System.Text;
 
 namespace Redpier.Infrastructure
 {
@@ -18,6 +19,8 @@ namespace Redpier.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
+            services.AddSingleton<IApiVersionService, ApiVersionService>();
+
             string migrationAssembly = typeof(ApplicationDbContext).Assembly.FullName;
 
             var connectionString = new SqliteConnectionStringBuilder
@@ -35,11 +38,40 @@ namespace Redpier.Infrastructure
 
             services.AddScoped<IDomainEventService, DomainEventService>();
 
-            services.AddTransient<IRepositoryBase<BaseEntity>, RepositoryBase<BaseEntity>>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.Password = Config.GetPasswordOptions();
+            })
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddTransient<IIdentityService, IdentityService>();
 
-            services.AddAuthentication();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = true;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidIssuer = configuration["JWT:Issuer"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Secret"])),
+                    };
+                });
+
+            services.AddAuthorization();
 
             return services;
         }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Redpier.Application.Common.Interfaces;
-using System;
 using System.Security.Claims;
 
 namespace Redpier.Web.API.Services

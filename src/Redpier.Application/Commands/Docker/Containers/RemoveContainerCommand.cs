@@ -1,30 +1,42 @@
-﻿using Docker.DotNet;
+﻿using AutoMapper;
+using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Application.Common.Mappings;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Containers
 {
-    public class RemoveContainerCommand : IRequest
+    [Authorize(Roles = DefaultRoleNames.Admin)]
+    public class RemoveContainerCommand : IRequest, IMapFrom<ContainerRemoveParameters>
     {
         public string Id { get; set; }
-        public ContainerRemoveParameters Parameters { get; set; }
+
+        public bool? RemoveVolumes { get; set; }
+
+        public bool? RemoveLinks { get; set; }
+
+        public bool? Force { get; set; }
     }
 
     public class RemoveContainerCommandHandler : IRequestHandler<RemoveContainerCommand>
     {
         private readonly IDockerClient _client;
+        private readonly IMapper _mapper;
 
-        public RemoveContainerCommandHandler(IDockerClient client)
+        public RemoveContainerCommandHandler(IDockerClient client, IMapper mapper)
         {
             _client = client;
+            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(RemoveContainerCommand request, CancellationToken cancellationToken)
         {
             await _client.Containers.RemoveContainerAsync(request.Id,
-                request.Parameters,
+                _mapper.Map<ContainerRemoveParameters>(request),
                 cancellationToken);
 
             return Unit.Value;

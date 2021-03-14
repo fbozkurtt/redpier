@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
 using Serilog;
 using Serilog.Events;
@@ -41,7 +43,11 @@ namespace Redpier.Web.API
 
                         await context.Database.MigrateAsync();
 
-                        await ApplicationDbContextSeed.SeedDatabase(context);
+                        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+                        await ApplicationDbContextSeed.SeedDefaultRolesAsync(roleManager);
+                        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
 
                     }
 

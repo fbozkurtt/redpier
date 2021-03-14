@@ -1,38 +1,38 @@
 ﻿using AutoMapper;
 using MediatR;
-using Redpier.Application.Common.Interfaces.Repositories;
-using Redpier.Application.DataTransferObjects;
+using Microsoft.AspNetCore.Identity;
+using Redpier.Application.Common.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.User
 {
-    public class GetUserQuery : IRequest<UserDto>
+    public class GetUserQuery : IRequest<IdentityUser<Guid>>
     {
         public Guid? Id { get; set; }
 
         public string Username { get; set; }
     }
 
-    public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
+    public class GetUserQueryHandler : IRequestHandler<GetUserQuery, IdentityUser<Guid>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IIdentityService _IdentityService;
         private readonly IMapper _mapper;
 
-        public GetUserQueryHandler(IUserRepository userRepository, IMapper mapper)
+        public GetUserQueryHandler(IIdentityService IdentityService, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _IdentityService = IdentityService;
             _mapper = mapper;
         }
 
-        public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<IdentityUser<Guid>> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
             var user = request.Id.HasValue
-                ? await _userRepository.GetAsync(request.Id.Value)
-                : await _userRepository.GetAsync(request.Username);
+                ? await _IdentityService.GetUserAsync(request.Id.Value)
+                : await _IdentityService.GetUserAsync(request.Username);
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
     }
 }

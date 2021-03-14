@@ -1,16 +1,19 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Redpier.Shared.Constants;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Docker.Containers
 {
+    [Authorize(Roles = DefaultRoleNames.Admin)]
     public class StartContainerCommand : IRequest
     {
         public string Id { get; set; }
+        public string DetachKeys { get; set; }
 
-        public ContainerStartParameters Parameters { get; set; }
     }
     public class StartContainerCommandHandler : IRequestHandler<StartContainerCommand>
     {
@@ -25,7 +28,7 @@ namespace Redpier.Application.Commands.Docker.Containers
         {
             await _client.Containers.StartContainerAsync(
                 request.Id,
-                request.Parameters ??= new ContainerStartParameters(),
+                new ContainerStartParameters() { DetachKeys = request.DetachKeys },
                 cancellationToken);
 
             return Unit.Value;

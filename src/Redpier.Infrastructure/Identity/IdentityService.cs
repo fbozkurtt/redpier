@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Redpier.Application.Common.Interfaces.Identity;
-using Redpier.Application.Common.Interfaces.Repositories;
-using Redpier.Domain.Entities;
+using Redpier.Application.Common.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -16,54 +16,118 @@ namespace Redpier.Infrastructure.Identity
 {
     public class IdentityService : IIdentityService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IConfiguration _configuration;
 
-        public IdentityService(IUserRepository userRepository, IConfiguration configuration)
+        public IdentityService(
+            UserManager<ApplicationUser> userManager,
+            IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
+            IAuthorizationService authorizationService,
+            IConfiguration configuration)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
+            _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
+            _authorizationService = authorizationService;
             _configuration = configuration;
         }
 
-        public async Task<bool> AddToRoleAsync(string username, string roleName)
+        public async Task<string> GetUserNameAsync(Guid userId)
         {
-            return await _userRepository.AddToRoleAsync(username, roleName);
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+
+            return user.UserName;
         }
 
-        public async Task<IList<Role>> GetRoles(string username)
+        public async Task<Guid> CreateUserAsync(string userName, string password)
         {
-            var user = await _userRepository.GetAsync(username);
+            var user = new ApplicationUser
+            {
+                UserName = userName,
+            };
 
-            return user.Roles.ToList();
+            await _userManager.CreateAsync(user, password);
+
+            return user.Id;
+        }
+
+        public async Task<bool> IsInRoleAsync(Guid userId, string role)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+
+            return await _userManager.IsInRoleAsync(user, role);
+        }
+
+        public async Task<bool> AuthorizeAsync(Guid userId, string policyName)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+
+            var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+
+            var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> DeleteUserAsync(Guid userId)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+
+            if (user != null)
+            {
+                return await DeleteUserAsync(user);
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteUserAsync(string username)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.UserName == username);
+
+            if (user != null)
+            {
+                return await DeleteUserAsync(user);
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteUserAsync(ApplicationUser user)
+        {
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
         }
 
         public async Task<string> GetTokenAsync(string username, string password)
         {
-            var user = await _userRepository.GetAsync(username);
+            var user = await _userManager.FindByNameAsync(username);
 
-            if (user != null && ValidateAsync(user, password).Result)
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
+                var userRoles = await _userManager.GetRolesAsync(user);
+
                 var tokenHandler = new JwtSecurityTokenHandler();
 
-                var identity = new ClaimsIdentity("Bearer");
+                var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
 
-                if(user.Roles != null)
+                foreach (var role in userRoles)
                 {
-                    foreach (var role in user.Roles)
-                    {
-                        identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
-                    }
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
                 }
 
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = identity,
-                    Expires = DateTime.UtcNow.AddHours(Double.TryParse(_configuration["BearerToken:Expires"], out double expires) ? expires : 1),
+                    Expires = DateTime.UtcNow.AddHours(Double.TryParse(_configuration["JWT:Expires"], out double expires) ? expires : 1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(_configuration["BearerToken:Secret"])), SecurityAlgorithms.HmacSha256Signature)
+                            .GetBytes(_configuration["JWT:Secret"])), SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = _configuration["JWT:Issuer"],
                 };
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -75,27 +139,15 @@ namespace Redpier.Infrastructure.Identity
             throw new UnauthorizedAccessException();
         }
 
-        public async Task<bool> IsInRoleAsync(string username, string roleName)
-        {
-            var user = await _userRepository.GetAsync(username);
 
-            return user.Roles.Any(w => w.Name.Equals(roleName));
+        public async Task<IdentityUser<Guid>> GetUserAsync(Guid userId)
+        {
+            return await _userManager.FindByIdAsync(userId.ToString());
         }
 
-        public async Task<bool> IsInRoleAsync(User user, string roleName)
+        public async Task<IdentityUser<Guid>> GetUserAsync(string username)
         {
-            return await Task.Run(() =>
-            {
-                return user.Roles.Any(w => w.Name.Equals(roleName));
-            });
-        }
-
-        public async Task<bool> ValidateAsync(User user, string password)
-        {
-            return await Task.Run(() =>
-            {
-                return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
-            });
+            return await _userManager.FindByNameAsync(username);
         }
     }
 }

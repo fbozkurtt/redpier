@@ -22,12 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Redpier.Application\Redpier.Application.csproj" />
-    <ProjectReference Include="..\Redpier.Shared\Redpier.Shared.csproj" />
+    <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
+    <ProjectReference Include="..\application\Redpier.Application.csproj" />
+    <ProjectReference Include="..\shared\Redpier.Shared.csproj" />
   </ItemGroup>
 
 </Project>

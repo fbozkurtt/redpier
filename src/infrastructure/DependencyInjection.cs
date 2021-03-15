@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Docker.DotNet;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +21,6 @@ namespace Redpier.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.AddSingleton<IApiVersionService, ApiVersionService>();
-
             string migrationAssembly = typeof(ApplicationDbContext).Assembly.FullName;
 
             var connectionString = new SqliteConnectionStringBuilder
@@ -37,6 +37,11 @@ namespace Redpier.Infrastructure
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddScoped<IDomainEventService, DomainEventService>();
+
+            //services.AddScoped<IDockerClientService, DockerClientService>();
+
+            services.AddScoped<IDockerClient>(w =>
+                new DockerClientService(w.GetRequiredService<IApplicationDbContext>(), w.GetRequiredService<HttpContext>()).CreateClient().Result);
 
             services.AddIdentityCore<ApplicationUser>(options =>
             {

@@ -14,7 +14,7 @@
     <AssemblyName>Redpier</AssemblyName>
     <UserSecretsId>7c151042-9ec5-47e0-80b8-5d8c92585cef</UserSecretsId>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Remove="logs\**" />
     <Content Remove="logs\**" />
@@ -44,8 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Redpier.Application\Redpier.Application.csproj" />
-    <ProjectReference Include="..\Redpier.Infrastructure\Redpier.Infrastructure.csproj" />
+    <ProjectReference Include="..\application\Redpier.Application.csproj" />
+    <ProjectReference Include="..\infrastructure\Redpier.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

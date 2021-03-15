@@ -20,12 +20,10 @@ namespace Redpier.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
 
-            services.AddSingleton<IDockerClient>(
-                    new DockerClientConfiguration(
-                        new Uri(configuration.GetValue<string>("DockerUri"))
-                        ).CreateClient());
-
-            //services.AddScoped<IDockerClient, DockerClient>();
+            //services.AddSingleton<IDockerClient>(
+            //        new DockerClientConfiguration(
+            //            new Uri(configuration.GetValue<string>("DockerUri"))
+            //            ).CreateClient());
 
             return services;
         }

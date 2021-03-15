@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Redpier.Infrastructure.Persistence.Migrations
 {
@@ -52,6 +52,7 @@ namespace Redpier.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Uri = table.Column<string>(type: "TEXT", maxLength: 2048, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: true),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -187,13 +188,13 @@ namespace Redpier.Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "DockerEndpoints",
-                columns: new[] { "Id", "Created", "CreatedBy", "LastModified", "LastModifiedBy", "Uri" },
-                values: new object[] { new Guid("306d1bb7-0f83-4d39-912b-ac9ee4f99e09"), new DateTime(2021, 3, 14, 17, 29, 35, 622, DateTimeKind.Local).AddTicks(9965), null, null, null, "npipe://./pipe/docker_engine" });
+                columns: new[] { "Id", "Created", "CreatedBy", "LastModified", "LastModifiedBy", "Name", "Uri" },
+                values: new object[] { new Guid("8dbe089f-fbf0-41e5-ac39-813bb25ae6ec"), new DateTime(2021, 3, 15, 15, 36, 39, 528, DateTimeKind.Local).AddTicks(7163), null, null, null, "local_windows", "npipe://./pipe/docker_engine" });
 
             migrationBuilder.InsertData(
                 table: "DockerEndpoints",
-                columns: new[] { "Id", "Created", "CreatedBy", "LastModified", "LastModifiedBy", "Uri" },
-                values: new object[] { new Guid("2756d530-c75f-428f-ac98-5b2dd99e6cf6"), new DateTime(2021, 3, 14, 17, 29, 35, 624, DateTimeKind.Local).AddTicks(3835), null, null, null, "/var/run/docker.sock" });
+                columns: new[] { "Id", "Created", "CreatedBy", "LastModified", "LastModifiedBy", "Name", "Uri" },
+                values: new object[] { new Guid("1482442c-575a-4b41-bd54-cdac76183e13"), new DateTime(2021, 3, 15, 15, 36, 39, 530, DateTimeKind.Local).AddTicks(8307), null, null, null, "local_linux", "/var/run/docker.sock" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

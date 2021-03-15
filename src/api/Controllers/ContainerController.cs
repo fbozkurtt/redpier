@@ -12,13 +12,7 @@ namespace Redpier.Web.API.Controllers
     public class ContainerController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<IList<ContainerListResponse>> GetContainers()
-        {
-            return await Mediator.Send(new ListContainersQuery());
-        }
-
-        [HttpPost]
-        public async Task<IList<ContainerListResponse>> GetContainers(ListContainersQuery query)
+        public async Task<IList<ContainerListResponse>> Containers([FromQuery] ListContainersQuery query)
         {
             return await Mediator.Send(query);
         }

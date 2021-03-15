@@ -10,14 +10,6 @@ namespace Redpier.Web.API.Controllers
     [Authorize]
     public class IdentityController : ApiControllerBase
     {
-
-        [Authorize(Roles = DefaultRoleNames.Admin)]
-        [HttpPost("[action]")]
-        public string Admin()
-        {
-            return new string("you are admin");
-        }
-
         [AllowAnonymous]
         [HttpPost]
         public async Task<string> Token(GetTokenCommand command)

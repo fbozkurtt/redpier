@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Redpier.Application.Queries.User
+namespace Redpier.Application.Queries.Identity
 {
     public class GetUserQuery : IRequest<IdentityUser<Guid>>
     {

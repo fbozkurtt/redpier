@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Commands\Docker\Exec\" />
     <Folder Include="Commands\Docker\Secrets\" />
-    <Folder Include="Queries\Identity\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,12 +28,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Redpier.Domain\Redpier.Domain.csproj" />
-    <ProjectReference Include="..\Redpier.Shared\Redpier.Shared.csproj" />
+    <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
+    <ProjectReference Include="..\domain\Redpier.Domain.csproj" />
+    <ProjectReference Include="..\shared\Redpier.Shared.csproj" />
   </ItemGroup>
 
 </Project>

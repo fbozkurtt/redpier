@@ -14,6 +14,7 @@ namespace Redpier.Infrastructure.Persistence.Configurations
 
             builder.HasData(new DockerEndpoint()
             {
+                Name="local_windows",
                 Uri = "npipe://./pipe/docker_engine",
                 Id = Guid.NewGuid(),
                 Created = DateTime.Now
@@ -21,6 +22,7 @@ namespace Redpier.Infrastructure.Persistence.Configurations
 
             builder.HasData(new DockerEndpoint()
             {
+                Name="local_linux",
                 Uri = "/var/run/docker.sock",
                 Id = Guid.NewGuid(),
                 Created = DateTime.Now

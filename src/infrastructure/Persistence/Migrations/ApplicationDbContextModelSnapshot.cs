@@ -160,6 +160,11 @@ namespace Redpier.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Uri")
                         .IsRequired()
                         .HasMaxLength(2048)
@@ -175,14 +180,16 @@ namespace Redpier.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("306d1bb7-0f83-4d39-912b-ac9ee4f99e09"),
-                            Created = new DateTime(2021, 3, 14, 17, 29, 35, 622, DateTimeKind.Local).AddTicks(9965),
+                            Id = new Guid("8dbe089f-fbf0-41e5-ac39-813bb25ae6ec"),
+                            Created = new DateTime(2021, 3, 15, 15, 36, 39, 528, DateTimeKind.Local).AddTicks(7163),
+                            Name = "local_windows",
                             Uri = "npipe://./pipe/docker_engine"
                         },
                         new
                         {
-                            Id = new Guid("2756d530-c75f-428f-ac98-5b2dd99e6cf6"),
-                            Created = new DateTime(2021, 3, 14, 17, 29, 35, 624, DateTimeKind.Local).AddTicks(3835),
+                            Id = new Guid("1482442c-575a-4b41-bd54-cdac76183e13"),
+                            Created = new DateTime(2021, 3, 15, 15, 36, 39, 530, DateTimeKind.Local).AddTicks(8307),
+                            Name = "local_linux",
                             Uri = "/var/run/docker.sock"
                         });
                 });

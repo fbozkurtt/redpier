@@ -5,17 +5,17 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{46728E2F-3199-4EDC-9643-9AC765E60F74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Domain", "src\Redpier.Domain\Redpier.Domain.csproj", "{FECE3EA3-DA1D-4FEC-8839-FEDB7637E540}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Domain", "src\domain\Redpier.Domain.csproj", "{FECE3EA3-DA1D-4FEC-8839-FEDB7637E540}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Application", "src\Redpier.Application\Redpier.Application.csproj", "{4DCD8944-A077-4E74-A7C0-5FC016E1EEB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Application", "src\application\Redpier.Application.csproj", "{4DCD8944-A077-4E74-A7C0-5FC016E1EEB1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Infrastructure", "src\Redpier.Infrastructure\Redpier.Infrastructure.csproj", "{6EF40370-4605-4303-B075-1390683DE922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Infrastructure", "src\infrastructure\Redpier.Infrastructure.csproj", "{6EF40370-4605-4303-B075-1390683DE922}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Web.API", "src\Redpier.Web.API\Redpier.Web.API.csproj", "{8B716BA7-C83A-4D68-9658-28DFE1902639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Web.API", "src\api\Redpier.Web.API.csproj", "{8B716BA7-C83A-4D68-9658-28DFE1902639}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.WebUI.Client", "src\Redpier.WebUI\Client\Redpier.WebUI.Client.csproj", "{1385DEF4-9403-4A38-805F-E865424649A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.WebUI.Client", "src\webUI\Client\Redpier.WebUI.Client.csproj", "{1385DEF4-9403-4A38-805F-E865424649A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Shared", "src\Redpier.Shared\Redpier.Shared.csproj", "{094ADEF8-297E-4BF4-8791-99CAF46A2ECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Shared", "src\shared\Redpier.Shared.csproj", "{094ADEF8-297E-4BF4-8791-99CAF46A2ECA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

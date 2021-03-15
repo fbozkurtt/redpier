@@ -31,7 +31,7 @@ namespace Redpier.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
-                    "Data source=RedpierDb.db",
+                    connectionString.ConnectionString,
                     b => b.MigrationsAssembly(migrationAssembly)));
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());

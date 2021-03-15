@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -12,6 +12,7 @@
     <Product>Redpier</Product>
     <RepositoryUrl>https://github.com/fbozkurtt/redpier.git</RepositoryUrl>
     <AssemblyName>Redpier</AssemblyName>
+    <UserSecretsId>7c151042-9ec5-47e0-80b8-5d8c92585cef</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

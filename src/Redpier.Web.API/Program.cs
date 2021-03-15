@@ -12,6 +12,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Redpier.Web.API
 {
@@ -41,6 +42,8 @@ namespace Redpier.Web.API
 
                     try
                     {
+                        Directory.CreateDirectory("Data");
+
                         var context = services.GetRequiredService<ApplicationDbContext>();
 
                         await context.Database.MigrateAsync();

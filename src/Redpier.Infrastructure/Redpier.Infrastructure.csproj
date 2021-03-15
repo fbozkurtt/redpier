@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Redpier.Shared\Redpier.Shared.csproj" />
     <ProjectReference Include="..\Redpier.Application\Redpier.Application.csproj" />
+    <ProjectReference Include="..\Redpier.Shared\Redpier.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Redpier.Infrastructure.Persistence.Context
+namespace Redpier.Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {
@@ -15,7 +15,7 @@ namespace Redpier.Infrastructure.Persistence.Context
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, "admin");
-                await userManager.AddToRolesAsync(administrator, roleManager.Roles.Select(r => r.Name));
+                await userManager.AddToRolesAsync(administrator, roleManager.Roles.Select(r => r.Name).ToList());
             }
         }
 

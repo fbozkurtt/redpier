@@ -5,34 +5,36 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Redpier.Infrastructure.Identity;
 using Redpier.Infrastructure.Persistence.Context;
+using Redpier.Infrastructure.Persistence;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Redpier.Web.API
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public async static Task<int> Main(string[] args)
         {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .Build();
+
             Log.Logger = new LoggerConfiguration()
-                   .MinimumLevel.Debug()
-                   .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                   .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                   .MinimumLevel.Override("System", LogEventLevel.Warning)
-                   .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-                   .Enrich.FromLogContext()
-                   .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
-                   .WriteTo.File("logs/redpierAPIlogs", rollingInterval: RollingInterval.Day)
-                   .CreateLogger();
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
 
             var host = CreateHostBuilder(args).Build();
 
             try
             {
-                Log.Information("Starting host...");
+                Log.Information("Starting Redpier API.");
                 using (var scope = host.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
@@ -49,21 +51,26 @@ namespace Redpier.Web.API
                         await ApplicationDbContextSeed.SeedDefaultRolesAsync(roleManager);
                         await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
 
+
+                        Log.Information("Database seeded with default values.");
+
                     }
 
                     catch (Exception ex)
                     {
-
                         Log.Error(ex, "An error occurred while migrating or seeding the database.");
-
-                        throw;
                     }
                 }
+
                 await host.RunAsync();
+
+                return 0;
             }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Host terminated unexpectedly.");
+
+                return 1;
             }
             finally
             {
@@ -74,10 +81,13 @@ namespace Redpier.Web.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseConfiguration(new ConfigurationBuilder()
+                       .AddCommandLine(args)
+                       .Build());
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
     }
 }

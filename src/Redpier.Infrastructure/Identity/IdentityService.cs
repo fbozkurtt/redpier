@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Redpier.Application.Common.Exceptions;
 using Redpier.Application.Common.Interfaces;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,6 +43,9 @@ namespace Redpier.Infrastructure.Identity
 
         public async Task<Guid> CreateUserAsync(string userName, string password)
         {
+            if (await _userManager.FindByNameAsync(userName) != null)
+                throw new AlreadyExistsException(nameof(IdentityUser), nameof(IdentityUser.UserName), userName);
+
             var user = new ApplicationUser
             {
                 UserName = userName,

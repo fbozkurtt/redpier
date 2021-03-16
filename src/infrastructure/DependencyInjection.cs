@@ -38,10 +38,12 @@ namespace Redpier.Infrastructure
 
             services.AddScoped<IDomainEventService, DomainEventService>();
 
-            //services.AddScoped<IDockerClientService, DockerClientService>();
-
-            services.AddScoped<IDockerClient>(w =>
-                new DockerClientService(w.GetRequiredService<IApplicationDbContext>(), w.GetRequiredService<HttpContext>()).CreateClient().Result);
+            services.AddScoped(w =>
+                new DockerClientService(
+                    w.GetRequiredService<IApplicationDbContext>(),
+                    w.GetRequiredService<IHttpContextAccessor>())
+                .CreateClient()
+                .Result);
 
             services.AddIdentityCore<ApplicationUser>(options =>
             {

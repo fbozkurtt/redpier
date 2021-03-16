@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,6 +9,10 @@ namespace Redpier.Application.Queries.Docker.Containers
 {
     public class InspectContainersQuery : IRequest<ContainerInspectResponse>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
         public string Id { get; set; }
     }
     public class InspectContainersQueryHandler : IRequestHandler<InspectContainersQuery, ContainerInspectResponse>

@@ -13,9 +13,16 @@ namespace Redpier.Web.API.Controllers
         [HttpGet]
         public async Task<ActionResult> Ping()
         {
-            await Mediator.Send(new PingQuery());
+            try
+            {
+                await Mediator.Send(new PingQuery());
 
-            return NoContent();
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("[action]")]

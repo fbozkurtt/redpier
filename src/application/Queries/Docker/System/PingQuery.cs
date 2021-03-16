@@ -1,5 +1,6 @@
 ﻿using Docker.DotNet;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +8,8 @@ namespace Redpier.Application.Queries.Docker.System
 {
     public class PingQuery : IRequest
     {
-
+        [Required]
+        public string Endpoint { get; set; }
     }
 
     public class PingQueryHandler : IRequestHandler<PingQuery>

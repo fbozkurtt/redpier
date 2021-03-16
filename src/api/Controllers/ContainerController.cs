@@ -30,7 +30,7 @@ namespace Redpier.Web.API.Controllers
         //}
 
         [HttpGet("[action]")]
-        public async Task<ContainerInspectResponse> Inspect(InspectContainersQuery query)
+        public async Task<ContainerInspectResponse> Inspect([FromQuery] InspectContainersQuery query)
         {
             return await Mediator.Send(query);
         }
@@ -106,7 +106,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
-        public async Task<ContainerUpdateResponse> Update(UpdateContainerCommand command)
+        public async Task<ContainerUpdateResponse> Update([FromBody] UpdateContainerCommand command)
         {
             return await Mediator.Send(command);
         }

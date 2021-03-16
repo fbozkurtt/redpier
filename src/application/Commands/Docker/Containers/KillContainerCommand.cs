@@ -12,6 +12,9 @@ namespace Redpier.Application.Commands.Docker.Containers
     public class KillContainerCommand : IRequest
     {
         [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
         public string Id { get; set; }
     }
 

@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,9 @@ namespace Redpier.Application.Commands.Docker.Volumes
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateVolumeCommand : IRequest<VolumeResponse>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public VolumesCreateParameters Parameters { get; set; }
     }
 

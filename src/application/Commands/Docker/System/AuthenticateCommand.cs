@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Application.Common.Mappings;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,9 @@ namespace Redpier.Application.Commands.Docker.System
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class AuthenticateCommand : IRequest, IMapFrom<AuthConfig>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public string Username { get; set; }
 
         public string Password { get; set; }

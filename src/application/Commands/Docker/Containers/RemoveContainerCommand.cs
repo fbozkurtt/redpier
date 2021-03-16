@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Application.Common.Mappings;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace Redpier.Application.Commands.Docker.Containers
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RemoveContainerCommand : IRequest, IMapFrom<ContainerRemoveParameters>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
         public string Id { get; set; }
 
         public bool? RemoveVolumes { get; set; }

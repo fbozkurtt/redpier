@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,10 @@ namespace Redpier.Application.Commands.Docker.Swarm
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateServiceCommand : IRequest<ServiceCreateResponse>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
+
         public ServiceCreateParameters Parameters { get; set; }
     }
 

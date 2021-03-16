@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using MediatR;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +10,12 @@ namespace Redpier.Application.Queries.Docker.Images
 {
     public class SearchImagesQuery : IRequest<IList<ImageSearchResponse>>
     {
-        public ImagesSearchParameters Parameters { get; set; }
+        [Required]
+        public string Endpoint { get; set; }
+
+        public string Term { get; set; }
+
+        public AuthConfig RegistryAuth { get; set; }
     }
 
     public class SearchImagesQueryHandler : IRequestHandler<SearchImagesQuery, IList<ImageSearchResponse>>
@@ -24,7 +30,7 @@ namespace Redpier.Application.Queries.Docker.Images
         public async Task<IList<ImageSearchResponse>> Handle(SearchImagesQuery request, CancellationToken cancellationToken)
         {
             return await _client.Images.SearchImagesAsync(
-                request.Parameters,
+                new ImagesSearchParameters() { Term = request.Term, RegistryAuth = request.RegistryAuth },
                 cancellationToken);
         }
     }

@@ -6,6 +6,7 @@ using Redpier.Application.Common.Interfaces;
 using Redpier.Application.Common.Mappings;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace Redpier.Application.Queries.Docker.Containers
 {
     public class ListContainersQuery : IRequest<IList<ContainerListResponse>>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public bool? All { get; set; } = false;
     }
 

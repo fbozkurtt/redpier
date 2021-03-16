@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +9,11 @@ namespace Redpier.Application.Queries.Docker.Containers
 {
     public class ListProcessesQuery : IRequest<ContainerProcessesResponse>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public string Id { get; set; }
+
         public ContainerListProcessesParameters Parameters { get; set; }
     }
 

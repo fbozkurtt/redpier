@@ -33,11 +33,11 @@ namespace Redpier.Web.API
         {
             services.AddApplication(Configuration);
 
+            services.AddHttpContextAccessor();
+
             services.AddInfrastructure(Configuration, Environment);
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
-            services.AddHttpContextAccessor();
 
             services.AddControllers(options =>
                 options.Filters.Add<ApiExceptionFilterAttribute>());

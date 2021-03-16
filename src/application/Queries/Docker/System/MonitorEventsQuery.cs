@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using MediatR;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +10,11 @@ namespace Redpier.Application.Queries.Docker.System
 {
     public class MonitorEventsQuery : IRequest<Unit>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public ContainerEventsParameters Parameters { get; set; }
+
         public IProgress<Message> Progress { get; set; }
     }
 

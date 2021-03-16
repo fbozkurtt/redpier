@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +9,8 @@ namespace Redpier.Application.Queries.Docker.System
 {
     public class GetVersionQuery : IRequest<VersionResponse>
     {
-
+        [Required]
+        public string Endpoint { get; set; }
     }
 
     public class GetVersionQueryHandler : IRequestHandler<GetVersionQuery, VersionResponse>

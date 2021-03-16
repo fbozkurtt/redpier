@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +14,12 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RemoveImageCommand : IRequest<IList<IDictionary<string, string>>>
     {
+        [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
         public ImageDeleteParameters Parameters { get; set; }
     }
 

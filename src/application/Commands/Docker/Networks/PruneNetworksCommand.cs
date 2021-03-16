@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace Redpier.Application.Commands.Docker.Networks
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class PruneNetworksCommand : IRequest<NetworksPruneResponse>
     {
-        public NetworksDeleteUnusedParameters Parameters { get; set; }
+        [Required]
+        public string Endpoint { get; set; }
     }
 
     public class PruneNetworksCommandHandler : IRequestHandler<PruneNetworksCommand, NetworksPruneResponse>
@@ -26,7 +28,7 @@ namespace Redpier.Application.Commands.Docker.Networks
         public async Task<NetworksPruneResponse> Handle(PruneNetworksCommand request, CancellationToken cancellationToken)
         {
             return await _client.Networks.PruneNetworksAsync(
-                request.Parameters,
+                null,
                 cancellationToken);
         }
     }

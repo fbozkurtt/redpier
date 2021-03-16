@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Redpier.Application.Common.Exceptions;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using Redpier.Web.API.Extensions;
 
 namespace Redpier.Web.API.Filters
 {
@@ -17,7 +19,9 @@ namespace Redpier.Web.API.Filters
             {
                 { typeof(NotFoundException), HandleNotFoundException},
                 { typeof(AlreadyExistsException), HandleAlreadyExistsException},
-                { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException }
+                { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
+                { typeof(ArgumentNullException), HandleArgumentNullException },
+                { typeof(InvalidOperationException), HandleInvalidOperationException}
             };
         }
 
@@ -115,7 +119,7 @@ namespace Redpier.Web.API.Filters
             var details = new ProblemDetails
             {
                 Status = StatusCodes.Status401Unauthorized,
-                Title = "Unauthorized",
+                Title = "Unauthorized.",
                 Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
             };
 
@@ -127,5 +131,44 @@ namespace Redpier.Web.API.Filters
             context.ExceptionHandled = true;
         }
 
+        private void HandleArgumentNullException(ExceptionContext context)
+        {
+            var exception = context.Exception as ArgumentNullException;
+
+            var details = new ProblemDetails()
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "Arguments were insufficient.",
+                Detail = exception.Message
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+            };
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInvalidOperationException(ExceptionContext context)
+        {
+            var exception = context.Exception as InvalidOperationException;
+
+            var messages = exception.GetInnerExceptions().Select(w => w.Message).ToArray();
+
+            var details = new ProblemDetails()
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "Operation failed.",
+                Detail = messages.Last()
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+            };
+
+            context.ExceptionHandled = true;
+        }
     }
 }

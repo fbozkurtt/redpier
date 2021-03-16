@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,11 @@ namespace Redpier.Application.Commands.Docker.Swarm
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class UnlockSwarmCommand : IRequest
     {
-        public SwarmUnlockParameters Parameters { get; set; }
+        [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
+        public string UnlockKey { get; set; }
     }
 
     public class UnlockSwarmCommandHandler : IRequestHandler<UnlockSwarmCommand>
@@ -26,7 +31,7 @@ namespace Redpier.Application.Commands.Docker.Swarm
         public async Task<Unit> Handle(UnlockSwarmCommand request, CancellationToken cancellationToken)
         {
             await _client.Swarm.UnlockSwarmAsync(
-                request.Parameters,
+                new SwarmUnlockParameters() { UnlockKey = request.UnlockKey },
                 cancellationToken);
 
             return Unit.Value;

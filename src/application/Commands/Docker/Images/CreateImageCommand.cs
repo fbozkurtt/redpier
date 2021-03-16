@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +13,11 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateImageCommand : IRequest
     {
+        [Required]
+        public string Endpoint { get; set; }
+
         public ImagesCreateParameters Parameters { get; set; }
+
         public AuthConfig AuthConfig { get; set; }
     }
 

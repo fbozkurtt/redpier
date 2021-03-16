@@ -348,3 +348,5 @@ healthchecksdb
 /src/Redpier.Web.API/RedpierDb.db-wal
 /.vscode
 /src/Redpier.Web.API/Data
+/src/api/Data/RedpierDb.db-wal
+/src/api/Data/RedpierDb.db-shm

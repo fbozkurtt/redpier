@@ -1,6 +1,12 @@
-﻿namespace Redpier.Application.Commands.Docker.Swarm
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Redpier.Application.Commands.Docker.Swarm
 {
-    class LeaveSwarmCommand
+    //TODO
+    public class LeaveSwarmCommand
     {
+        [Required]
+        public string Endpoint { get; set; }
+
     }
 }

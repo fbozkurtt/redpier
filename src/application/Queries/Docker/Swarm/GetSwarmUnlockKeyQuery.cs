@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,6 +9,8 @@ namespace Redpier.Application.Queries.Docker.Swarm
 {
     public class GetSwarmUnlockKeyQuery : IRequest<SwarmUnlockResponse>
     {
+        [Required]
+        public string Endpoint { get; set; }
 
     }
 

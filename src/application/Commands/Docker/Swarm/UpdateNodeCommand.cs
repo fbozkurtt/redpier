@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,8 +12,14 @@ namespace Redpier.Application.Commands.Docker.Swarm
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class UpdateNodeCommand : IRequest
     {
+        [Required]
+        public string Endpoint { get; set; }
+
+        [Required]
         public string Id { get; set; }
-        public ulong version { get; set; }
+
+        public ulong Version { get; set; }
+
         public NodeUpdateParameters Parameters { get; set; }
     }
 
@@ -29,7 +36,7 @@ namespace Redpier.Application.Commands.Docker.Swarm
         {
             await _client.Swarm.UpdateNodeAsync(
                 request.Id,
-                request.version,
+                request.Version,
                 request.Parameters,
                 cancellationToken);
 

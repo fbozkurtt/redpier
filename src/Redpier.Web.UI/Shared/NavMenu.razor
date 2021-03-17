@@ -1,0 +1,75 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand px-3" href="">Redpier</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#" Match="NavLinkMatch.All">
+                <span class="fa fa-home px-1" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/containers">
+                <span class="fa fa-square px-1" aria-hidden="true"></span> Containers
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-images px-1" aria-hidden="true"></span> Images
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-ethernet px-1" aria-hidden="true"></span> Networks
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-hdd px-1" aria-hidden="true"></span> Volumes
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-th px-1" aria-hidden="true"></span> Swarm
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-database px-1" aria-hidden="true"></span> Stacks
+            </NavLink>
+        </li>
+    </ul>
+    <hr />
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-server px-1" aria-hidden="true"></span> System
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-terminal px-1" aria-hidden="true"></span> Terminal
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#">
+                <span class="fa fa-question px-1" aria-hidden="true"></span> About
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -4,6 +4,9 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+/*
+    This file is edited. Edited sections commented as //Edited
+*/
 
 :root {
     --blue: #007bff;
@@ -2696,10 +2699,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-success {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745
+    background-color: #4eb564;
+    border-color: #4eb564;
 }
-
     .btn-success:hover {
         color: #fff;
         background-color: #218838;
@@ -2904,19 +2906,20 @@ a.btn.disabled, fieldset:disabled a.btn {
             box-shadow: 0 0 0 .2rem rgba(82,88,93,.5)
         }
 
+/*Edited*/
 .btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff
+    color: #ba1c1c;
+    border-color: #ba1c1c;
 }
 
     .btn-outline-primary:hover {
         color: #fff;
-        background-color: #007bff;
-        border-color: #007bff
+        background-color: #ba1c1c;
+        border-color: #c45c5c;
     }
 
     .btn-outline-primary.focus, .btn-outline-primary:focus {
-        box-shadow: 0 0 0 .2rem rgba(0,123,255,.5)
+        box-shadow: 0 0 0 0.2rem #c45c5c;
     }
 
     .btn-outline-primary.disabled, .btn-outline-primary:disabled {
@@ -2926,12 +2929,12 @@ a.btn.disabled, fieldset:disabled a.btn {
 
     .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {
         color: #fff;
-        background-color: #007bff;
-        border-color: #007bff
+        background-color: #ba1c1c;
+        border-color: #c45c5c;
     }
 
         .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .show > .btn-outline-primary.dropdown-toggle:focus {
-            box-shadow: 0 0 0 .2rem rgba(0,123,255,.5)
+            box-shadow: 0 0 0 0.2rem #c45c5c;
         }
 
 .btn-outline-secondary {
@@ -5002,29 +5005,30 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     border-radius: .25rem
 }
 
+/*Edited*/
 .page-link {
     position: relative;
     display: block;
     padding: .5rem .75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #007bff;
+    color: #ba1c1c;
     background-color: #fff;
     border: 1px solid #dee2e6
 }
 
     .page-link:hover {
         z-index: 2;
-        color: #0056b3;
+        color: white;
         text-decoration: none;
-        background-color: #e9ecef;
-        border-color: #dee2e6
+        background-color: #ba1c1c;
+        border-color: #c45c5c;
     }
 
     .page-link:focus {
         z-index: 3;
         outline: 0;
-        box-shadow: 0 0 0 .2rem rgba(0,123,255,.25)
+        box-shadow: 0 0 0 0.2rem #c45c5c;
     }
 
 .page-item:first-child .page-link {

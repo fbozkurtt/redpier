@@ -5,6 +5,28 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.console {
+    background-color: #1e1e1e;
+    color: #d1d1d1;
+    resize: none;
+    height: 100vh;
+    width: 100%;
+    border: none;
+}
+
+.console-input {
+    background-color: #1e1e1e;
+    color: #d1d1d1;
+    resize: none;
+    width: 100%;
+    border: none;
+    cursor: default;
+}
+
+    .console-input:focus {
+        outline: none;
+    }
+
 .box {
     background: #ffadad;
     position: absolute;

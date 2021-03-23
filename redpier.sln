@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.WebUI.Client", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Shared", "src\shared\Redpier.Shared.csproj", "{094ADEF8-297E-4BF4-8791-99CAF46A2ECA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redpier.Web.UI", "src\Redpier.Web.UI\Redpier.Web.UI.csproj", "{80554368-B368-4640-8BBB-B5B7754BFB08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redpier.Web.UI", "src\Redpier.Web.UI\Redpier.Web.UI.csproj", "{80554368-B368-4640-8BBB-B5B7754BFB08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

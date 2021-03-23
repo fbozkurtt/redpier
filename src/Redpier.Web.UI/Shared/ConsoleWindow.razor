@@ -1,0 +1,56 @@
+﻿@page "/containers/console/{id}"
+@layout EmptyLayout
+
+<div class="box">
+    <div class="console" id="consoleWindow">
+        <input class="console-input" type="text" @onkeypress="e => KeyPress(e, 0)" @ref="elementReferences[0]" />
+        @foreach (var line in consoleLines)
+        {
+            if (line.Index == 0)
+                continue;
+            <input class="console-input" type="text" @onkeypress="e => KeyPress(e, line.Index)" hidden="@line.IsDisabled" @ref="elementReferences[line.Index]" />
+        }
+    </div>
+</div>
+
+@code{
+    private ElementReference[] elementReferences;
+
+    private ConsoleLine[] consoleLines;
+
+    public ConsoleWindow()
+    {
+        consoleLines = new ConsoleLine[100];
+        for (int i = 0; i < consoleLines.Length; i++)
+        {
+            consoleLines[i] = new ConsoleLine(i);
+        }
+        elementReferences = new ElementReference[100];
+    }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    public async Task KeyPress(KeyboardEventArgs e, int index)
+    {
+        if (e.Key.Equals("Enter"))
+        {
+            consoleLines[index].IsDisabled = true;
+            consoleLines[index + 1].IsDisabled = false;
+            await elementReferences[index + 1].FocusAsync();
+        }
+    }
+
+    public class ConsoleLine
+    {
+        public int Index { get; }
+
+        public bool IsDisabled { get; set; }
+
+        public ConsoleLine(int index)
+        {
+            Index = index;
+            IsDisabled = true;
+        }
+    }
+}

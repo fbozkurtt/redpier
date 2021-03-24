@@ -23,9 +23,23 @@
     cursor: default;
 }
 
-    .console-input:focus {
-        outline: none;
-    }
+.console-response {
+    background-color: #1e1e1e;
+    color: #d1d1d1;
+    resize: none;
+    width: 100%;
+    border: none;
+    cursor: default;
+    padding-right: 2px;
+    padding-left: 2px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin: 0;
+}
+
+.console-input:focus {
+    outline: none;
+}
 
 .box {
     background: #ffadad;

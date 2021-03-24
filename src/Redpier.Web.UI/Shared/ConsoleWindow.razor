@@ -1,31 +1,46 @@
-﻿@page "/containers/console/{id}"
+﻿@page "/console/{id}"
+@inject IJSRuntime JS;
 @layout EmptyLayout
 
 <div class="box">
     <div class="console" id="consoleWindow">
-        <input class="console-input" type="text" @onkeypress="e => KeyPress(e, 0)" @ref="elementReferences[0]" />
+        <input class="console-input" type="text" @onkeypress="e => KeyPress(e, 0)" id="input0" @onfocusout="e => FocusLost(e, 0)"/>
+        <p class="console-response" id="response0" hidden />
         @foreach (var line in consoleLines)
         {
             if (line.Index == 0)
                 continue;
-            <input class="console-input" type="text" @onkeypress="e => KeyPress(e, line.Index)" hidden="@line.IsDisabled" @ref="elementReferences[line.Index]" />
+            <input class="console-input" type="text"
+                   @onkeypress="e => KeyPress(e, line.Index)"
+                   disabled="@line.IsDisabled"
+                   id="@("input" + line.Index.ToString())"
+                   @onfocusout="e => FocusLost(e, line.Index)" />
+            <p class="console-response" id="@("response" + line.Index.ToString())" hidden="@line.IsDisabled" />
         }
     </div>
 </div>
 
 @code{
-    private ElementReference[] elementReferences;
 
-    private ConsoleLine[] consoleLines;
+    private IList<ConsoleLine> consoleLines;
+
+    private int lineCount = 50;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await JS.InvokeVoidAsync("focusElement", "input0");
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     public ConsoleWindow()
     {
-        consoleLines = new ConsoleLine[100];
-        for (int i = 0; i < consoleLines.Length; i++)
+        consoleLines = new List<ConsoleLine>();
+
+        for (int i = 0; i < lineCount; i++)
         {
-            consoleLines[i] = new ConsoleLine(i);
+            consoleLines.Add(new ConsoleLine(i));
         }
-        elementReferences = new ElementReference[100];
     }
 
     [Parameter]
@@ -35,10 +50,27 @@
     {
         if (e.Key.Equals("Enter"))
         {
-            consoleLines[index].IsDisabled = true;
-            consoleLines[index + 1].IsDisabled = false;
-            await elementReferences[index + 1].FocusAsync();
+            Console.WriteLine(index);
+            await JS.InvokeVoidAsync("disableElement", "input" + index.ToString());
+            await JS.InvokeVoidAsync("showElement", "response" + index.ToString());
+            await JS.InvokeVoidAsync("fillElement", "response" + index.ToString(), "this is a response " + index.ToString());
+            if (index == lineCount - 1)
+            {
+                await JS.InvokeVoidAsync("enableElement", "input0");
+                await JS.InvokeVoidAsync("clearInput", "input0");
+                //await JS.InvokeVoidAsync("clearElement", "response0");
+                await JS.InvokeVoidAsync("focusElement", "input0");
+                return;
+            }
+            await JS.InvokeVoidAsync("clearInput", "input" + (++index).ToString());
+            await JS.InvokeVoidAsync("enableElement", "input" + index.ToString());
+            await JS.InvokeVoidAsync("focusElement", "input" + index.ToString());
         }
+    }
+
+    public async Task FocusLost(FocusEventArgs e ,int index)
+    {
+        await JS.InvokeVoidAsync("focusElement", "input" + index.ToString());
     }
 
     public class ConsoleLine

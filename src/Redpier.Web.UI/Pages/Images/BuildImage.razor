@@ -3,37 +3,60 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         <form>
-            <a href="#" class="btn-sm btn-success">
-                <span class="fa fa-plus"></span> Add new
-            </a>
-            <div class="form-row my-2">
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" placeholder="Name" required>
-                </div>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" placeholder="Tag">
-                </div>
+            <div class="form-section-title">
+                Name
+            </div>
+            <div class="form-group row">
                 <div class="col">
-                    <a href="#" class="btn btn-danger">
-                        <span class="fa fa-trash"></span>
-                    </a>
+                    <span class="text-muted small">
+                        Only one name
+                        <span class="font-weight-bolder">
+                            required
+                        </span>
+                        but you can add multiple names. Tags are optional. The default value of
+                        <span class="font-weight-bolder">
+                            latest
+                        </span>
+                        will be used if neglected.
+                    </span>
                 </div>
             </div>
-            <div class="form-row my-2">
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" placeholder="Name">
+            <div class="form-group">
+                <a href="#" class="btn-sm btn-success">
+                    <span class="fa fa-plus"></span> Add new
+                </a>
+                <div class="form-row my-2">
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Tag">
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-danger">
+                            <span class="fa fa-trash"></span>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" placeholder="Tag">
-                </div>
-                <div class="col">
-                    <a href="#" class="btn btn-danger">
-                        <span class="fa fa-trash"></span>
-                    </a>
+                <div class="form-row my-2">
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Tag">
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-danger">
+                            <span class="fa fa-trash"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </form>
-        <ul class="nav nav-pills nav-justified flex-column flex-sm-row" role="tablist">
+        <div class="form-section-title">
+            Build
+        </div>
+        <ul class="nav nav-tabs nav-justified flex-column flex-sm-row" role="tablist">
             <li class="nav-item">
                 <a class="flex-sm-fill text-sm-center nav-link active" id="basicTab" data-toggle="tab" href="#webEditor" role="tab" aria-controls="webEditor" aria-selected="true">Web editor</a>
             </li>
@@ -45,8 +68,21 @@
         <div class="tab-content">
             <div class="tab-pane active py-4" id="webEditor" role="tabpanel" aria-labelledby="webEditorTab">
                 <form>
-                    <div class="form-group">
-                        <WebEditor></WebEditor>
+                    <div class="form-section-title">
+                        Web editor
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <span class="text-muted small">
+                                For more information about the format of Dockerfile visit
+                                <a href="https://docs.docker.com/engine/reference/builder/" target="_blank">Docker docs</a>.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <WebEditor Id="editor" Rows="15"></WebEditor>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -60,6 +96,6 @@
                 </form>
             </div>
         </div>
-        <a href="#" class="btn btn-primary">Build image</a>
+        <a href="#" class="btn btn-primary my-2">Build image</a>
     </div>
 </div>

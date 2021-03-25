@@ -1,2 +1,13 @@
-﻿<label for="editor">Web editor</label>
-<textarea class="form-control text-nowrap" id="editor" rows="14" style="resize:none;"></textarea>
+﻿<textarea class="form-control text-nowrap" id=@Id rows=@Rows style="
+    resize: none;
+    box-shadow: none;
+    border-color: rgb(206, 212, 218)">
+</textarea>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public int Rows { get; set; }
+}

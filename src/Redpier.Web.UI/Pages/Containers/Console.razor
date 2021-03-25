@@ -1,0 +1,9 @@
+﻿@page "/containers/console/{id}"
+@layout EmptyLayout
+
+<ConsoleWindow></ConsoleWindow>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+}

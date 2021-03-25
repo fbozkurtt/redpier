@@ -141,3 +141,12 @@ a, .btn-link {
     color: #ba1c1c;
     background-color: #ffebeb;
 }
+
+.form-section-title {
+    border-bottom: 1px solid #ba1c1c;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #ba1c1c;
+    padding-left: 0;
+}
+

@@ -1,5 +1,4 @@
-﻿@page "/console/{id}"
-@inject IJSRuntime JS;
+﻿@inject IJSRuntime JS;
 @layout EmptyLayout
 
 <div class="box">
@@ -42,9 +41,6 @@
             consoleLines.Add(new ConsoleLine(i));
         }
     }
-
-    [Parameter]
-    public string Id { get; set; }
 
     public async Task KeyPress(KeyboardEventArgs e, int index)
     {

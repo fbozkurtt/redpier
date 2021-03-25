@@ -1,5 +1,65 @@
-﻿@page "/images/new"
+﻿@page "/images/build"
 
-@code {
-
-}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <form>
+            <a href="#" class="btn-sm btn-success">
+                <span class="fa fa-plus"></span> Add new
+            </a>
+            <div class="form-row my-2">
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" placeholder="Name" required>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" placeholder="Tag">
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-danger">
+                        <span class="fa fa-trash"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="form-row my-2">
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" placeholder="Name">
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" placeholder="Tag">
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-danger">
+                        <span class="fa fa-trash"></span>
+                    </a>
+                </div>
+            </div>
+        </form>
+        <ul class="nav nav-pills nav-justified flex-column flex-sm-row" role="tablist">
+            <li class="nav-item">
+                <a class="flex-sm-fill text-sm-center nav-link active" id="basicTab" data-toggle="tab" href="#webEditor" role="tab" aria-controls="webEditor" aria-selected="true">Web editor</a>
+            </li>
+            <li class="nav-item">
+                <a class="flex-sm-fill text-sm-center nav-link" id="profileTab" data-toggle="tab" href="#uploadFile" role="tab" aria-controls="uploadFile" aria-selected="false">Upload</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active py-4" id="webEditor" role="tabpanel" aria-labelledby="webEditorTab">
+                <form>
+                    <div class="form-group">
+                        <WebEditor></WebEditor>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane py-4" id="uploadFile" role="tabpanel" aria-labelledby="uploadFileTab">
+                <form>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input type="file" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <a href="#" class="btn btn-primary">Build image</a>
+    </div>
+</div>

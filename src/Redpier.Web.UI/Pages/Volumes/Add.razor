@@ -1,0 +1,72 @@
+﻿@page "/volumes/add"
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <form>
+                <div class="form-section-title">
+                    Basic
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-sm-1 col-form-label">Name:</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="name" placeholder="can be anything even nothing">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="driver" class="col-lg-1 col-form-label">Driver:</label>
+                    <div class="col-lg-11">
+                        <select class="form-control" id="driver" required>
+                            <option selected>local</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-section-title">
+                    Driver options
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <span class="text-muted small">
+                            Use this section to set driver specific options. Please refer to
+                            <a href="https://docs.docker.com/engine/reference/commandline/volume_create/#driver-specific-options" target="_blank">Docker docs</a> for more information
+                            or visit <a href="https://man7.org/linux/man-pages/man8/mount.8.html" target="_blank">linux documentation</a> for complete list of available mount options.
+                        </span>
+                    </div>
+                </div>
+                <a href="#" class="btn-sm btn-success">
+                    <span class="fa fa-plus"></span> Add new
+                </a>
+                <div class="form-group">
+                    <div class="form-row mt-1">
+                        <div class="col-sm-5">
+                            <label class="sr-only" for="inlineFormInputGroup">Name</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">name</div>
+                                </div>
+                                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="such as mountpoint" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <label class="sr-only" for="inlineFormInputGroup">Value</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">value</div>
+                                </div>
+                                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="such as /path/on/host/machine" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a href="#" class="btn btn-danger">
+                                <span class="fa fa-trash"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary my-2" type="submit">Create network</button>
+            </form>
+        </div>
+    </div>
+
+    @code {
+
+    }

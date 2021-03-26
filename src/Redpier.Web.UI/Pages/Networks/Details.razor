@@ -1,0 +1,137 @@
+﻿@page "/networks/{id}"
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th colspan="2">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>bridge</td>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <td>ae596f83093b32203e03917e7f9fe2b6602cf2e3d708ce015f52dcc8b34774cd</td>
+                </tr>
+                <tr>
+                    <th>Driver</th>
+                    <td>bridge</td>
+                </tr>
+                <tr>
+                    <th>Scope</th>
+                    <td>local</td>
+                </tr>
+                <tr>
+                    <th>Attachable</th>
+                    <td>false</td>
+                </tr>
+                <tr>
+                    <th>Internal</th>
+                    <td>false</td>
+                </tr>
+                <tr>
+                    <th>IPv4 Subnet</th>
+                    <td>172.17.0.0/16</td>
+                </tr>
+                <tr>
+                    <th>IPv4 Gateway</th>
+                    <td>172.17.0.1</td>
+                </tr>
+                <tr>
+                    <th>IPv4 IP Range</th>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>IPv4 Excluded Ips</th>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th colspan="2">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        com.docker.network.bridge.default_bridge
+                    </td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>
+                        com.docker.network.bridge.enable_icc
+                    </td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>
+                        com.docker.network.bridge.enable_ip_masquerade
+                    </td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>
+                        com.docker.network.bridge.host_binding_ipv4
+                    </td>
+                    <td>0.0.0.0</td>
+                </tr>
+                <tr>
+                    <td>
+                        com.docker.network.bridge.name
+                    </td>
+                    <td>docker0</td>
+                </tr>
+                <tr>
+                    <td>
+                        com.docker.network.driver.mtu
+                    </td>
+                    <td>1500</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th colspan="4">Joined containers</th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th scope="col">Container Name</th>
+                    <th scope="col">IPv4 Address</th>
+                    <th colspan="2">Mac Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>portainer</td>
+                    <td>172.17.0.2/16</td>
+                    <td>02:42:ac:11:00:02</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-danger">
+                            <span class="fa fa-trash"></span> Remove
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Id { get; set; }
+}

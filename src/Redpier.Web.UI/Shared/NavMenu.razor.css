@@ -50,6 +50,10 @@
     color: white;
 }
 
+.dropdown-menu.show {
+    display: contents;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;

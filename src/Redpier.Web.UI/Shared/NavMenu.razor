@@ -59,6 +59,11 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/endpoints">
+                <span class="fab fa-docker px-1" aria-hidden="true"></span> Endpoints
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="#">
                 <span class="fa fa-terminal px-1" aria-hidden="true"></span> Terminal
             </NavLink>
@@ -69,17 +74,17 @@
             </NavLink>
         </li>
         <li class="nav-item dropdown px-3 d-block d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="dockerEndpointPickerMobile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="dockerEndpointPickerMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Docker endpoint
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="dockerEndpointPickerMobile">
                 <a class="dropdown-item" href="#">
                     local<span class="fa fa-check pl-2"></span>
                 </a>
                 <a class="dropdown-item" href="#">local_windows</a>
             </div>
         </li>
-        <li class="nav-item px-3 d-none d-block d-sm-none">
+        <li class="nav-item px-3 d-block d-sm-none">
             <NavLink class="nav-link" href="/logout">
                 <span class="fa fa-sign-out-alt px-1" aria-hidden="true"></span> Logout
             </NavLink>

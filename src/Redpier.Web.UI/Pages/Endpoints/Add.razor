@@ -1,0 +1,62 @@
+﻿@page "/endpoints/add"
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <form>
+            <div class="form-section-title">
+                Attention
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <span class="text-muted small">
+                        Multiple methods exists for connecting to a Docker Engine. Two of them are using a socket and TCP connection.
+                        Redpier supports both of them.
+                        When using sockets you can only connect to a local Docker Engine.
+                        For remote connections you need to expose the socket (named pipes on Windows and unix sockets on Linux)
+                        that used by Docker Engine over TCP.
+                        To learn to how to do that (for Docker Engine running on Ubuntu) you can refer to
+                        <a href="https://www.ivankrizsan.se/2016/05/18/enabling-docker-remote-api-on-ubuntu-16-04/" target="_blank" class="font-weight-bolder"> Ivan Krizsan's post</a>.
+                        You can expose a socket to any TCP port (usually 2375 for Docker Engine) without a port even (using 0.0.0.0).
+                        After that You need to specify a domain name or IP address of the host machine in the section below.
+                        <span class="font-weight-bolder">Notice: </span>Redpier does not support TLS yet. Exposing Docker engine over TCP without TLS will result vulnerabilites.
+                        Use at your own risk. For more information please visit
+                        <a href="https://docs.docker.com/engine/security/protect-access/#use-tls-https-to-protect-the-docker-daemon-socket" target="_blank" class="font-weight-bolder">Docker docs</a>.
+                    </span>
+                </div>
+            </div>
+            <div class="form-section-title">
+                Create new Docker Engine endpoint
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-1 col-form-label">Name:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="name" placeholder="can be anything" required>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="useSocket">
+                <label class="form-check-label" for="useSocket">Use local socket</label>
+            </div>
+            <div class="form-group row">
+                <label for="endpointURL" class="col-sm-1 col-form-label">Endpoint URL:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="endpointURL" placeholder="such as 10.20.30.40:2375, somedomain.com:2375, docker.mydomain.com" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <span class="text-muted small">
+                        <span class="font-weight-bolder">Info: </span>Redpier comes packed with the default socket URIs for convenience
+                    </span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-1 col-form-label">Socket URI:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="name" placeholder="defaults are /var/run/docker.sock and npipe://./pipe/docker_engine" required>
+                </div>
+            </div>
+        </form>
+        <a href="#" class="btn btn-primary my-2">Create endpoint</a>
+    </div>
+</div>

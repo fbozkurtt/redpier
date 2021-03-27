@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace Redpier.Application.Queries.Docker.Images
     public class GetImageHistoryQuery : IRequest<IList<ImageHistoryResponse>>
     {
         [Required]
-        public string Endpoint { get; set; }
+        public Guid Endpoint { get; set; }
 
         public string Name { get; set; }
     }

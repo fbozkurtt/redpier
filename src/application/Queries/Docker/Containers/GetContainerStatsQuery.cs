@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using MediatR;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,8 +10,13 @@ namespace Redpier.Application.Queries.Docker.Containers
 {
     public class GetContainerStatsQuery : IRequest<Unit>
     {
+        [Required]
+        public Guid Endpoint { get; set; }
+
         public string Id { get; set; }
+
         public ContainerStatsParameters Parameters { get; set; }
+
         public IProgress<ContainerStatsResponse> Progress { get; set; }
     }
     public class GetContainerStatsQueryHandler : IRequestHandler<GetContainerStatsQuery, Unit>

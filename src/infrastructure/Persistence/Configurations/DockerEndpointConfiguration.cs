@@ -14,16 +14,18 @@ namespace Redpier.Infrastructure.Persistence.Configurations
 
             builder.HasData(new DockerEndpoint()
             {
-                Name="local_windows",
+                Name="Docker Desktop for Windows",
                 Uri = "npipe://./pipe/docker_engine",
+                Type ="socket",
                 Id = Guid.NewGuid(),
                 Created = DateTime.Now
             });
 
             builder.HasData(new DockerEndpoint()
             {
-                Name="local_linux",
+                Name="Local Docker Engine on Linux",
                 Uri = "/var/run/docker.sock",
+                Type = "socket",
                 Id = Guid.NewGuid(),
                 Created = DateTime.Now
             });

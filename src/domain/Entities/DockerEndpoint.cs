@@ -15,6 +15,10 @@ namespace Redpier.Domain.Entities
         [MaxLength(128)]
         public string Name { get; set; }
 
+        [Required]
+        [MaxLength(128)]
+        public string Type { get; set; }
+
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }

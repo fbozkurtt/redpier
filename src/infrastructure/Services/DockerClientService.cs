@@ -25,15 +25,15 @@ namespace Redpier.Infrastructure.Services
 
         public async Task<IDockerClient> CreateClient()
         {
-            var dockerEndpointName = _httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString();
+            var dockerEndpointId = _httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString();
 
-            if (String.IsNullOrEmpty(dockerEndpointName))
+            if (String.IsNullOrEmpty(dockerEndpointId))
                 throw new ArgumentNullException("endpoint");
 
-            var dockerEndpoint = await _dbContext.DockerEndpoints.SingleOrDefaultAsync(w => w.Name.Equals(dockerEndpointName));
+            var dockerEndpoint = await _dbContext.DockerEndpoints.FirstAsync(w => w.Id == new Guid(dockerEndpointId));
 
             if (dockerEndpoint == null)
-                throw new NotFoundException(nameof(DockerEndpoint), nameof(DockerEndpoint.Name), dockerEndpointName);
+                throw new NotFoundException(nameof(DockerEndpoint), nameof(DockerEndpoint.Id), dockerEndpointId);
 
             return new DockerClientConfiguration(
                         new Uri(dockerEndpoint.Uri)

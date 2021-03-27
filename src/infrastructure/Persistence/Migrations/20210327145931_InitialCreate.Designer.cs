@@ -9,7 +9,7 @@ using Redpier.Infrastructure.Persistence.Context;
 namespace Redpier.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210315123640_InitialCreate")]
+    [Migration("20210327145931_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,11 @@ namespace Redpier.Infrastructure.Persistence.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Uri")
                         .IsRequired()
                         .HasMaxLength(2048)
@@ -182,16 +187,18 @@ namespace Redpier.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8dbe089f-fbf0-41e5-ac39-813bb25ae6ec"),
-                            Created = new DateTime(2021, 3, 15, 15, 36, 39, 528, DateTimeKind.Local).AddTicks(7163),
-                            Name = "local_windows",
+                            Id = new Guid("a01cb5ea-1716-4fec-b3a8-61c3474c8f5c"),
+                            Created = new DateTime(2021, 3, 27, 17, 59, 31, 493, DateTimeKind.Local).AddTicks(5243),
+                            Name = "Docker Desktop for Windows",
+                            Type = "socket",
                             Uri = "npipe://./pipe/docker_engine"
                         },
                         new
                         {
-                            Id = new Guid("1482442c-575a-4b41-bd54-cdac76183e13"),
-                            Created = new DateTime(2021, 3, 15, 15, 36, 39, 530, DateTimeKind.Local).AddTicks(8307),
-                            Name = "local_linux",
+                            Id = new Guid("87b18a25-8581-48b0-baae-4c65b0a056ad"),
+                            Created = new DateTime(2021, 3, 27, 17, 59, 31, 494, DateTimeKind.Local).AddTicks(9004),
+                            Name = "Local Docker Engine on Linux",
+                            Type = "socket",
                             Uri = "/var/run/docker.sock"
                         });
                 });

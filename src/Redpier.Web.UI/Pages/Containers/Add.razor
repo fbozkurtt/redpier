@@ -22,10 +22,9 @@
                 <a class="flex-sm-fill text-sm-center nav-link" id="resourceTab" data-toggle="tab" href="#resources" role="tab" aria-controls="resources" aria-selected="false">Resources</a>
             </li>
         </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane active py-4" id="basic" role="tabpanel" aria-labelledby="basicTab">
-                <form>
+        <form>
+            <div class="tab-content">
+                <div class="tab-pane active py-4" id="basic" role="tabpanel" aria-labelledby="basicTab">
                     <div class="form-group row">
                         <label for="name" class="col-sm-1 col-form-label">Name:</label>
                         <div class="col-sm-11">
@@ -35,7 +34,7 @@
                     <div class="form-group row">
                         <label for="image" class="col-sm-1 col-form-label">Image:</label>
                         <div class="col-sm-11">
-                            <input type="text" class="form-control" id="image" placeholder="docker/getting-started:latest">
+                            <input type="text" class="form-control" id="image" placeholder="such as docker/getting-started:latest" required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -67,10 +66,8 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="command" role="tabpanel" aria-labelledby="profileTab">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="command" role="tabpanel" aria-labelledby="profileTab">
                     <div class="form-group row">
                         <div class="col">
                             <div class="form-check form-check-inline">
@@ -132,10 +129,8 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="labels" role="tabpanel" aria-labelledby="labelsTab">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="labels" role="tabpanel" aria-labelledby="labelsTab">
                     <div class="form-group">
                         <a href="#" class="btn-sm btn-success">
                             <span class="fa fa-plus"></span> Add new
@@ -167,10 +162,8 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="mounts" role="tabpanel" aria-labelledby="mountsTab">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="mounts" role="tabpanel" aria-labelledby="mountsTab">
                     <div class="form-group">
                         <a href="#" class="btn-sm btn-success">
                             <span class="fa fa-plus"></span> Add bind mount
@@ -195,11 +188,11 @@
                             <div class="col-sm-5">
                                 <select class="form-control" id="volumeSelect">
                                     <option selected>Select a volume</option>
-                                    <option>volume 1</option>
-                                    <option>volume 2</option>
-                                    <option>volume 3</option>
-                                    <option>volume 4</option>
-                                    <option>volume 5</option>
+                                    <option value="volume1">volume 1</option>
+                                    <option value="volume2">volume 2</option>
+                                    <option value="volume3">volume 3</option>
+                                    <option value="volume4">volume 4</option>
+                                    <option value="volume5">volume 5</option>
                                 </select>
                             </div>
                             <div class="col-sm-5">
@@ -212,18 +205,16 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="network" role="tabpanel" aria-labelledby="networkTab">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="network" role="tabpanel" aria-labelledby="networkTab">
                     <div class="form-group row">
                         <label for="network" class="col-lg-1 col-form-label">Network:</label>
                         <div class="col-lg-11">
                             <select class="form-control" id="network">
                                 <option selected>bridge</option>
-                                <option>Network 1</option>
-                                <option>Network 2</option>
-                                <option>Network 3</option>
+                                <option value="network1">Network 1</option>
+                                <option value="network2">Network 2</option>
+                                <option value="network3">Network 3</option>
                             </select>
                         </div>
                     </div>
@@ -269,36 +260,36 @@
                             <input type="text" class="form-control" id="secondaryDNS" placeholder="8.8.4.4">
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="resources">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="resources">
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-lg-2">
                                 <label for="memoryLimitRange" class="col-form-label">Memory limit (MB):</label>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-lg-8 pb-2">
                                 <input type="range" class="form-control-range ml-auto mt-2" min="0" max="32768" value="0" id="memoryLimitRange" step="64">
+                                <label class="text-muted">Unlimited</label>
                             </div>
-                            <div class="col-sm-2 ml-auto d-none d-md-block">
+                            <div class="col-lg-2 pb-2">
                                 <input type="number" class="form-control" min="0" max="32768" value="0" id="memoryLimit" step="64">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-lg-2">
                                 <label for="cpuLimit" class="col-form-label">CPU limit (Threads):</label>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-lg-8">
                                 <input type="range" class="form-control-range ml-auto mt-2" min="0" max="12" value="0" id="cpuLimit" step="0.25">
+                                <label class="text-muted">Unlimited</label>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <a href="#" class="btn btn-primary my-2">Deploy container</a>
+            <button type="submit" class="btn btn-primary my-2">Deploy container</button>
+        </form>
     </div>
 </div>

@@ -107,6 +107,11 @@ a, .btn-link {
             box-shadow: 0 0 0 0.2rem #c45c5c;
         }
 
+.btn-outline-primary.disabled, .btn-outline-primary:disabled {
+    color: #ba1c1c;
+    background-color: #f7f7f7;
+}
+
 .dropdown-item.active, .dropdown-item:active {
     background-color: #c45c5c;
 }
@@ -157,3 +162,16 @@ a, .btn-link {
     padding-left: 0;
 }
 
+.form-control:focus {
+    border-color: #ba1c1c;
+    box-shadow: 0 0 0 0.2rem #c45c5c;
+}
+
+option:focus, option:hover, option.active {
+    background-color: #ffcfcf;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #c45c5c;
+}

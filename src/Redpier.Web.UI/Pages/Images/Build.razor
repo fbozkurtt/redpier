@@ -78,22 +78,20 @@
                     </div>
                 </div>
             </div>
-        </form>
-        <div class="form-section-title">
-            Build
-        </div>
-        <ul class="nav nav-tabs nav-justified flex-column flex-sm-row" role="tablist">
-            <li class="nav-item">
-                <a class="flex-sm-fill text-sm-center nav-link active" id="basicTab" data-toggle="tab" href="#webEditor" role="tab" aria-controls="webEditor" aria-selected="true">Web editor</a>
-            </li>
-            <li class="nav-item">
-                <a class="flex-sm-fill text-sm-center nav-link" id="profileTab" data-toggle="tab" href="#uploadFile" role="tab" aria-controls="uploadFile" aria-selected="false">Upload</a>
-            </li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane active py-4" id="webEditor" role="tabpanel" aria-labelledby="webEditorTab">
-                <form>
+            <div class="form-section-title">
+                Build
+            </div>
+            <ul class="nav nav-tabs nav-justified flex-column flex-sm-row" role="tablist">
+                <li class="nav-item">
+                    <a class="flex-sm-fill text-sm-center nav-link active" id="basicTab" data-toggle="tab" href="#webEditor" role="tab" aria-controls="webEditor" aria-selected="true">Web editor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="flex-sm-fill text-sm-center nav-link" id="profileTab" data-toggle="tab" href="#uploadFile" role="tab" aria-controls="uploadFile" aria-selected="false">Upload</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active py-4" id="webEditor" role="tabpanel" aria-labelledby="webEditorTab">
                     <div class="form-section-title">
                         Web editor
                     </div>
@@ -107,21 +105,19 @@
                     </div>
                     <div class="form-group row">
                         <div class="col">
-                            <WebEditor Id="editor" Rows="15"></WebEditor>
+                            <WebEditor Id="editor" Rows="13"></WebEditor>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane py-4" id="uploadFile" role="tabpanel" aria-labelledby="uploadFileTab">
-                <form>
+                </div>
+                <div class="tab-pane py-4" id="uploadFile" role="tabpanel" aria-labelledby="uploadFileTab">
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <input type="file" />
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <a href="#" class="btn btn-primary my-2">Build image</a>
+            <a href="#" class="btn btn-primary my-2">Build image</a>
+        </form>
     </div>
 </div>

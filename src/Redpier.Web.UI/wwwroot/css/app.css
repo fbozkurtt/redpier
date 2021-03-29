@@ -50,6 +50,12 @@
     left: 0px;
 }
 
+.center {
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
 a, .btn-link {
     color: #ba1c1c;
     text-decoration: none;
@@ -110,6 +116,16 @@ a, .btn-link {
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
     color: #ba1c1c;
     background-color: #f7f7f7;
+}
+
+.btn-info {
+    border-color: #138091;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #a82a36;
 }
 
 .dropdown-item.active, .dropdown-item:active {

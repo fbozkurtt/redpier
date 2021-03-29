@@ -7,27 +7,27 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="#" Match="NavLinkMatch.All">
                 <span class="fa fa-home nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/containers">
                 <span class="fa fa-square nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Containers
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/images">
                 <span class="fa fa-images nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Images
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/networks">
                 <span class="fa fa-ethernet nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Networks
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/volumes">
                 <span class="fa fa-hdd nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Volumes
             </NavLink>
@@ -53,22 +53,27 @@
         </ul>*@
     <hr />
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/system">
                 <span class="fa fa-server nav-link-icon d-none d-lg-block" aria-hidden="true"></span> System
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/endpoints">
                 <span class="fab fa-docker nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Endpoints
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/registries">
+                <span class="fa fa-anchor nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Registries
+            </NavLink>
+        </li>
+        <li class="nav-item">
             <NavLink class="nav-link" href="/terminal">
                 <span class="fa fa-terminal nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Terminal
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/settings">
                 <span class="fa fa-cog nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Settings
             </NavLink>
@@ -81,7 +86,7 @@
     </ul>
     <hr class="d-block d-md-none"/>
     <ul class="nav flex-column d-block d-md-none">
-        <li class="nav-item dropdown px-3">
+        <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dockerEndpointPickerMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Docker endpoint
             </a>
@@ -92,7 +97,7 @@
                 <a class="dropdown-item" href="#">local_windows</a>
             </div>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="/logout">
                 <span class="fa fa-sign-out-alt nav-link-icon d-none d-lg-block" aria-hidden="true"></span> Logout
             </NavLink>

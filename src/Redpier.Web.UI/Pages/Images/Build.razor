@@ -4,20 +4,21 @@
     <div class="col-lg-12 col-md-12 col-xs-12">
         <form>
             <div class="form-section-title">
-                Repository Tag
+                RepoTags
             </div>
             <div class="form-group row">
                 <div class="col">
                     <span class="text-muted small">
-                        Only one
-                        <span class="font-weight-bolder">
-                            required
-                        </span>
-                        but you can add multiple repository names. Tags are optional. The default value of
-                        <span class="font-weight-bolder">
-                            latest
-                        </span>
-                        will be used if neglected.
+                        RepoTag is the abbreviation for <b>Repository Tags</b>.
+                        The Repository consists of the image name and the registry name.
+                        Registries are where the images are stored.
+                        You do not have to specify the registry name when tagging an image.
+                        But a name for the image is required. Tags are also optional.
+                        The default value of <b>latest</b> will be used if neglected.
+                        So the general repotag format is "registry/image-name:any-tag".
+                        You do not have to state registry name when pulling images from Docker Hub.
+                        But if you want to push an image to Docker Hub you need to specify your Docker Hub username as the registry name.
+                        Repotag splitted into three inputs for your convenience.
                     </span>
                 </div>
             </div>
@@ -26,22 +27,31 @@
             </a>
             <div class="form-group">
                 <div class="form-row mt-1">
-                    <div class="col-sm-5">
-                        <label class="sr-only" for="name1">Repository</label>
+                    <div class="col-lg-3">
+                        <label class="sr-only" for="registry1">Registry</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">repository</div>
+                                <div class="input-group-text">registry</div>
                             </div>
-                            <input type="text" class="form-control" id="nam1" placeholder="such as redpier, redpier/redpier" required>
+                            <input type="text" class="form-control" id="registry1" placeholder="MyHub" required>
                         </div>
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-lg-3">
+                        <label class="sr-only" for="name1">Image name</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">image name</div>
+                            </div>
+                            <input type="text" class="form-control" id="name1" placeholder="redpier, my-image" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
                         <label class="sr-only" for="tag1">Tag</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">tag</div>
                             </div>
-                            <input type="text" class="form-control" id="tag1" placeholder="such as 1.0.0, 1.0.0-linux">
+                            <input type="text" class="form-control" id="tag1" placeholder="1.0.0, linux, win64">
                         </div>
                     </div>
                     <div class="col">
@@ -51,31 +61,11 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="form-row mt-1">
-                    <div class="col-sm-5">
-                        <label class="sr-only" for="name1">Repository</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">repository</div>
-                            </div>
-                            <input type="text" class="form-control" id="nam1" placeholder="such as redpier, redpier/redpier" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        <label class="sr-only" for="tag1">Tag</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">tag</div>
-                            </div>
-                            <input type="text" class="form-control" id="tag1" placeholder="such as 1.0.0, 1.0.0-linux">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <a href="#" class="btn btn-danger">
-                            <span class="fa fa-trash"></span>
-                        </a>
-                    </div>
+            <div class="form-group row">
+                <div class="col">
+                    <span class="text-muted small">
+                        <b>output: </b><span id="exampleRegistry">registry</span>/<span id="exampleImage">image-name</span>:<span id="exampleTag">tag</span>
+                    </span>
                 </div>
             </div>
             <div class="form-section-title">

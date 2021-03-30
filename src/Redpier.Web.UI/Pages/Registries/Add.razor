@@ -11,7 +11,10 @@
                     <span class="text-muted small">
                         You can add image registries in here. To create a new image registry on your machine you can use offical registry image by Docker.
                         For more information please visit
-                        <a href="https://docs.docker.com/registry/deploying/#running-a-domain-registry" target="_blank" class="font-weight-bolder"> Docker docs</a>.
+                        <a href="https://docs.docker.com/registry/deploying/#running-a-domain-registry" target="_blank" class="font-weight-bolder">Docker docs</a>.
+                        Docker forbids connections to registries without SSL.
+                        You need to <a href="https://docs.docker.com/registry/insecure/#deploy-a-plain-http-registry" target="_blank" class="font-weight-bolder">modify Docker daemon file</a>
+                        in order to connect to an insecure registry.
                     </span>
                 </div>
             </div>
@@ -33,7 +36,7 @@
             <div class="form-group row">
                 <div class="col">
                     <span class="text-muted small">
-                        You can add credentials depending on your needs.
+                        You need to add credentials for pulling private images and pushing images to your Docker Hub repositories or connecting to your custom registry if it has password protection.
                     </span>
                 </div>
             </div>

@@ -26,19 +26,19 @@
                 <span class="fa fa-plus"></span> Add new
             </a>
             <div class="form-group">
-                <div class="form-row mt-1">
+                <div class="form-row mt-2">
                     <div class="col-lg-3">
                         <label class="sr-only" for="registry1">Registry</label>
-                        <div class="input-group mb-2">
+                        <div class="input-group input-group-sm mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">registry</div>
                             </div>
-                            <input type="text" class="form-control" id="registry1" placeholder="MyHub" required>
+                            <input type="text" class="form-control" id="registry1" placeholder="MyHub, dockerUsername">
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <label class="sr-only" for="name1">Image name</label>
-                        <div class="input-group mb-2">
+                        <div class="input-group input-group-sm mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">image name</div>
                             </div>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="sr-only" for="tag1">Tag</label>
-                        <div class="input-group mb-2">
+                        <div class="input-group input-group-sm mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">tag</div>
                             </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="col">
-                        <a href="#" class="btn btn-danger">
+                        <a href="#" class="btn btn-sm btn-danger">
                             <span class="fa fa-trash"></span>
                         </a>
                     </div>
@@ -71,26 +71,49 @@
             <div class="form-section-title">
                 Build
             </div>
-            <ul class="nav nav-tabs nav-justified flex-column flex-sm-row" role="tablist">
+            <ul class="nav nav-pills nav-justified flex-column flex-sm-row" role="tablist">
                 <li class="nav-item">
                     <a class="flex-sm-fill text-sm-center nav-link active" id="basicTab" data-toggle="tab" href="#webEditor" role="tab" aria-controls="webEditor" aria-selected="true">Web editor</a>
                 </li>
                 <li class="nav-item">
-                    <a class="flex-sm-fill text-sm-center nav-link" id="profileTab" data-toggle="tab" href="#uploadFile" role="tab" aria-controls="uploadFile" aria-selected="false">Upload</a>
+                    <a class="flex-sm-fill text-sm-center nav-link" id="profileTab" data-toggle="tab" href="#uploadFile" role="tab" aria-controls="uploadFile" aria-selected="false">Upload Dockerfile</a>
                 </li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane active py-4" id="webEditor" role="tabpanel" aria-labelledby="webEditorTab">
                     <div class="form-section-title">
-                        Web editor
+                        Project
                     </div>
                     <div class="form-group row">
                         <div class="col">
                             <span class="text-muted small">
-                                For more information about the format of Dockerfile visit
+                                You can upload directory of your project or project files directly in order to build an image.
+                                If there is a Dockerfile in the root folder web editor will show its contents.
+                                Ignore this field if you don't need any external files to build your image.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group col-sm-8 col-md-12 col-lg-6">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="directoryUpload" webkitdirectory directory>
+                                <label class="custom-file-label" for="directoryUpload">Upload your project</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section-title">
+                        Web editor
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12 col-lg-10 ">
+                            <span class="text-muted small">
+                                This editor uses Dockerfile format in order to build images. For more information about the format of Dockerfile please visit
                                 <a href="https://docs.docker.com/engine/reference/builder/" target="_blank">Docker docs</a>.
                             </span>
+                        </div>
+                        <div class="col mt-2">
+                            <button type="button" class="btn btn-sm btn-primary float-lg-right">Save Dockerfile</button>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -100,14 +123,27 @@
                     </div>
                 </div>
                 <div class="tab-pane py-4" id="uploadFile" role="tabpanel" aria-labelledby="uploadFileTab">
+                    <div class="form-section-title">
+                        Upload
+                    </div>
                     <div class="form-group row">
-                        <div class="col-sm-12">
-                            <input type="file" />
+                        <div class="col">
+                            <span class="text-muted small">
+                                You can upload a dockerfile in order to build your image.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group col-sm-8 col-md-12 col-lg-6">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="dockerfileUpload">
+                                <label class="custom-file-label" for="dockerfileUpload">Upload your dockerfile</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <a href="#" class="btn btn-primary my-2">Build image</a>
+            <button type="submit" class="btn btn-primary mb-3">Build image</button>
         </form>
     </div>
 </div>

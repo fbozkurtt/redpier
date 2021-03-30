@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Redpier.Application.Common.Interfaces;
+using Redpier.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Identity
 {
-    public class GetTokenCommand : IRequest<string>
+    public class GetTokenCommand : IRequest<LoginResponse>
     {
         [Required]
         public string Username { get; set; }
@@ -15,7 +16,7 @@ namespace Redpier.Application.Commands.Identity
         public string Password { get; set; }
     }
 
-    public class GetTokenCommandHandler : IRequestHandler<GetTokenCommand, string>
+    public class GetTokenCommandHandler : IRequestHandler<GetTokenCommand, LoginResponse>
     {
         private readonly IIdentityService _identityService;
 
@@ -24,11 +25,12 @@ namespace Redpier.Application.Commands.Identity
             _identityService = identityService;
         }
 
-        public async Task<string> Handle(GetTokenCommand request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(GetTokenCommand request, CancellationToken cancellationToken)
         {
-            return await _identityService.GetTokenAsync(
+            var token = await _identityService.GetTokenAsync(
                 request.Username,
                 request.Password);
+            return new LoginResponse() { Token = token, Username = request.Username };
         }
     }
 }

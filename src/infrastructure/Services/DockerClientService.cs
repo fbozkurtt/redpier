@@ -1,14 +1,11 @@
 ﻿using Docker.DotNet;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Redpier.Application.Common.Exceptions;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using Redpier.Application.Common.Exceptions;
 
 namespace Redpier.Infrastructure.Services
 {

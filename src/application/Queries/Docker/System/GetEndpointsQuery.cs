@@ -1,18 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Redpier.Application.Common.Interfaces;
-using Redpier.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using AutoMapper;
 using Redpier.Application.Common.Mappings;
 using Redpier.Application.Common.Models;
 using Redpier.Application.DTOs;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.Docker.System
 {

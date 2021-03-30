@@ -1,8 +1,5 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -25,7 +22,7 @@ namespace Redpier.Web.UI.Components
             var token = await _localStorage.GetItemAsStringAsync("JWT");
 
             if (string.IsNullOrEmpty(token))
-                return null;
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
             var identity = new ClaimsIdentity("Bearer");
 
@@ -34,6 +31,19 @@ namespace Redpier.Web.UI.Components
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             return new AuthenticationState(user);
+        }
+
+        public void NotifyAuthenticationStateChanged(string username)
+        {
+            var identity = new ClaimsIdentity("Bearer");
+
+            identity.AddClaim(new Claim(ClaimTypes.Name, username));
+
+            var user = new ClaimsPrincipal(identity);
+
+            var authState = Task.FromResult(new AuthenticationState(user));
+
+            base.NotifyAuthenticationStateChanged(authState);
         }
     }
 }

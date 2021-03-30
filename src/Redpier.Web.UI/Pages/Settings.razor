@@ -1,4 +1,5 @@
 ﻿@page "/settings"
+@attribute [Authorize]
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
@@ -20,9 +21,9 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="password" class="col-lg-2 col-form-label">Re-enter new password:</label>
+                <label for="passwordRepeat" class="col-lg-2 col-form-label">Re-enter new password:</label>
                 <div class="col-lg-10">
-                    <input type="password" class="form-control" id="password" placeholder="" required>
+                    <input type="password" class="form-control" id="passwordRepeat" placeholder="" required>
                 </div>
             </div>
             <div class="form-section-title">

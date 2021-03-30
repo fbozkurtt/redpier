@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Redpier.Application.Common.Exceptions;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Redpier.Web.API.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Redpier.Web.API.Filters
 {

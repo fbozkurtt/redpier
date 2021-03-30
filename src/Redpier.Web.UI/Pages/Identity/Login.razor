@@ -21,7 +21,14 @@
                                 <input @bind-value="model.Password" type="password" name="password" id="password" class="form-control" required>
                             </div>
                             <div class="form-group text-center">
-                                <button type="submit" class="btn btn-primary btn-md">Login or register</button>
+                                <button type="submit" class="btn btn-primary btn-md">Login</button>
+                            </div>
+                            <div class="form-group row" hidden="@HideErrors">
+                                <div class="col">
+                                    <span class="text-danger small">
+                                        Incorrect username or password.
+                                    </span>
+                                </div>
                             </div>
                         </EditForm>
                     </div>
@@ -35,6 +42,14 @@
     [Inject]
     public HttpClient Client { get; set; }
 
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    [Inject]
+    AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    public bool HideErrors { get; set; } = true;
+
     private LoginModel model = new LoginModel();
 
     private async void HandleValidSubmit()
@@ -43,12 +58,25 @@
 
         if (response.IsSuccessStatusCode)
         {
-            var token = await response.Content.ReadFromJsonAsync<string>();
-            await localStorage.SetItemAsync("JWT", token);
+            string returnUrl = "/";
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            await localStorage.SetItemAsync("JWT", loginResponse.Token);
+
+            //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged(loginResponse.Username);
+
+            Navigation.TryGetQueryString<string>("returnUrl", out returnUrl);
+            Navigation.NavigateTo(returnUrl);
+            Console.WriteLine(returnUrl);
         }
         else
         {
-            Console.WriteLine("Login failed!");
+            HideErrors = false;
         }
     }
+}
+
+@code{
+
 }

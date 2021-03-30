@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using Docker.DotNet;
+﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
-using Redpier.Application.Common.Interfaces;
-using Redpier.Application.Common.Mappings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 

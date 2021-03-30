@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -14,7 +11,7 @@ namespace Redpier.WebUI.Client
         public bool DockerStatus { get; private set; } = false;
 
         public Timer Timer = new Timer(1000);
-        
+
         [Inject]
         public HttpClient Client { get; set; }
 

@@ -1,8 +1,6 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Web.UI.Components;
 using System;

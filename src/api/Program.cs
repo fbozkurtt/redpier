@@ -1,18 +1,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Redpier.Infrastructure.Identity;
-using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Persistence;
+using Redpier.Infrastructure.Persistence.Context;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.SystemConsole.Themes;
 using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Redpier.Web.API
 {

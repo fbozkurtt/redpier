@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Identity;
-using Redpier.Shared.Constants;
+using Redpier.Shared.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -12,7 +12,7 @@ namespace Redpier.Web.API.Controllers
     {
         [AllowAnonymous]
         [HttpPost]
-        public async Task<string> Token(GetTokenCommand command)
+        public async Task<LoginResponse> Token(GetTokenCommand command)
         {
             return await Mediator.Send(command);
         }

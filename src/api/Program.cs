@@ -91,6 +91,7 @@ namespace Redpier.Web.API
                        .Build());
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
+                    webBuilder.UseUrls("https://localhost:5000;");
                 });
     }
 }

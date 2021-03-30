@@ -39,6 +39,18 @@ namespace Redpier.Web.API
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSPA",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:5001")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
+            });
+
             services.AddControllers(options =>
                 options.Filters.Add<ApiExceptionFilterAttribute>());
 
@@ -75,6 +87,8 @@ namespace Redpier.Web.API
             app.UseRouting();
 
             //app.UseApplicationResponse();
+
+            app.UseCors("AllowSPA");
 
             app.UseAuthentication();
 

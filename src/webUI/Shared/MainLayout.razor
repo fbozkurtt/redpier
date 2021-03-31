@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+@using Blazored.Toast.Configuration
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        @*<div class="top-row px-4">
+                <a href="/logout" class="ml-md-auto">Logout</a>
+            </div>*@
+
+        <div class="top-row">
+            <NavBar />
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="5"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-check-circle"
+                ErrorIcon="fa fa-exclamation-circle" />

@@ -1,0 +1,19 @@
+﻿@page "/logout"
+@inject HttpClient Client
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@inject ILocalStorageService localStorage
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await localStorage.RemoveItemAsync("JWT");
+        await localStorage.RemoveItemAsync("JWT.Expires");
+
+        (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged();
+
+        Client.DefaultRequestHeaders.Authorization = null;
+
+        Navigation.NavigateTo("/login");
+    }
+}

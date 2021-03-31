@@ -1,0 +1,48 @@
+﻿@inject HttpClient Client
+@inject ILocalStorageService localStorage
+
+<ul class="dropdown-menu" aria-labelledby="dockerEndpointPicker">
+    <li>
+        <a class="dropdown-item">
+            local
+            <span class="fa fa-check"></span>
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item">
+            local_windows
+        </a>
+    </li>
+</ul>
+
+@if (IsForMobile)
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="dockerEndpointPicker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Docker endpoint
+        </a>
+        <div class="dropdown-menu dropdown-menu-nav" aria-labelledby="dockerEndpointPicker">
+            <a class="dropdown-item">
+                local<span class="fa fa-check pl-2"></span>
+            </a>
+            <a class="dropdown-item">local_windows</a>
+        </div>
+    </li>
+}
+
+@code{
+    [Parameter]
+    public bool IsForMobile { get; set; } = false;
+
+    public PaginatedListDto<DockerEndpointDto> Endpoints;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Client.GetAsync("/api/system/endpoints");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+        }
+    }
+}

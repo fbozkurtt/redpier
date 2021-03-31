@@ -105,7 +105,7 @@ namespace Redpier.Infrastructure.Identity
             return result.Succeeded;
         }
 
-        public async Task<string> GetTokenAsync(string username, string password)
+        public async Task<SecurityToken> GetTokenAsync(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
 
@@ -135,9 +135,8 @@ namespace Redpier.Infrastructure.Identity
                 };
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandler.WriteToken(token);
 
-                return tokenString;
+                return token;
             }
 
             throw new UnauthorizedAccessException();

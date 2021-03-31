@@ -2,6 +2,7 @@
 using Redpier.Application.Common.Interfaces;
 using Redpier.Shared.Models;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,10 +28,18 @@ namespace Redpier.Application.Commands.Identity
 
         public async Task<LoginResponse> Handle(GetTokenCommand request, CancellationToken cancellationToken)
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
             var token = await _identityService.GetTokenAsync(
                 request.Username,
                 request.Password);
-            return new LoginResponse() { Token = token, Username = request.Username };
+
+            return new LoginResponse()
+            {
+                Token = tokenHandler.WriteToken(token),
+                Username = request.Username,
+                Expires = token.ValidTo
+            };
         }
     }
 }

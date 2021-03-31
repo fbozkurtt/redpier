@@ -1,0 +1,89 @@
+﻿@page "/networks/add"
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <form>
+            <div class="form-section-title">
+                Basic
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-lg-1 col-form-label">Name:</label>
+                <div class="col-lg-11">
+                    <input type="text" class="form-control" id="name" placeholder="can be anything" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="driver" class="col-lg-1 col-form-label">Driver:</label>
+                <div class="col-lg-11">
+                    <select class="form-control" id="driver" required>
+                        <option selected>bridge</option>
+                        <option>ipvlan</option>
+                        <option>macvlan</option>
+                        <option>overlay</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-section-title">
+                IPv4 configuration
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-lg-1 col-form-label">Subnet:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control" id="name" placeholder="such as 172.20.0.0/16">
+                </div>
+                <label for="ipv4Gateway" class="col-lg-1 col-form-label">Gateway:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control" id="ipv4Gateway" placeholder="such as 172.20.10.11">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="ipRange" class="col-lg-1 col-form-label">IP range:</label>
+                <div class="col-lg-11">
+                    <input type="text" class="form-control" id="ipRange" placeholder="such as 172.20.10.128/25">
+                </div>
+            </div>
+            <div class="form-section-title">
+                Advanced configuration
+            </div>
+            <div class="form-group">
+                <a href="#" class="btn-sm btn-success">
+                    <span class="fa fa-plus"></span> Add new
+                </a>
+                <div class="form-row my-2">
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Value">
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-danger">
+                            <span class="fa fa-trash"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-row my-2">
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="Value">
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-danger">
+                            <span class="fa fa-trash"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="isolatedNetwork">
+                <label class="form-check-label" for="isolatedNetwork">Isolated network</label>
+            </div>
+            <button href="#" class="btn btn-primary my-2">Create network</button>
+        </form>
+    </div>
+</div>
+
+@code {
+}

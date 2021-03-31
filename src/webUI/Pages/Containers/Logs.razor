@@ -1,0 +1,76 @@
+﻿@page "/containers/logs/{id}"
+
+<div class="row">
+    <div class="col-sm-12">
+        <a href="#" class="btn btn-primary mb-2">
+            <span class="fa fa-file-download"></span> Download as txt
+        </a>
+        <div class="text-nowrap mb-2" style="border:solid; border-width:thin; overflow-x:auto">
+            @foreach (var line in logs.Split('\n'))
+            {
+                <p class="mb-0 px-1">@line</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+
+    public string logs { get; set; } = @"2021/03/13 18:03:18 server: Reverse tunnelling enabled
+2021/03/13 18:03:18 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/13 18:03:18 server: Listening on 0.0.0.0:8000...
+2021/03/13 18:03:18 Starting Portainer 2.1.1 on :9000
+2021/03/13 18:03:18 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/13 18:03:40 http error: Invalid credentials (err=Unauthorized) (code=422)
+2021/03/15 14:31:51 server: Reverse tunnelling enabled
+2021/03/15 14:31:51 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/15 14:31:51 server: Listening on 0.0.0.0:8000...
+2021/03/15 14:31:51 Starting Portainer 2.1.1 on :9000
+2021/03/15 14:31:51 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/15 18:03:52 server: Reverse tunnelling enabled
+2021/03/15 18:03:52 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/15 18:03:52 server: Listening on 0.0.0.0:8000...
+2021/03/15 18:03:52 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/15 18:03:52 Starting Portainer 2.1.1 on :9000
+2021/03/17 10:58:33 server: Reverse tunnelling enabled
+2021/03/17 10:58:33 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/17 10:58:33 server: Listening on 0.0.0.0:8000...
+2021/03/17 10:58:33 Starting Portainer 2.1.1 on :9000
+2021/03/17 10:58:33 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/17 10:59:31 http error: Invalid credentials (err=Unauthorized) (code=422)
+2021/03/18 12:23:59 server: Reverse tunnelling enabled
+2021/03/18 12:23:59 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/18 12:23:59 server: Listening on 0.0.0.0:8000...
+2021/03/18 12:23:59 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/18 12:23:59 Starting Portainer 2.1.1 on :9000
+2021/03/18 12:24:28 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 12:24:28 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 12:24:28 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 12:24:28 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 12:24:28 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 17:56:59 server: Reverse tunnelling enabled
+2021/03/18 17:56:59 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/18 17:56:59 server: Listening on 0.0.0.0:8000...
+2021/03/18 17:56:59 Starting Portainer 2.1.1 on :9000
+2021/03/18 17:56:59 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/18 17:57:10 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/18 17:57:10 http error: Unauthorized (err=Unauthorized) (code=401)
+2021/03/22 17:04:00 server: Reverse tunnelling enabled
+2021/03/22 17:04:00 server: Fingerprint cd:40:9d:c0:0a:cb:6a:c8:82:af:ec:57:cd:ff:cf:51
+2021/03/22 17:04:00 server: Listening on 0.0.0.0:8000...
+2021/03/22 17:04:00 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+2021/03/22 17:04:00 Starting Portainer 2.1.1 on :9000
+2021/03/22 18:27:43 http error: An error occured during websocket attach operation (err=websocket: close 1006 (abnormal closure): unexpected EOF) (code=500)
+2021/03/22 18:27:43 http error: An error occured during websocket attach operation (err=websocket: close 1006 (abnormal closure): unexpected EOF) (code=500)
+2021/03/22 18:27:43 http: response.WriteHeader on hijacked connection from github.com/portainer/libhttp/error.writeErrorResponse (error.go:37)
+2021/03/22 18:27:43 http: response.WriteHeader on hijacked connection from github.com/portainer/libhttp/error.writeErrorResponse (error.go:37)
+2021/03/22 18:27:43 http: response.Write on hijacked connection from encoding/json.(*Encoder).Encode (stream.go:227)
+2021/03/22 18:27:43 http: response.Write on hijacked connection from encoding/json.(*Encoder).Encode (stream.go:227)
+2021/03/23 12:07:14 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/23 12:07:14 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/23 12:07:14 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/23 12:07:14 http error: Invalid JWT token (err=Invalid JWT token) (code=401)
+2021/03/23 12:07:14 http error: Invalid JWT token (err=Invalid JWT token) (code=401)";
+}

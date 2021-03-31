@@ -1,0 +1,94 @@
+﻿@page "/login"
+@layout EmptyLayout
+@inject HttpClient Client
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@inject ILocalStorageService localStorage
+@inject IToastService toastService
+@attribute [AllowAnonymous]
+
+<div class="box" style="background-color: #fff0f0">
+    <div class="center row align-items-center">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <EditForm Model="@model" id="login-form" class="form" OnValidSubmit="@HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <h3 class="text-center">Login</h3>
+                            <div class="form-group">
+                                <label for="username">Username:</label><br>
+                                <input @bind-value="model.Username" type="text" name="username" id="username" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label><br>
+                                <input @bind-value="model.Password" type="password" name="password" id="password" class="form-control" required>
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary btn-md" disabled="@IsInLoginProcess">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsInLoginProcess)"></span>
+                                    Login
+                                </button>
+                            </div>
+                            @*<div class="form-group row" hidden="@HideErrors">
+                                <div class="col">
+                                    <span class="text-danger small">
+                                        Incorrect username or password.
+                                    </span>
+                                </div>
+                            </div>*@
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    //public bool HideErrors { get; set; } = true;
+
+    public bool IsInLoginProcess { get; set; } = false;
+
+    private LoginModel model = new LoginModel();
+
+    private async void HandleValidSubmit()
+    {
+        IsInLoginProcess = true;
+
+        var response = await Client.PostAsJsonAsync("/api/Identity", model);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string returnUrl = string.Empty;
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            await localStorage.SetItemAsync("JWT", loginResponse.Token);
+            await localStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
+
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
+
+            (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged(loginResponse.Username);
+
+            Navigation.TryGetQueryString<string>("returnUrl", out returnUrl);
+            Navigation.NavigateTo(returnUrl ?? "/");
+        }
+
+        else if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            Console.WriteLine(response.StatusCode);
+            //HideErrors = false;
+            toastService.ShowError("Incorrect username or password.", "Error");
+        }
+
+        else
+        {
+            toastService.ShowError("Something went wrong.","Error");
+        }
+
+        IsInLoginProcess = false;
+
+        StateHasChanged();
+    }
+}

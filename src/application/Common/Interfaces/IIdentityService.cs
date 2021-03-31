@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Threading.Tasks;
 
@@ -22,6 +23,6 @@ namespace Redpier.Application.Common.Interfaces
 
         Task<bool> DeleteUserAsync(string username);
 
-        Task<string> GetTokenAsync(string username, string password);
+        Task<SecurityToken> GetTokenAsync(string username, string password);
     }
 }

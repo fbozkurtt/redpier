@@ -1,0 +1,72 @@
+﻿@page "/volumes"
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-danger">
+                <span class="fa fa-times-circle"></span> Remove
+            </button>
+        </div>
+        <a class="btn btn-sm btn-success float-right" href="/volumes/add">
+            <span class="fa fa-plus"></span> Add volume
+        </a>
+
+        <div class="table-responsive py-2">
+            <table class="table table-sm table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th><input type="checkbox" /></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Stack</th>
+                        <th scope="col">Driver</th>
+                        <th scope="col">Mount point</th>
+                        <th scope="col">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td><a href="/volumes/portainer_data">portainer_data</a></td>
+                        <td>-</td>
+                        <td>local</td>
+                        <td>/var/lib/docker/volumes/portainer_data/_data</td>
+                        <td>17.03.2021 20:06</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td><a href="/volumes/portainer_data">portainer_data</a></td>
+                        <td>-</td>
+                        <td>local</td>
+                        <td>/var/lib/docker/volumes/portainer_data/_data</td>
+                        <td>17.03.2021 20:06</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td><a href="/volumes/portainer_data">portainer_data</a></td>
+                        <td>-</td>
+                        <td>local</td>
+                        <td>/var/lib/docker/volumes/portainer_data/_data</td>
+                        <td>17.03.2021 20:06</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@code {
+
+}

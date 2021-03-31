@@ -1,0 +1,214 @@
+﻿@page "/images/{id}"
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="form-section-title">
+            RepoTags
+        </div>
+        <div class="table-responsive py-2">
+            <table class="table table-sm table-borderless" style="border: none">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 30%"></th>
+                        <th scope="col" style=""></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-info p-2">0.0.0.0:5000/registry:latest</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm" id="imageActions">
+                                <button class="btn btn-info" type="button" data-toggle="tooltip" data-placement="top" title="Push to registry">
+                                    <span class="fa fa-upload"></span>
+                                </button>
+                                <button class="btn btn-info" type="button" data-toggle="tooltip" data-placement="top" title="Pull from registry">
+                                    <span class="fa fa-download"></span>
+                                </button>
+                                <button class="btn btn-danger" type="button" data-toggle="tooltip" data-placement="top" title="Remove tag">
+                                    <span class="fa fa-trash"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-section-title">
+            Tag Image
+        </div>
+        <form>
+            <div class="form-group row">
+                <label for="registry" class="col-lg-1 col-form-label">Registry:</label>
+                <div class="col-lg-11">
+                    <select class="form-control" id="registry" required>
+                        <option selected>do not specify</option>
+                        <option>DockerHub (fbozkurt)</option>
+                        <option>MyHub1</option>
+                        <option>MyHub2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-1 col-form-label">Name:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="name" placeholder="redpier, myapp, any-name" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="tag" class="col-sm-1 col-form-label">Tag:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="tag" placeholder="2.1.1, linux, arm64" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <span class="text-muted small">
+                        <b>output: </b><span id="exampleRegistry">registry</span>/<span id="exampleImage">image-name</span>:<span id="exampleTag">tag</span>
+                    </span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary my-2">Tag image</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="form-section-title py-3">
+            Details
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="2">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>sha256:eefcac9e385600903a7d9aecbbd9ac7c88af61f4ef68993ff11039656eaa7a1b</td>
+                    </tr>
+                    <tr>
+                        <th>Size</th>
+                        <td>26.2 MB</td>
+                    </tr>
+                    <tr>
+                        <th>Build</th>
+                        <td>Docker 19.03.12 on linux, amd64</td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>17.03.2021 20:06</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="2">Config</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>CMD</th>
+                        <td>/etc/docker/registry/config.yml</td>
+                    </tr>
+                    <tr>
+                        <th>Entrypoint</th>
+                        <td>/entrypoint.sh</td>
+                    </tr>
+                    <tr>
+                        <th>Volumes</th>
+                        <td>
+                            <span class="badge badge-info py-2">/var/lib/registry</span>
+                            <span class="badge badge-info py-2">/data</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Exposed ports</th>
+                        <td>
+                            <span class="badge badge-info py-2">5000/TCP</span>
+                            <span class="badge badge-info py-2">5000/TCP</span>
+                            <span class="badge badge-info py-2">5000/TCP</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Environment</th>
+                        <td>
+                            <table class="table table-bordered table-sm m-0">
+                                <tbody>
+                                    <tr>
+                                        <td>PATH</td>
+                                        <td>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="3">History</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Index</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Created by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>214.1 KB</td>
+                        <td>COPY file:c8f727cb8b17c5a8735e609a9b9f333f20765e36c457d0557ed48693a6694880 in /etc/ssl/certs/ca-certificates.crt</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>0 B</td>
+                        <td>COPY dir:d00db8f164e4eb29b4de3def05c32b9a86265bbb2904c7cde901eab9b7b4e086 in /tmp</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>208.4 MB</td>
+                        <td>COPY dist / # buildkit</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <nav aria-label="Image history pagination">
+            <ul class="pagination justify-content-end">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+}

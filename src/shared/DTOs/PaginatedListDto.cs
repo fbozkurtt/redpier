@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Redpier.Shared.DTOs
 {
-    public class PaginatedListDto<T> : IMapFrom<PaginatedList<T>>
+    public class PaginatedListDto<T>
     {
-        public IList<T> Items { get; }
+        public IList<T> Items { get; set; }
 
-        public int PageIndex { get; }
+        public int PageIndex { get; set; }
 
-        public int TotalPages { get; }
+        public int TotalPages { get; set; }
 
-        public int TotalCount { get; }
+        public int TotalCount { get; set; }
 
         public bool HasPreviousPage => PageIndex > 1;
 

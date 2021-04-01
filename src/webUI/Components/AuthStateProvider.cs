@@ -14,7 +14,7 @@ namespace Redpier.Web.UI.Components
         private readonly HttpClient _httpClient;
         private readonly AuthenticationState _anonymous;
 
-        public AuthStateProvider(ILocalStorageService localStorage, HttpClient httpClient)
+        public AuthStateProvider(ILocalStorageService localStorage, HttpClient  httpClient)
         {
             _localStorage = localStorage;
             _httpClient = httpClient;
@@ -23,9 +23,9 @@ namespace Redpier.Web.UI.Components
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _localStorage.GetItemAsStringAsync("JWT");
+            var token = await _localStorage.GetItemAsync<string>("JWT");
 
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrWhiteSpace(token))
                 return _anonymous;
 
             var expires = await _localStorage.GetItemAsync<DateTime>("JWT.Expires");

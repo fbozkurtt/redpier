@@ -8,7 +8,7 @@ namespace Redpier.Shared.Models
 {
     public class PaginatedList<T>
     {
-        public IList<T> Items { get; }
+        public List<T> Items { get; }
         public int PageIndex { get; }
         public int TotalPages { get; }
         public int TotalCount { get; }

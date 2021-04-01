@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Redpier.Application.Common.Interfaces;
+using Redpier.Application.Common.Models;
 using Redpier.Shared.DTOs;
 using Redpier.Shared.Mappings;
 using Redpier.Shared.Models;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.Docker.System
 {
-    public class GetEndpointsQuery : IRequest<PaginatedListDto<DockerEndpointDto>>
+    public class GetEndpointsQuery : IRequest<PaginatedList<DockerEndpointDto>>
     {
         public int PageNumber { get; set; } = 1;
 
@@ -21,7 +22,7 @@ namespace Redpier.Application.Queries.Docker.System
         public bool All { get; set; } = true;
     }
 
-    public class GetEndpointsQueryHandler : IRequestHandler<GetEndpointsQuery, PaginatedListDto<DockerEndpointDto>>
+    public class GetEndpointsQueryHandler : IRequestHandler<GetEndpointsQuery, PaginatedList<DockerEndpointDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -31,12 +32,12 @@ namespace Redpier.Application.Queries.Docker.System
             _mapper = mapper;
         }
 
-        public async Task<PaginatedListDto<DockerEndpointDto>> Handle(GetEndpointsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<DockerEndpointDto>> Handle(GetEndpointsQuery request, CancellationToken cancellationToken)
         {
-            return _mapper.Map<PaginatedListDto<DockerEndpointDto>>(
+            return 
                 await _context.DockerEndpoints
                 .ProjectTo<DockerEndpointDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.All ? request.PageSize : Int32.MaxValue));
+                .PaginatedListAsync(request.PageNumber, request.All ? request.PageSize : Int32.MaxValue);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Redpier.Web.API.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<PaginatedListDto<DockerEndpointDto>>> Endpoints([FromQuery] GetEndpointsQuery query)
+        public async Task<ActionResult<PaginatedList<DockerEndpointDto>>> Endpoints([FromQuery] GetEndpointsQuery query)
         {
             return await Mediator.Send(query);
         }

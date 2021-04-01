@@ -22,18 +22,20 @@ namespace Redpier.Web.UI
             builder.Services.AddBlazoredLocalStorage(config =>
                 config.JsonSerializerOptions.WriteIndented = true);
 
-            builder.Services.AddScoped(sp => new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:5000")
-            });
+            //builder.Services.AddScoped(sp => new HttpClient
+            //{
+            //    BaseAddress = new Uri("https://localhost:5000")
+            //});
 
-            //builder.Services.AddScoped<IAccessTokenProvider, AccessTokenProvider>();
+            builder.Services.AddScoped<AuthMessageHandler>();
+            builder.Services.AddScoped<AccessTokenProvider>();
 
-            //builder.Services.AddScoped<AuthMessageHandler>();
+            builder.Services.AddHttpClient("api",
+                    client => client.BaseAddress = new Uri("https://localhost:5000"))
+                .AddHttpMessageHandler<AuthMessageHandler>();
 
-            //builder.Services.AddHttpClient("RedpierAPI",
-            //        client => client.BaseAddress = new Uri("https://localhost:5000"))
-            //    .AddHttpMessageHandler<AuthMessageHandler>();
+            builder.Services.AddTransient(sp => 
+                sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 
             builder.Services.AddBlazoredToast();
 

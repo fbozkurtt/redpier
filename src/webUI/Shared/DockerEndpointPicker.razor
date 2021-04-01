@@ -38,11 +38,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Client.GetAsync("/api/system/endpoints");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+            var response = await Client.GetAsync("/api/system/endpoints");
+
+            if (response.IsSuccessStatusCode)
+            {
+                Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
     }
 }

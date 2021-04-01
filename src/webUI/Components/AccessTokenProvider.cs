@@ -29,6 +29,7 @@ namespace Redpier.Web.UI.Components
             {
                 await _localStorage.RemoveItemAsync("JWT");
                 await _localStorage.RemoveItemAsync("JWT.Expires");
+
                 return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, null, "/login");
             }
 

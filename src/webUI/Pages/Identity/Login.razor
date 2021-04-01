@@ -32,12 +32,12 @@
                                 </button>
                             </div>
                             @*<div class="form-group row" hidden="@HideErrors">
-                                <div class="col">
-                                    <span class="text-danger small">
-                                        Incorrect username or password.
-                                    </span>
-                                </div>
-                            </div>*@
+                                    <div class="col">
+                                        <span class="text-danger small">
+                                            Incorrect username or password.
+                                        </span>
+                                    </div>
+                                </div>*@
                         </EditForm>
                     </div>
                 </div>
@@ -58,37 +58,46 @@
     {
         IsInLoginProcess = true;
 
-        var response = await Client.PostAsJsonAsync("/api/Identity", model);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            string returnUrl = string.Empty;
-            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            await localStorage.SetItemAsync("JWT", loginResponse.Token);
-            await localStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
+            var response = await Client.PostAsJsonAsync("/api/Identity", model);
 
-            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
+            if (response.IsSuccessStatusCode)
+            {
+                string returnUrl;
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                await localStorage.SetItemAsync("JWT", loginResponse.Token);
+                await localStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
 
-            (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged(loginResponse.Username);
+                Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
 
-            Navigation.TryGetQueryString<string>("returnUrl", out returnUrl);
-            Navigation.NavigateTo(returnUrl ?? "/");
+                (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged(loginResponse.Username);
+
+                Navigation.TryGetQueryString<string>("returnUrl", out returnUrl);
+                Navigation.NavigateTo(returnUrl ?? "/");
+            }
+
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                Console.WriteLine(response.StatusCode);
+                //HideErrors = false;
+                toastService.ShowError("Incorrect username or password.", "Error");
+            }
+
+            else
+            {
+                toastService.ShowError("Something went wrong.", "Error");
+            }
+
+            StateHasChanged();
         }
 
-        else if (response.StatusCode == HttpStatusCode.Unauthorized)
+        catch (AccessTokenNotAvailableException ex)
         {
-            Console.WriteLine(response.StatusCode);
-            //HideErrors = false;
-            toastService.ShowError("Incorrect username or password.", "Error");
-        }
-
-        else
-        {
-            toastService.ShowError("Something went wrong.","Error");
+            //toastService.ShowError(ex.Message,"Error");
+            ex.Redirect();
         }
 
         IsInLoginProcess = false;
-
-        StateHasChanged();
     }
 }

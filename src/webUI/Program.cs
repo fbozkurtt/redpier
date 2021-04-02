@@ -34,6 +34,9 @@ namespace Redpier.Web.UI
                     client => client.BaseAddress = new Uri("https://localhost:5000"))
                 .AddHttpMessageHandler<AuthMessageHandler>();
 
+            builder.Services.AddHttpClient("apinoauth",
+                    client => client.BaseAddress = new Uri("https://localhost:5000"));
+
             builder.Services.AddTransient(sp => 
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 

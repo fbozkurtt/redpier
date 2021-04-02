@@ -1,6 +1,6 @@
 ﻿@page "/login"
 @layout EmptyLayout
-@inject HttpClient Client
+@inject IHttpClientFactory ClientFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 @inject ILocalStorageService localStorage
@@ -57,10 +57,10 @@
     private async void HandleValidSubmit()
     {
         IsInLoginProcess = true;
-
+        var client = ClientFactory.CreateClient("apinoauth");
         try
         {
-            var response = await Client.PostAsJsonAsync("/api/Identity", model);
+            var response = await client.PostAsJsonAsync("/api/Identity", model);
 
             if (response.IsSuccessStatusCode)
             {
@@ -69,7 +69,7 @@
                 await localStorage.SetItemAsync("JWT", loginResponse.Token);
                 await localStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
 
-                Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
+                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
 
                 (AuthenticationStateProvider as AuthStateProvider).NotifyAuthenticationStateChanged(loginResponse.Username);
 
@@ -92,12 +92,11 @@
             StateHasChanged();
         }
 
-        catch (AccessTokenNotAvailableException ex)
+        catch (Exception ex)
         {
-            //toastService.ShowError(ex.Message,"Error");
-            ex.Redirect();
+            toastService.ShowError(ex.Message,"Error");
+            Console.WriteLine(ex);
         }
-
         IsInLoginProcess = false;
     }
 }

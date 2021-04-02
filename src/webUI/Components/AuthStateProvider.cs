@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,40 +11,31 @@ namespace Redpier.Web.UI.Components
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {
-        private readonly ILocalStorageService _localStorage;
-        private readonly HttpClient _httpClient;
         private readonly AuthenticationState _anonymous;
+        private readonly AccessTokenProvider _tokenProvider;
 
-        public AuthStateProvider(ILocalStorageService localStorage, HttpClient  httpClient)
+        public AuthStateProvider(ILocalStorageService localStorage,
+            HttpClient  httpClient,
+            AccessTokenProvider tokenProvider)
         {
-            _localStorage = localStorage;
-            _httpClient = httpClient;
             _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            _tokenProvider = tokenProvider;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _localStorage.GetItemAsync<string>("JWT");
+            var result = await _tokenProvider.RequestAccessToken();
 
-            if (string.IsNullOrWhiteSpace(token))
-                return _anonymous;
-
-            var expires = await _localStorage.GetItemAsync<DateTime>("JWT.Expires");
-
-            if (expires < DateTime.UtcNow)
+            if(result.Status == AccessTokenResultStatus.Success)
             {
-                await _localStorage.RemoveItemAsync("JWT");
-                await _localStorage.RemoveItemAsync("JWT.Expires");
-                return _anonymous;
+                var identity = new ClaimsIdentity("Bearer");
+
+                var user = new ClaimsPrincipal(identity);
+
+                return new AuthenticationState(user);
             }
 
-            var identity = new ClaimsIdentity("Bearer");
-
-            var user = new ClaimsPrincipal(identity);
-
-            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            return new AuthenticationState(user);
+            return _anonymous;
         }
 
         public void NotifyAuthenticationStateChanged(string username)

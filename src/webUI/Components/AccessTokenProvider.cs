@@ -38,9 +38,9 @@ namespace Redpier.Web.UI.Components
             return new AccessTokenResult(AccessTokenResultStatus.Success, accessToken, "/");
         }
 
-        public ValueTask<AccessTokenResult> RequestAccessToken(AccessTokenRequestOptions options)
+        public async ValueTask<AccessTokenResult> RequestAccessToken(AccessTokenRequestOptions options)
         {
-            throw new NotImplementedException();
+            return await RequestAccessToken();
         }
     }
 }

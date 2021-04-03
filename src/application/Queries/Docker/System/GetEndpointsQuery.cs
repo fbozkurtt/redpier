@@ -19,7 +19,7 @@ namespace Redpier.Application.Queries.Docker.System
 
         public int PageSize { get; set; } = 10;
 
-        public bool All { get; set; } = true;
+        public bool All { get; set; } = false;
     }
 
     public class GetEndpointsQueryHandler : IRequestHandler<GetEndpointsQuery, PaginatedList<DockerEndpointDto>>
@@ -34,10 +34,11 @@ namespace Redpier.Application.Queries.Docker.System
 
         public async Task<PaginatedList<DockerEndpointDto>> Handle(GetEndpointsQuery request, CancellationToken cancellationToken)
         {
-            return 
+            return
                 await _context.DockerEndpoints
+                .OrderBy(w => w.Created)
                 .ProjectTo<DockerEndpointDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.All ? request.PageSize : Int32.MaxValue);
+                .PaginatedListAsync(request.PageNumber, request.All ? Int32.MaxValue : request.PageSize);
         }
     }
 }

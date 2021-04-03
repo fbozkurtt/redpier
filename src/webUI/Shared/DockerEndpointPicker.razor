@@ -1,21 +1,34 @@
 ﻿@inject HttpClient Client
 @inject ILocalStorageService localStorage
 
-<ul class="dropdown-menu" aria-labelledby="dockerEndpointPicker">
-    <li>
-        <a class="dropdown-item">
-            local
-            <span class="fa fa-check"></span>
-        </a>
-    </li>
-    <li>
-        <a class="dropdown-item">
-            local_windows
-        </a>
-    </li>
-</ul>
-
-@if (IsForMobile)
+@if (!IsForMobile)
+{
+    <ul class="dropdown-menu" aria-labelledby="dockerEndpointPicker">
+        @if (Endpoints != null)
+        {
+            @foreach (var endpoint in Endpoints.Items)
+            {
+                <li>
+                    <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="async () => { await SelectEndpoint(endpoint.Id); }">
+                        <span>@endpoint.Name</span>
+                        <span class="@(SelectedEndpointId.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
+                    </a>
+                </li>
+            }
+        }
+        else
+        {
+            <li>
+                <div class="text-center dropdown-item">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
 {
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="dockerEndpointPicker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -36,20 +49,38 @@
 
     public PaginatedListDto<DockerEndpointDto> Endpoints;
 
+    public Guid SelectedEndpointId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var response = await Client.GetAsync("/api/system/endpoints");
+            var response = await Client.GetAsync("/api/system/endpoints?pagesize=5");
 
             if (response.IsSuccessStatusCode)
             {
                 Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+
+                var savedEndpointId = await localStorage.GetItemAsync<Guid>("selectedEndpointId");
+                if (savedEndpointId != default && Endpoints.Items.Select(e => e.Id).ToList().Contains(savedEndpointId))
+                {
+                    SelectedEndpointId = savedEndpointId;
+                }
+                else
+                {
+                    await SelectEndpoint(Endpoints.Items.First().Id);
+                }
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    public async Task SelectEndpoint(Guid endpointId)
+    {
+        await localStorage.SetItemAsync("selectedEndpointId", endpointId);
+        SelectedEndpointId = endpointId;
     }
 }

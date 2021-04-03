@@ -1,10 +1,13 @@
 ﻿@page "/endpoints"
+@inject HttpClient Client
+@inject IToastService toastService
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-danger">
-                <span class="fa fa-times-circle"></span> Remove
+            <button type="button" class="btn btn-sm btn-danger" @onclick="async ()=> { await Remove(); }" disabled="@(IsInProgress || !SelectedEndpointIds.Any())">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsInProgress)"></span>
+                <span class="fa fa-trash" hidden="@(IsInProgress)"></span> Remove
             </button>
         </div>
         <a class="btn btn-sm btn-success float-right" href="/endpoints/add">
@@ -15,27 +18,153 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr>
-                        <th><input type="checkbox" /></th>
+                        <th><input type="checkbox" checked="@SelectedEndpointIds.Any()" @onclick="SelectAll" /></th>
                         <th scope="col">Name</th>
                         <th scope="col">Endpoint</th>
                         <th scope="col">Type</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="checkbox" disabled /></td>
-                        <td>local</td>
-                        <td>/var/run/docker.sock</td>
-                        <td>socket</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" disabled /></td>
-                        <td>local_windows</td>
-                        <td>npipe://./pipe/docker_engine</td>
-                        <td>socket</td>
-                    </tr>
+                    @if (DockerEndpoints != null)
+                    {
+                        @foreach (var endpoint in DockerEndpoints.Items)
+                        {
+                            <tr>
+                                <td><input type="checkbox" checked="@SelectedEndpointIds.Contains(endpoint.Id)" @onclick="() => { Select(endpoint.Id); }" /></td>
+                                <td>@endpoint.Name</td>
+                                <td>@endpoint.Uri</td>
+                                <td>@endpoint.Type</td>
+                            </tr>
+                        }
+                    }
+                    else if (IsInProgress && DockerEndpoints == null)
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="text-center dropdown-item">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
+        @if (DockerEndpoints != null && DockerEndpoints.TotalPages > 1)
+        {
+            <nav aria-label="Endpoints page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(DockerEndpoints.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link" tabindex="-1" @onclick="async () => await FetchNewPage(DockerEndpoints.PageIndex - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= DockerEndpoints.TotalPages; i++)
+                    {
+                        var index = i;
+                        <li class="page-item"><a class="page-link @(index == DockerEndpoints.PageIndex ? "active disabled" : "")" @onclick="async () => await FetchNewPage(index)">@index</a></li>
+                    }
+                    <li class="page-item @(DockerEndpoints.HasNextPage ? "" : "disabled")">
+                        <a class="page-link" @onclick="async () => await FetchNewPage(DockerEndpoints.PageIndex + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
     </div>
 </div>
+
+@code{
+    public bool IsInProgress { get; set; } = true;
+
+    public int PageSize { get; set; } = 3;
+
+    public PaginatedListDto<DockerEndpointDto> DockerEndpoints;
+
+    public List<Guid> SelectedEndpointIds { get; set; } = new List<Guid>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchNewPage(1);
+    }
+
+    public async Task FetchNewPage(int pageNumber)
+    {
+        try
+        {
+            IsInProgress = true;
+            var response = await Client.GetAsync($"/api/system/endpoints?pagesize={PageSize}&pagenumber={pageNumber}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                DockerEndpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+                IsInProgress = false;
+            }
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError(ex.Message, "Error");
+            IsInProgress = false;
+        }
+    }
+
+    public async Task Remove()
+    {
+        IsInProgress = true;
+        try
+        {
+            var responses = new List<HttpResponseMessage>();
+            var removedIds = new List<Guid>();
+            foreach (var endpointId in SelectedEndpointIds)
+            {
+                var response = await Client.DeleteAsync($"/api/system/deleteEndpoint?Id={endpointId}");
+                responses.Add(response);
+                if (response.IsSuccessStatusCode)
+                    removedIds.Add(endpointId);
+            }
+            if (responses.Any(r => r.IsSuccessStatusCode))
+            {
+                DockerEndpoints.Items.RemoveAll(e => SelectedEndpointIds.Contains(e.Id));
+                foreach (var id in removedIds)
+                {
+                    SelectedEndpointIds.Remove(id);
+                }
+                toastService.ShowSuccess($"Removed {responses.Where(r => r.IsSuccessStatusCode).Count()} endpoint(s).");
+            }
+            if (responses.Any(r => !r.IsSuccessStatusCode))
+                toastService.ShowError($"Failed when removing {responses.Where(r => !r.IsSuccessStatusCode).Count()} endpoint(s).");
+
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsInProgress = false;
+        }
+    }
+
+    public void SelectAll()
+    {
+        if (SelectedEndpointIds.Any())
+            SelectedEndpointIds.Clear();
+        else
+            SelectedEndpointIds = DockerEndpoints.Items.Select(e => e.Id).ToList();
+    }
+
+    public void Select(Guid Id)
+    {
+        if (SelectedEndpointIds.Contains(Id))
+            SelectedEndpointIds.Remove(Id);
+        else
+            SelectedEndpointIds.Add(Id);
+    }
+}

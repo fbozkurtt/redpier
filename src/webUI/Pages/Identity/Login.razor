@@ -13,7 +13,7 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <EditForm Model="@model" id="login-form" class="form" OnValidSubmit="@HandleValidSubmit">
+                        <EditForm Model="model" id="login-form" OnValidSubmit="HandleValidSubmit">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
                             <h3 class="text-center">Login</h3>
@@ -26,8 +26,8 @@
                                 <input @bind-value="model.Password" type="password" name="password" id="password" class="form-control" required>
                             </div>
                             <div class="form-group text-center">
-                                <button type="submit" class="btn btn-primary btn-md" disabled="@IsInLoginProcess">
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsInLoginProcess)"></span>
+                                <button type="submit" class="btn btn-primary btn-md" disabled="@IsInProgress">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsInProgress)"></span>
                                     Login
                                 </button>
                             </div>
@@ -50,17 +50,18 @@
 
     //public bool HideErrors { get; set; } = true;
 
-    public bool IsInLoginProcess { get; set; } = false;
+    public bool IsInProgress { get; set; } = false;
 
     private LoginModel model = new LoginModel();
 
-    private async void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        IsInLoginProcess = true;
+        IsInProgress = true;
         var client = ClientFactory.CreateClient("apinoauth");
+
         try
         {
-            var response = await client.PostAsJsonAsync("/api/Identity", model);
+            var response = await client.PostAsJsonAsync("/api/identity", model);
 
             if (response.IsSuccessStatusCode)
             {
@@ -97,6 +98,7 @@
             toastService.ShowError(ex.Message,"Error");
             Console.WriteLine(ex);
         }
-        IsInLoginProcess = false;
+
+        IsInProgress = false;
     }
 }

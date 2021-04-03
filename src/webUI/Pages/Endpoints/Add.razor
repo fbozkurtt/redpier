@@ -1,8 +1,10 @@
 ﻿@page "/endpoints/add"
+@inject HttpClient Client
+@inject IToastService toastService
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
-        <form>
+        <EditForm Model="model" OnValidSubmit="HandleValidSubmit">
             <div class="form-section-title">
                 Attention
             </div>
@@ -30,33 +32,81 @@
             <div class="form-group row">
                 <label for="name" class="col-sm-1 col-form-label">Name:</label>
                 <div class="col-sm-11">
-                    <input type="text" class="form-control" id="name" placeholder="can be anything" required>
+                    <input @bind-value="model.Name" type="text" class="form-control" id="name" placeholder="can be anything" required>
                 </div>
             </div>
             <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="useSocket">
+                <input @bind="UseSocket" type="checkbox" class="form-check-input" id="useSocket">
                 <label class="form-check-label" for="useSocket">Use local socket</label>
             </div>
-            <div class="form-group row">
-                <label for="endpointURL" class="col-sm-1 col-form-label">Endpoint URL:</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="endpointURL" placeholder="such as 10.20.30.40:2375, somedomain.com:2375, docker.mydomain.com" required>
+            @if (!UseSocket)
+            {
+                <div class="form-group row">
+                    <label for="endpointURL" class="col-sm-1 col-form-label">Endpoint URL:</label>
+                    <div class="col-sm-11">
+                        <input @bind-value="model.Uri" type="text" class="form-control" id="endpointURL" placeholder="10.20.30.40:2375, somedomain.com:2375, docker.mydomain.com" required>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="col">
-                    <span class="text-muted small">
-                        <span class="font-weight-bolder">Info: </span>Redpier comes packed with the default socket URIs for convenience
-                    </span>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col">
+                        <span class="text-muted small">
+                            <span class="font-weight-bolder">Info: </span>Redpier comes packed with the default socket URIs for convenience
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="name" class="col-sm-1 col-form-label">Socket URI:</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="name" placeholder="defaults are /var/run/docker.sock and npipe://./pipe/docker_engine" required>
+                <div class="form-group row">
+                    <label for="name" class="col-sm-1 col-form-label">Socket URI:</label>
+                    <div class="col-sm-11">
+                        <input @bind-value="model.Uri" type="text" class="form-control" id="sockerUri" placeholder="defaults are /var/run/docker.sock and npipe://./pipe/docker_engine" required>
+                    </div>
                 </div>
-            </div>
-        </form>
-        <a href="#" class="btn btn-primary my-2">Create endpoint</a>
+            }
+            <button type="submit" class="btn btn-primary my-2" disabled="@IsInProgress">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsInProgress)"></span>
+                Create endpoint
+            </button>
+        </EditForm>
     </div>
 </div>
+
+@code{
+    private AddEndpointModel model = new AddEndpointModel();
+
+    public bool IsInProgress { get; set; } = false;
+
+    public bool UseSocket { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        IsInProgress = true;
+
+        try
+        {
+            var response = await Client.PostAsJsonAsync("/api/system/createEndpoint", model);
+
+            if (response.IsSuccessStatusCode)
+            {
+                toastService.ShowSuccess("Endpoint created", "Success");
+            }
+
+            else
+            {
+                toastService.ShowError("Error when creating the endpoint", "Error");
+            }
+
+        }
+
+        catch (AccessTokenNotAvailableException ex)
+        {
+
+            IsInProgress = false;
+            ex.Redirect();
+        }
+
+        IsInProgress = false;
+    }
+
+}

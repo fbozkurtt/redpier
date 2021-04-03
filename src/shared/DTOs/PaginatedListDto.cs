@@ -10,7 +10,7 @@ namespace Redpier.Shared.DTOs
 {
     public class PaginatedListDto<T>
     {
-        public IList<T> Items { get; set; }
+        public List<T> Items { get; set; }
 
         public int PageIndex { get; set; }
 

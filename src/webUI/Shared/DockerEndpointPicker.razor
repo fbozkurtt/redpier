@@ -55,7 +55,7 @@ else
     {
         try
         {
-            var response = await Client.GetAsync("/api/system/endpoints?pagesize=5");
+            var response = await Client.GetAsync("/api/endpoint?pagesize=5");
 
             if (response.IsSuccessStatusCode)
             {

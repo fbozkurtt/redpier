@@ -85,7 +85,7 @@
 
         try
         {
-            var response = await Client.PostAsJsonAsync("/api/system/createEndpoint", model);
+            var response = await Client.PostAsJsonAsync("/api/endpoint", model);
 
             if (response.IsSuccessStatusCode)
             {

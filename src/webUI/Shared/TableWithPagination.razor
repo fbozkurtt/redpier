@@ -25,7 +25,7 @@
                 @foreach (var item in Page.Items)
                 {
                     <tr>
-                        <td><input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="() => { Select(item); }" /></td>
+                        <td><input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="async () => { await Select(item); }" /></td>
                         @TableRow(item)
                     </tr>
                 }
@@ -144,10 +144,10 @@
                 {
                     SelectedItems.Remove(item);
                 }
-                ToastService.ShowSuccess($"Removed {responses.Where(r => r.IsSuccessStatusCode).Count()} {typeof(TItem).Name}(s).");
+                ToastService.ShowSuccess($"Removed {responses.Where(r => r.IsSuccessStatusCode).Count()} {"item"/*GetDisplayName<TItem>() ?? typeof(TItem).Name*/}(s).");
             }
             if (responses.Any(r => !r.IsSuccessStatusCode))
-                ToastService.ShowError($"Failed when removing {responses.Where(r => !r.IsSuccessStatusCode).Count()} {typeof(TItem).Name}(s).");
+                ToastService.ShowError($"Failed when removing {responses.Where(r => !r.IsSuccessStatusCode).Count()} {"item"/*GetDisplayName<TItem>() ?? typeof(TItem).Name*/}(s).");
 
         }
         catch (AccessTokenNotAvailableException ex)
@@ -186,4 +186,11 @@
             await OnItemSelected.InvokeAsync(SelectedItems);
         }
     }
+
+    //public static string GetDisplayName<T>()
+    //{
+    //    return (typeof(T)
+    //        .GetCustomAttributes(typeof(DisplayNameAttribute), true)
+    //        .FirstOrDefault() as DisplayNameAttribute)?.DisplayName;
+    //}
 }

@@ -28,11 +28,13 @@ namespace Redpier.Web.UI
             //});
 
             builder.Services.AddScoped<AuthMessageHandler>();
+            builder.Services.AddScoped<DockerEndpointHandler>();
             builder.Services.AddScoped<AccessTokenProvider>();
 
             builder.Services.AddHttpClient("api",
                     client => client.BaseAddress = new Uri("https://localhost:5000"))
-                .AddHttpMessageHandler<AuthMessageHandler>();
+                .AddHttpMessageHandler<AuthMessageHandler>()
+                .AddHttpMessageHandler<DockerEndpointHandler>();
 
             builder.Services.AddHttpClient("apinoauth",
                     client => client.BaseAddress = new Uri("https://localhost:5000"));

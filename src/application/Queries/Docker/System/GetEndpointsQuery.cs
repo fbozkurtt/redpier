@@ -38,7 +38,7 @@ namespace Redpier.Application.Queries.Docker.System
                 await _context.DockerEndpoints
                 .OrderBy(w => w.Created)
                 .ProjectTo<DockerEndpointDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.All ? Int32.MaxValue : request.PageSize);
+                .ToPaginatedListAsync(request.PageNumber, request.All ? Int32.MaxValue : request.PageSize);
         }
     }
 }

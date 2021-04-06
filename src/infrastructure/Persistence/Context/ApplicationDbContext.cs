@@ -33,12 +33,6 @@ namespace Redpier.Infrastructure.Persistence.Context
 
             base.OnConfiguring(optionsBuilder);
         }
-        //public DbSet<User> Users { get; set; }
-
-        //public DbSet<Role> Roles { get; set; }
-
-        //public DbSet<RoleClaim> RoleClaims { get; set; }
-
 
         public DbSet<DockerEndpoint> DockerEndpoints { get; set; }
 

@@ -7,12 +7,6 @@ namespace Redpier.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        //public DbSet<User> Users { get; set; }
-
-        //public DbSet<Role> Roles { get; set;
-
-        //public DbSet<RoleClaim> RoleClaims { get; set; }
-
         public DbSet<Event> Events { get; set; }
 
         public DbSet<DockerEndpoint> DockerEndpoints { get; set; }

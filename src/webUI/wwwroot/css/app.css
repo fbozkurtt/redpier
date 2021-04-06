@@ -237,17 +237,17 @@ option:focus, option:hover, option.active {
         box-shadow: 0 0 0 0.2rem #c45c5c;
     }
 
-.page-item {
-    cursor: pointer;
-}
-
-    .page-item:disabled, .disabled {
-        cursor: default;
-    }
-
-    .page-item:active, .active {
+    .page-link.active {
         cursor: default;
         color: white;
         background-color: #ba1c1c;
         border-color: #c45c5c;
+    }
+
+.page-item {
+    cursor: pointer;
+}
+
+    .page-item:disabled, page-item.disabled {
+        cursor: default;
     }

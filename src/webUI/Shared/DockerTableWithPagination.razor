@@ -10,12 +10,10 @@
     </div>
 }
 <div class="table-responsive py-2">
-    <table class="table table-hover table-sm">
+    <table class="table table-sm table-hover">
         <thead class="thead-light">
             <tr>
-                <th>
-                    <input type="checkbox" checked="@SelectedItems.Any()" @onclick="SelectAllAsync" />
-                </th>
+                <th><input type="checkbox" checked="@SelectedItems.Any()" @onclick="SelectAllAsync" /></th>
                 @TableHeader
             </tr>
         </thead>
@@ -32,7 +30,7 @@
                     </tr>
                 }
             }
-            else if (IsBusy && Page == null)
+            else if (IsBusy)
             {
                 <tr>
                     <td colspan="@ColSpan">
@@ -42,6 +40,12 @@
                             </div>
                         </div>
                     </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="@ColSpan" class="text-center">No data</td>
                 </tr>
             }
         </tbody>
@@ -57,9 +61,7 @@
             @for (int i = 1; i <= Page.TotalPages; i++)
             {
                 var index = i;
-                <li class="page-item">
-                    <a class="page-link @(index == Page.PageIndex ? "active disabled" : "")" @onclick="async () => await FetchNewPageAsync(index)">@index</a>
-                </li>
+                <li class="page-item"><a class="page-link @(index == Page.PageIndex ? "active disabled" : "")" @onclick="async () => await FetchNewPageAsync(index)">@index</a></li>
             }
             <li class="page-item @(Page.HasNextPage ? "" : "disabled")">
                 <a class="page-link" @onclick="async () => await FetchNewPageAsync(Page.PageIndex + 1)">Next</a>

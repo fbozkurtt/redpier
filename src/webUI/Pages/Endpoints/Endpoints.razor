@@ -8,7 +8,7 @@
             <span class="fa fa-plus"></span> Add endpoint
         </a>
         <CascadingValue Value="@SelectedItems">
-            <TableWithPagination TItem="DockerEndpointDto" ControllerName="endpoint" Context="endpoint" OnItemSelected="ItemSelectedHandler">
+            <TableWithPagination TItem="DockerEndpointDto" ControllerName="endpoint" Context="endpoint" OnItemSelected="ItemSelectedHandler" ColSpan="4">
                 <TableHeader>
                     <th>Name</th>
                     <th>Endpoint</th>

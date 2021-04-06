@@ -5,11 +5,8 @@ using System.ComponentModel;
 
 namespace Redpier.Shared.DTOs
 {
-    [DisplayName("endpoint")]
-    public class DockerEndpointDto : IMapFrom<DockerEndpoint>
+    public class DockerEndpointDto : DtoBase, IMapFrom<DockerEndpoint>
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; }
 
         public string Uri { get; set; }

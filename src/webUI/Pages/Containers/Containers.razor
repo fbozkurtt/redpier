@@ -1,187 +1,116 @@
 ﻿@page "/containers"
 @inject HttpClient HttpClient
 @inject IToastService ToastService
+@using Microsoft.EntityFrameworkCore
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-primary" disabled>Start</button>
-            <button type="button" class="btn btn-outline-primary" disabled>Stop</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Start</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Stop</button>
         </div>
         <div class="d-block d-sm-none py-1" />
         <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-primary" disabled>Pause</button>
-            <button type="button" class="btn btn-outline-primary" disabled>Unpause</button>
-            <button type="button" class="btn btn-outline-primary">Restart</button>
-            <button type="button" class="btn btn-outline-primary">Kill</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Pause</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Unpause</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Restart</button>
+            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Kill</button>
 
-            <button type="button" class="btn btn-danger">
+            @*<button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
                 <div class="form-inline">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsBusy)"></span>
-                    <span class="fa fa-trash" hidden="@(IsBusy)"></span>
+                    <span class="fa fa-trash"></span>
                     <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
                 </div>
-            </button>
+            </button>*@
         </div>
         <div class="d-block d-sm-none py-1" />
-        <a class="btn btn-sm btn-success float-sm-right" href="/containers/add">
-            <div class="form-inline">
-                <span class="fa fa-plus pr-1"></span>Add new container
-            </div>
+        <a class="btn btn-sm btn-success" href="/containers/add">
+            <span class="fa fa-plus"></span>Add new container
         </a>
-        <div class="table-responsive py-2">
-            <table class="table table-sm table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th><input type="checkbox" /></th>
-                        <th scope="col">Name</th>
-                        <th scope="col">State</th>
-                        <th scope="col">Ports</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Stack</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (ContainerList.Count > 0)
-                    {
-                        foreach (var container in ContainerList)
-                        {
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td><a href="@($"/containers/{container.ID}")">@container.Names.First().Trim('/')</a></td>
-                                <td>
-                                    @{
-                                        switch (container.State)
-                                        {
-                                            case "running":
-                                                {
-                                                    <div class="badge badge-success p-2">
-                                                        Running
-                                                    </div>
-                                                    break;
-                                                }
-                                            case "stopped":
-                                                {
-                                                    <div class="badge badge-danger p-2">
-                                                        Stopped
-                                                    </div>
-                                                    break;
-                                                }
-                                            case "exited":
-                                                {
-                                                    <div class="badge badge-danger p-2">
-                                                        Stopped
-                                                    </div>
-                                                    break;
-                                                }
-                                            case "paused":
-                                                {
-                                                    <div class="badge badge-warning p-2">
-                                                        Paused
-                                                    </div>
-                                                    break;
-                                                }
-                                            default:
-                                                break;
-                                        }
+        <CascadingValue Value="@SelectedItems">
+            <DockerTableWithPagination TItem="ContainerListResponse" ControllerName="container" Context="container" OnItemSelected="ItemSelectedHandler" ColSpan="8" IncludeRemoveButton="true">
+                <TableHeader>
+                    <th scope="col">Name</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Ports</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Stack</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
+                </TableHeader>
+                <TableRow>
+                    <td><a href="@($"/containers/{container.ID}")">@container.Names.First().Trim('/')</a></td>
+                    <td>
+                        @{
+                            switch (container.State)
+                            {
+                                case "running":
+                                    {
+                                        <div class="badge badge-success p-2">
+                                            Running
+                                        </div>
+                                        break;
                                     }
-                                </td>
-                                <td>
-                                    @{
-                                        foreach (var port in container.Ports.Take(3).ToList())
-                                        {
-                                            <div class="badge badge-info p-1 mr-1">
-                                                <a href="http://localhost:@port.PublicPort" target="_blank" class="text-white">@($"{port.PublicPort}:{port.PrivatePort}")</a>
-                                            </div>
-                                        }
+                                case "stopped":
+                                    {
+                                        <div class="badge badge-danger p-2">
+                                            Stopped
+                                        </div>
+                                        break;
                                     }
-                                </td>
-                                <td>@container.Image</td>
-                                <td>-</td>
-                                <td>@container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                                <td>
-                                    <a href="/containers/logs/portainer" class="fa fa-file-alt px-1"></a>
-                                    <a href="#" class="fa fa-info-circle px-1"></a>
-                                    <a href="#" class="fa fa-chart-area px-1"></a>
-                                    <a href="/containers/console/portainer" target="_blank" class="fa fa-terminal px-1"></a>
-                                </td>
-                            </tr>
+                                case "exited":
+                                    {
+                                        <div class="badge badge-danger p-2">
+                                            Stopped
+                                        </div>
+                                        break;
+                                    }
+                                case "paused":
+                                    {
+                                        <div class="badge badge-warning p-2">
+                                            Paused
+                                        </div>
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                    else if (IsBusy)
-                    {
-                        <tr>
-                            <td colspan="8">
-                                <div class="text-center dropdown-item">
-                                    <div class="spinner-border spinner-border-sm" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
+                    </td>
+                    <td>
+                        @{
+                            foreach (var port in container.Ports.Where(p => p.PublicPort != 0).Take(3).ToList())
+                            {
+                                <div class="badge badge-info p-1 mr-1">
+                                    <a href="http://localhost:@port.PublicPort" target="_blank" class="text-white">@($"{port.PublicPort}:{port.PrivatePort}")</a>
                                 </div>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="8" class="text-center">No data</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <nav aria-label="Containers pagination">
-            <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+                            }
+                        }
+                    </td>
+                    <td>@container.Image</td>
+                    <td>-</td>
+                    <td>@container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        <a href="/containers/logs/portainer" class="fa fa-file-alt px-1"></a>
+                        <a href="#" class="fa fa-info-circle px-1"></a>
+                        <a href="#" class="fa fa-chart-area px-1"></a>
+                        <a href="/containers/console/portainer" target="_blank" class="fa fa-terminal px-1"></a>
+                    </td>
+                </TableRow>
+            </DockerTableWithPagination>
+        </CascadingValue>
+        @foreach (var item in SelectedItems)
+        {
+            @item.Names.First()<br />
+        }
     </div>
 </div>
 
 @code{
-    public List<string> SelectedContainerIds { get; set; } = new List<string>();
+    public List<ContainerListResponse> SelectedItems { get; set; } = new List<ContainerListResponse>();
 
-    public List<ContainerListResponse> ContainerList { get; set; } = new List<ContainerListResponse>();
-
-    public bool IsBusy { get; set; } = true;
-
-    protected override async Task OnInitializedAsync()
+    public void ItemSelectedHandler(List<ContainerListResponse> items)
     {
-        await FetchData();
-    }
-
-    public async Task FetchData()
-    {
-        try
-        {
-            IsBusy = true;
-            var response = await HttpClient.GetAsync($"/api/container");
-
-            if (response.IsSuccessStatusCode)
-            {
-                ContainerList = await response.Content.ReadFromJsonAsync<List<ContainerListResponse>>();
-            }
-        }
-        catch (AccessTokenNotAvailableException ex)
-        {
-            ex.Redirect();
-        }
-        catch (Exception ex)
-        {
-            ToastService.ShowError(ex.Message);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
+        SelectedItems = items;
     }
 }

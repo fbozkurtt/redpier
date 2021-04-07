@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Redpier.Shared.Mappings
+namespace Redpier.Application.Common.Mappings
 {
     public interface IMapFrom<T>
     {

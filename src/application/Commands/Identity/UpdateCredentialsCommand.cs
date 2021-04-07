@@ -27,7 +27,7 @@ namespace Redpier.Application.Commands.Identity
             _currentUserService = currentUserService;
         }
 
-        public async Task<bool> Handle(UpdateCredentialsCommand request, CancellationToken cancellationToken)
+        public Task<bool> Handle(UpdateCredentialsCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
             //var user = await _userRepository.GetAsync(_currentUserService.UserId);

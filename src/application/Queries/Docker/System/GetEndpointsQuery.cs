@@ -2,9 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Redpier.Application.Common.Interfaces;
-using Redpier.Application.Common.Models;
-using Redpier.Shared.DTOs;
-using Redpier.Shared.Mappings;
+using Redpier.Application.DTOs;
+using Redpier.Shared.Extensions;
 using Redpier.Shared.Models;
 using System;
 using System.Linq;

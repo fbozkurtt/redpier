@@ -5,10 +5,6 @@ using Redpier.Application.Common.Interfaces;
 using Redpier.Domain.Entities;
 using Redpier.Shared.Constants;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

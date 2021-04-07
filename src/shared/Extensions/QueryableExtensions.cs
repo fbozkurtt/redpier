@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Redpier.Shared.Mappings
+namespace Redpier.Shared.Extensions
 {
-    public static class MappingExtensions
+    public static class QueryableExtensions
     {
         public static Task<PaginatedList<TDestination>> ToPaginatedListAsync<TDestination>(this IQueryable<TDestination> queryable, int pageNumber, int pageSize)
             => PaginatedList<TDestination>.CreateAsync(queryable, pageNumber, pageSize);

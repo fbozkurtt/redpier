@@ -1,9 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -15,7 +13,7 @@ namespace Redpier.Web.UI.Components
         private readonly AccessTokenProvider _tokenProvider;
 
         public AuthStateProvider(ILocalStorageService localStorage,
-            HttpClient  httpClient,
+            HttpClient httpClient,
             AccessTokenProvider tokenProvider)
         {
             _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
@@ -26,7 +24,7 @@ namespace Redpier.Web.UI.Components
         {
             var result = await _tokenProvider.RequestAccessToken();
 
-            if(result.Status == AccessTokenResultStatus.Success)
+            if (result.Status == AccessTokenResultStatus.Success)
             {
                 var identity = new ClaimsIdentity("Bearer");
 

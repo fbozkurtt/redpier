@@ -3,8 +3,8 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Redpier.Application.Common.Mappings;
 using Redpier.Shared.Constants;
-using Redpier.Shared.Mappings;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,11 +20,11 @@ namespace Redpier.Application.Commands.Docker.Containers
         [Required]
         public string Id { get; set; }
 
-        public bool? RemoveVolumes { get; set; }
+        public bool? RemoveVolumes { get; set; } = false;
 
-        public bool? RemoveLinks { get; set; }
+        public bool? RemoveLinks { get; set; } = false;
 
-        public bool? Force { get; set; }
+        public bool? Force { get; set; } = true;
     }
 
     public class RemoveContainerCommandHandler : IRequestHandler<RemoveContainerCommand>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Docker.Containers;
 using Redpier.Application.Queries.Docker.Containers;
+using Redpier.Shared.Constants;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace Redpier.Web.API.Controllers
             return await Mediator.Send(query);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Start(StartContainerCommand command)
         {
@@ -50,7 +51,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Stop(StopContainerCommand command)
         {
@@ -59,7 +60,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Restart(RestartContainerCommand command)
         {
@@ -68,7 +69,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Pause(PauseContainerCommand command)
         {
@@ -77,7 +78,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Unpause(UnpauseContainerCommand command)
         {
@@ -86,7 +87,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Kill(KillContainerCommand command)
         {
@@ -95,7 +96,7 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ActionResult> Rename(RenameContainerCommand command)
         {
@@ -104,23 +105,23 @@ namespace Redpier.Web.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
         public async Task<ContainerUpdateResponse> Update([FromBody] UpdateContainerCommand command)
         {
             return await Mediator.Send(command);
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("[action]")]
-        public async Task<ActionResult> Remove(RemoveContainerCommand command)
+        [Authorize(Roles = DefaultRoleNames.Admin)]
+        [HttpDelete]
+        public async Task<ActionResult> Remove([FromQuery] RemoveContainerCommand command)
         {
             await Mediator.Send(command);
 
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpDelete("[action]")]
         public async Task<ContainersPruneResponse> Prune(PruneContainersCommand command)
         {

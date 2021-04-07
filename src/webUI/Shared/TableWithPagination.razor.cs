@@ -1,7 +1,8 @@
 ﻿using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Redpier.Shared.DTOs;
+using Redpier.Shared.Models;
+using Redpier.Web.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Redpier.Web.UI.Shared
         [Parameter]
         public int ColSpan { get; set; }
 
-        public PaginatedListDto<TItem> Page { get; set; }
+        public Redpier.Shared.Models.PaginatedList<TItem> Page { get; set; }
 
         public bool IsBusy { get; set; } = true;
 
@@ -62,7 +63,7 @@ namespace Redpier.Web.UI.Shared
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Page = await response.Content.ReadFromJsonAsync<PaginatedListDto<TItem>>();
+                    Page = await response.Content.ReadFromJsonAsync<Redpier.Shared.Models.PaginatedList<TItem>>();
                 }
             }
             catch (AccessTokenNotAvailableException ex)
@@ -89,7 +90,7 @@ namespace Redpier.Web.UI.Shared
                 var removedItems = new List<TItem>();
                 foreach (var item in SelectedItems)
                 {
-                    var response = await HttpClient.DeleteAsync($"/api/{ControllerName}?Id={(item as DtoBase).Id}");
+                    var response = await HttpClient.DeleteAsync($"/api/{ControllerName}?Id={(item as ViewModelBase).Id}");
                     responses.Add(response);
                     if (response.IsSuccessStatusCode)
                         removedItems.Add(item);

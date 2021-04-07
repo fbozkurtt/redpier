@@ -1,8 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Redpier.Web.UI.Components
@@ -33,7 +31,7 @@ namespace Redpier.Web.UI.Components
                 return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, null, "/login");
             }
 
-            var accessToken =  new AccessToken() { Value = token, Expires = expires };
+            var accessToken = new AccessToken() { Value = token, Expires = expires };
 
             return new AccessTokenResult(AccessTokenResultStatus.Success, accessToken, "/");
         }

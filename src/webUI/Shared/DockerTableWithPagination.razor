@@ -1,5 +1,11 @@
 ﻿@typeparam TItem
 
+<CascadingValue Value="ProgressBarValue">
+    <CascadingValue Value="ShowProgressBar">
+        <ProgressBar ProgressBarMaxValue="ProgressBarMaxValue"></ProgressBar>
+    </CascadingValue>
+</CascadingValue>
+<input type="number" @bind="ProgressBarValue"/>
 @if (IncludeRemoveButton)
 {
     <div class="btn-group float-right">

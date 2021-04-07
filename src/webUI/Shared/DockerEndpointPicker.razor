@@ -47,7 +47,7 @@ else
     [Parameter]
     public bool IsForMobile { get; set; } = false;
 
-    public PaginatedListDto<DockerEndpointDto> Endpoints;
+    public PaginatedListViewModel<Endpoint> Endpoints;
 
     public Guid SelectedEndpointId { get; set; }
 
@@ -59,7 +59,7 @@ else
 
             if (response.IsSuccessStatusCode)
             {
-                Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListDto<DockerEndpointDto>>();
+                Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListViewModel<Endpoint>>();
 
                 var savedEndpointId = await localStorage.GetItemAsync<Guid>("selectedEndpointId");
                 if (savedEndpointId != default && Endpoints.Items.Select(e => e.Id).ToList().Contains(savedEndpointId))

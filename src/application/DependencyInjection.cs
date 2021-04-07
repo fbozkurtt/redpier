@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Application.Common.Behaviours;
-using Redpier.Shared.Mappings;
 using System.Reflection;
 
 namespace Redpier.Application
@@ -11,7 +10,7 @@ namespace Redpier.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

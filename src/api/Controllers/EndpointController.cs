@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Redpier.Application.Common.Models;
-using Redpier.Shared.DTOs;
-using Redpier.Application.Queries.Docker.System;
-using System.Threading.Tasks;
-using Redpier.Shared.Models;
 using Redpier.Application.Commands.Docker.System;
+using Redpier.Application.DTOs;
+using Redpier.Application.Queries.Docker.System;
+using Redpier.Shared.Models;
+using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Controllers
 {

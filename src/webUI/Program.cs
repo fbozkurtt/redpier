@@ -1,13 +1,11 @@
 using Blazored.LocalStorage;
 using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Web.UI.Components;
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Redpier.Web.UI
@@ -39,7 +37,7 @@ namespace Redpier.Web.UI
             builder.Services.AddHttpClient("apinoauth",
                     client => client.BaseAddress = new Uri("https://localhost:5000"));
 
-            builder.Services.AddTransient(sp => 
+            builder.Services.AddTransient(sp =>
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 
             builder.Services.AddBlazoredToast();

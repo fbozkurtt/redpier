@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Redpier.Shared.Mappings
+namespace Redpier.Application.Common.Mappings
 {
     public class MappingProfile : Profile
     {

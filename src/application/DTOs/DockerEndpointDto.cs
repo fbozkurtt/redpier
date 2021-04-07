@@ -1,9 +1,7 @@
-﻿using Redpier.Domain.Entities;
-using Redpier.Shared.Mappings;
-using System;
-using System.ComponentModel;
+﻿using Redpier.Application.Common.Mappings;
+using Redpier.Domain.Entities;
 
-namespace Redpier.Shared.DTOs
+namespace Redpier.Application.DTOs
 {
     public class DockerEndpointDto : DtoBase, IMapFrom<DockerEndpoint>
     {

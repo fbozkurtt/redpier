@@ -1,7 +1,7 @@
 ﻿using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Redpier.Shared.Mappings;
+using Redpier.Shared.Extensions;
 using Redpier.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -50,6 +50,12 @@ namespace Redpier.Web.UI.Shared
 
         public bool IsBusy { get; set; } = true;
 
+        public double ProgressBarMaxValue { get; set; } = 100;
+
+        public double ProgressBarValue { get; set; } = 0;
+
+        public bool ShowProgressBar { get; set; } = true;
+
         protected override async Task OnInitializedAsync()
         {
             await FetchDataAsync();
@@ -92,6 +98,9 @@ namespace Redpier.Web.UI.Shared
             IsBusy = true;
             try
             {
+                ProgressBarMaxValue = SelectedItems.Count;
+                ShowProgressBar = true;
+
                 var responses = new List<HttpResponseMessage>();
                 var removedItems = new List<TItem>();
                 foreach (var item in SelectedItems)
@@ -100,10 +109,12 @@ namespace Redpier.Web.UI.Shared
                     responses.Add(response);
                     if (response.IsSuccessStatusCode)
                         removedItems.Add(item);
+                    ProgressBarValue += 1;
                 }
                 if (responses.Any(r => r.IsSuccessStatusCode))
                 {
                     Page.Items.RemoveAll(i => SelectedItems.Contains(i));
+                    Items.RemoveAll(i => SelectedItems.Contains(i));
                     foreach (var item in removedItems)
                     {
                         SelectedItems.Remove(item);
@@ -125,6 +136,8 @@ namespace Redpier.Web.UI.Shared
             finally
             {
                 await OnItemSelected.InvokeAsync(SelectedItems);
+                ShowProgressBar = false;
+                ProgressBarValue = 0;
                 IsBusy = false;
             }
         }

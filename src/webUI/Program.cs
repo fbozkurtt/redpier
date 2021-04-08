@@ -47,7 +47,7 @@ namespace Redpier.Web.UI
 
             builder.Services.AddBlazoredToast();
 
-            builder.Services.AddOptions();
+            //builder.Services.AddOptions();
 
             builder.Services.AddAuthorizationCore();
 

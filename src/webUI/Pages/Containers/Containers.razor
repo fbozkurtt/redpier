@@ -1,8 +1,10 @@
 ﻿@page "/containers"
-@inject HttpClient HttpClient
-@inject IToastService ToastService
 @using Docker.DotNet.Models
 
+<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="true"></ProgressBar>
+<input type="number" @bind="ProgressBarValue" />
+<input type="checkbox" @bind="IsBusy" />
+<button @onclick="FetchData">fetch</button>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         <div class="btn-group btn-group-sm">
@@ -16,18 +18,24 @@
             <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Restart</button>
             <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Kill</button>
 
-            @*<button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
-                    <div class="form-inline">
-                        <span class="fa fa-trash"></span>
-                        <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
-                    </div>
-                </button>*@
+            <button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
+                <div class="form-inline">
+                    <span class="fa fa-trash"></span>
+                    <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
+                </div>
+            </button>
+
         </div>
         <div class="d-block d-sm-none py-1" />
-        <a class="btn btn-sm btn-success" href="/containers/add">
+        <a class="btn btn-sm btn-success float-right" href="/containers/add">
             <span class="fa fa-plus"></span>Add new container
         </a>
-        <DockerTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" ControllerName="container" ColSpan="8" IncludeRemoveButton="true">
+        @*<div class="btn-group float-right">
+                <button type="button" class="btn btn-sm btn-danger" disabled="@(IsBusy || !SelectedItems.Any())">
+                    <span class="fa fa-trash"></span> Remove
+                </button>
+            </div>*@
+        <DockerTableWithPagination @bind-Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8">
             <TableHeader>
                 <th scope="col">Name</th>
                 <th scope="col">State</th>
@@ -101,16 +109,28 @@
         {
             @item.Names.First()<br />
         }
+        @foreach (var item in Items)
+        {
+            @item.Names.First()<br />
+        }
     </div>
 </div>
 
 @code{
-    public List<ContainerListResponse> SelectedItems { get; set; } = new List<ContainerListResponse>();
-
-    public List<ContainerListResponse> Items { get; set; }
 
     [Inject]
     public IContainerService ContainerService { get; set; }
+
+    [Inject]
+    public IToastService ToastService { get; set; }
+
+    public bool IsBusy { get; set; } = false;
+
+    public double ProgressBarValue { get; set; } = 0;
+
+    public List<ContainerListResponse> SelectedItems { get; set; } = new List<ContainerListResponse>();
+
+    public List<ContainerListResponse> Items { get; set; } = new List<ContainerListResponse>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -119,22 +139,74 @@
 
     public async Task FetchData()
     {
-        Items = await ContainerService.GetAllAsync();
+        try
+        {
+            IsBusy = true;
+            ProgressBarValue = 1;
+            Items = await ContainerService.GetAllAsync();
+            foreach (var item in Items)
+            {
+                Console.WriteLine(item.ID);
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("Error occured while fetching data from the server");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            IsBusy = false;
+        }
     }
 
     public async Task StartContainers()
     {
-        foreach (var container in SelectedItems)
+        try
         {
-            var result = await ContainerService.StartContainerAsync(container.ID);
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.StartContainerAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Started {container.ID}");
+                else
+                    ToastService.ShowWarning($"An error occured while starting {container.ID}");
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while starting container(s)");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
     public async Task StopContainers()
     {
-        foreach (var container in SelectedItems)
+        try
         {
-            var result = await ContainerService.StopContainerAsync(container.ID);
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.StopContainerAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Stopped {container.ID}");
+                else
+                    ToastService.ShowWarning($"An error occured while stopping {container.ID}");
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while stopping container(s)");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }

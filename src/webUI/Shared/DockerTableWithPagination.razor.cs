@@ -14,14 +14,21 @@ namespace Redpier.Web.UI.Shared
 {
     public partial class DockerTableWithPagination<TItem> : ComponentBase
     {
-        [Inject]
-        public HttpClient HttpClient { get; set; }
-
-        [Inject]
-        public IToastService ToastService { get; set; }
+        private List<TItem> _items { get; set; }
 
         [Parameter]
-        public List<TItem> Items { get; set; }
+        public List<TItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                _items = value;
+                StateHasChanged();
+            }
+        }
 
         [Parameter]
         public List<TItem> SelectedItems { get; set; }
@@ -30,112 +37,40 @@ namespace Redpier.Web.UI.Shared
         public int PageSize { get; set; } = 10;
 
         [Parameter]
-        public string ControllerName { get; set; } = typeof(TItem).Name;
-
-        [Parameter]
         public RenderFragment TableHeader { get; set; }
 
         [Parameter]
         public RenderFragment<TItem> TableRow { get; set; }
 
         [Parameter]
-        public bool IncludeRemoveButton { get; set; } = true;
+        public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
 
         [Parameter]
-        public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
+        public EventCallback<List<TItem>> ItemsChanged { get; set; }
 
         [Parameter]
         public int ColSpan { get; set; }
 
+        [Parameter]
+        public bool IsSmallTable { get; set; } = true;
+
+        [Parameter]
+        public bool IsBusy { get; set; }
+
         public PaginatedList<TItem> Page { get; set; }
-
-        public bool IsBusy { get; set; } = true;
-
-        public double ProgressBarValue { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            await FetchDataAsync();
-            await FetchNewPageAsync(1);
-        }
-        public async Task FetchDataAsync()
-        {
-            try
-            {
-                IsBusy = true;
-                var response = await HttpClient.GetAsync($"/api/{ControllerName}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    Items = await response.Content.ReadFromJsonAsync<List<TItem>>();
-                }
-            }
-            catch (AccessTokenNotAvailableException ex)
-            {
-                ex.Redirect();
-            }
-            catch (Exception ex)
-            {
-                ToastService.ShowError(ex.Message);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            _items = Items;
+            await SetPageAsync(1);
         }
 
-        public async Task FetchNewPageAsync(int pageNumber)
+        public async Task SetPageAsync(int pageNumber)
         {
-            Page = Items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
+            Page = _items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
             SelectedItems.Clear();
 
             await SelectedItemsChanged.InvokeAsync(SelectedItems);
-        }
-
-        public async Task RemoveAsync()
-        {
-            IsBusy = true;
-            try
-            {
-                ProgressBarValue = 1;
-                var responses = new List<HttpResponseMessage>();
-                var removedItems = new List<TItem>();
-                foreach (var item in SelectedItems)
-                {
-                    var response = await HttpClient.DeleteAsync($"/api/{ControllerName}?Id={item.GetType().GetProperty("ID").GetValue(item)}");
-                    responses.Add(response);
-                    if (response.IsSuccessStatusCode)
-                        removedItems.Add(item);
-                    ProgressBarValue += 1;
-                    StateHasChanged();
-                }
-                if (responses.Any(r => r.IsSuccessStatusCode))
-                {
-                    Page.Items.RemoveAll(i => SelectedItems.Contains(i));
-                    Items.RemoveAll(i => SelectedItems.Contains(i));
-                    foreach (var item in removedItems)
-                    {
-                        SelectedItems.Remove(item);
-                    }
-                    ToastService.ShowSuccess($"Removed {responses.Where(r => r.IsSuccessStatusCode).Count()} item(s).");
-                }
-                if (responses.Any(r => !r.IsSuccessStatusCode))
-                    ToastService.ShowError($"Failed when removing {responses.Where(r => !r.IsSuccessStatusCode).Count()} item(s).");
-
-            }
-            catch (AccessTokenNotAvailableException ex)
-            {
-                ex.Redirect();
-            }
-            catch (Exception ex)
-            {
-                ToastService.ShowError(ex.Message);
-            }
-            finally
-            {
-                await SelectedItemsChanged.InvokeAsync(SelectedItems);
-                IsBusy = false;
-            }
         }
 
         public async Task SelectAllAsync()

@@ -9,10 +9,11 @@
             </tr>
         </thead>
         <tbody>
-            @if (Page != null && Page.TotalCount > 0)
+            @if (true@*Page != null && Page.TotalCount > 0*@)
             {
-                @foreach (var item in Page.Items)
+                @foreach (var item in Items)
                 {
+                    Console.WriteLine(Page.Items.Count);
                     <tr>
                         <td>
                             <input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="e => SelectAsync(item)" />

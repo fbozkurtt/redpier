@@ -62,6 +62,7 @@ namespace Redpier.Web.UI.Shared
         protected override async Task OnInitializedAsync()
         {
             _items = Items;
+            await ItemsChanged.InvokeAsync(_items);
             await SetPageAsync(1);
         }
 
@@ -69,7 +70,7 @@ namespace Redpier.Web.UI.Shared
         {
             Page = _items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
             SelectedItems.Clear();
-
+            Console.WriteLine(Page.Items.Count);
             await SelectedItemsChanged.InvokeAsync(SelectedItems);
         }
 

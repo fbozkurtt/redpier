@@ -44,7 +44,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Start(StartContainerCommand command)
+        public async Task<ActionResult> Start([FromQuery] StartContainerCommand command)
         {
             await Mediator.Send(command);
 
@@ -53,7 +53,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Stop(StopContainerCommand command)
+        public async Task<ActionResult> Stop([FromQuery] StopContainerCommand command)
         {
             await Mediator.Send(command);
 

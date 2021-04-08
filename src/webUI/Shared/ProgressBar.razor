@@ -1,6 +1,6 @@
 ﻿<div class="progress" hidden="@(!ShowProgressBar)">
     <div class="progress-bar" role="progressbar"
-         style="width: @(((ProgressBarValue / ProgressBarMaxValue) * 100).ToString() + "%")"
+         style="width: @(((int)((ProgressBarValue / ProgressBarMaxValue) * 100)).ToString() + "%")"
          aria-valuenow="@ProgressBarValue"
          aria-valuemin="0"
          aria-valuemax="@ProgressBarMaxValue">
@@ -8,12 +8,18 @@
 </div>
 
 @code{
-    [CascadingParameter]
-    public double ProgressBarValue { get; set; }
-
-    [CascadingParameter]
+    [Parameter]
     public bool ShowProgressBar { get; set; }
 
     [Parameter]
+    public double ProgressBarValue { get; set; } = 0;
+
+    [Parameter]
     public double ProgressBarMaxValue { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ProgressBarValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ShowProgressBarChanged { get; set; }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Web.UI.Components;
+using Redpier.Web.UI.Interfaces;
+using Redpier.Web.UI.Services;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -39,6 +41,9 @@ namespace Redpier.Web.UI
 
             builder.Services.AddTransient(sp =>
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
+
+
+            builder.Services.AddScoped<IContainerService, ContainerService>();
 
             builder.Services.AddBlazoredToast();
 

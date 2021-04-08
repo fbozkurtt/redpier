@@ -20,7 +20,10 @@ namespace Redpier.Web.UI.Shared
         [Inject]
         public IToastService ToastService { get; set; }
 
-        [CascadingParameter]
+        [Parameter]
+        public List<TItem> Items { get; set; }
+
+        [Parameter]
         public List<TItem> SelectedItems { get; set; }
 
         [Parameter]
@@ -39,22 +42,16 @@ namespace Redpier.Web.UI.Shared
         public bool IncludeRemoveButton { get; set; } = true;
 
         [Parameter]
-        public EventCallback<List<TItem>> OnItemSelected { get; set; }
+        public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
 
         [Parameter]
         public int ColSpan { get; set; }
 
         public PaginatedList<TItem> Page { get; set; }
 
-        public List<TItem> Items { get; set; }
-
         public bool IsBusy { get; set; } = true;
 
-        public double ProgressBarMaxValue { get; set; } = 100;
-
-        public double ProgressBarValue { get; set; } = 0;
-
-        public bool ShowProgressBar { get; set; } = true;
+        public double ProgressBarValue { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -90,7 +87,9 @@ namespace Redpier.Web.UI.Shared
         public async Task FetchNewPageAsync(int pageNumber)
         {
             Page = Items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
-            await OnItemSelected.InvokeAsync(new List<TItem>());
+            SelectedItems.Clear();
+
+            await SelectedItemsChanged.InvokeAsync(SelectedItems);
         }
 
         public async Task RemoveAsync()
@@ -98,9 +97,7 @@ namespace Redpier.Web.UI.Shared
             IsBusy = true;
             try
             {
-                ProgressBarMaxValue = SelectedItems.Count;
-                ShowProgressBar = true;
-
+                ProgressBarValue = 1;
                 var responses = new List<HttpResponseMessage>();
                 var removedItems = new List<TItem>();
                 foreach (var item in SelectedItems)
@@ -110,6 +107,7 @@ namespace Redpier.Web.UI.Shared
                     if (response.IsSuccessStatusCode)
                         removedItems.Add(item);
                     ProgressBarValue += 1;
+                    StateHasChanged();
                 }
                 if (responses.Any(r => r.IsSuccessStatusCode))
                 {
@@ -135,9 +133,7 @@ namespace Redpier.Web.UI.Shared
             }
             finally
             {
-                await OnItemSelected.InvokeAsync(SelectedItems);
-                ShowProgressBar = false;
-                ProgressBarValue = 0;
+                await SelectedItemsChanged.InvokeAsync(SelectedItems);
                 IsBusy = false;
             }
         }
@@ -145,23 +141,21 @@ namespace Redpier.Web.UI.Shared
         public async Task SelectAllAsync()
         {
             if (SelectedItems.Any())
-                await OnItemSelected.InvokeAsync(new List<TItem>());
+                SelectedItems.Clear();
             else
-                await OnItemSelected.InvokeAsync(Page.Items.ToList());
+                SelectedItems = Page.Items.ToList();
+
+            await SelectedItemsChanged.InvokeAsync(SelectedItems);
         }
 
         public async Task SelectAsync(TItem item)
         {
             if (SelectedItems.Contains(item))
-            {
                 SelectedItems.Remove(item);
-                await OnItemSelected.InvokeAsync(SelectedItems);
-            }
             else
-            {
                 SelectedItems.Add(item);
-                await OnItemSelected.InvokeAsync(SelectedItems);
-            }
+
+            await SelectedItemsChanged.InvokeAsync(SelectedItems);
         }
     }
 }

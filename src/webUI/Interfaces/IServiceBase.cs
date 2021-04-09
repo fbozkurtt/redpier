@@ -7,7 +7,6 @@ namespace Redpier.Web.UI.Interfaces
 {
     public interface IServiceBase<T>
     {
-        Task<bool> CreateAsync(T item);
-        Task<IList<T>> GetAsync();
+        Task<List<T>> GetAllAsync();
     }
 }

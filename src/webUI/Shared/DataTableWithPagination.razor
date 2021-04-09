@@ -9,11 +9,10 @@
             </tr>
         </thead>
         <tbody>
-            @if (true@*Page != null && Page.TotalCount > 0*@)
+            @if (Page != null && Page.TotalCount > 0)
             {
-                @foreach (var item in Items)
+                @foreach (var item in Page.Items)
                 {
-                    Console.WriteLine(Page.Items.Count);
                     <tr>
                         <td>
                             <input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="e => SelectAsync(item)" />
@@ -26,7 +25,7 @@
             {
                 <tr>
                     <td colspan="@ColSpan">
-                        <div class="text-center dropdown-item">
+                        <div class="text-center">
                             <div class="spinner-border spinner-border-sm" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -34,7 +33,7 @@
                     </td>
                 </tr>
             }
-            else if (Page.Items.Count == 0)
+            else if (Page == null || Page.Items.Count == 0)
             {
                 <tr>
                     <td colspan="@ColSpan" class="text-center">No data</td>

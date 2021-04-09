@@ -1,115 +1,120 @@
 ﻿@page "/containers"
+@inherits BaseComponentWithDataTable<ContainerListResponse>
 @using Docker.DotNet.Models
 
-<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="true"></ProgressBar>
-<input type="number" @bind="ProgressBarValue" />
-<input type="checkbox" @bind="IsBusy" />
 <button @onclick="FetchData">fetch</button>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
-        <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Start</button>
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Stop</button>
-        </div>
-        <div class="d-block d-sm-none py-1" />
-        <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Pause</button>
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Unpause</button>
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Restart</button>
-            <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Kill</button>
-
-            <button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
-                <div class="form-inline">
-                    <span class="fa fa-trash"></span>
-                    <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
-                </div>
-            </button>
-
-        </div>
-        <div class="d-block d-sm-none py-1" />
-        <a class="btn btn-sm btn-success float-sm-right" href="/containers/add">
-            <span class="fa fa-plus"></span>Add new container
-        </a>
-        @*<div class="btn-group float-right">
-                <button type="button" class="btn btn-sm btn-danger" disabled="@(IsBusy || !SelectedItems.Any())">
-                    <span class="fa fa-trash"></span> Remove
-                </button>
-            </div>*@
-        <DockerTableWithPagination @bind-Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8">
-            <TableHeader>
-                <th scope="col">Name</th>
-                <th scope="col">State</th>
-                <th scope="col">Ports</th>
-                <th scope="col">Image</th>
-                <th scope="col">Stack</th>
-                <th scope="col">Created</th>
-                <th scope="col">Actions</th>
-            </TableHeader>
-            <TableRow>
-                <td><a href="@($"/containers/{container.ID}")">@container.Names.First().Trim('/')</a></td>
-                <td>
-                    @{
-                        switch (container.State)
-                        {
-                            case "running":
-                                {
-                                    <div class="badge badge-success p-2">
-                                        Running
-                                    </div>
-                                    break;
-                                }
-                            case "stopped":
-                                {
-                                    <div class="badge badge-danger p-2">
-                                        Stopped
-                                    </div>
-                                    break;
-                                }
-                            case "exited":
-                                {
-                                    <div class="badge badge-danger p-2">
-                                        Stopped
-                                    </div>
-                                    break;
-                                }
-                            case "paused":
-                                {
-                                    <div class="badge badge-warning p-2">
-                                        Paused
-                                    </div>
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                    }
-                </td>
-                <td>
-                    @{
-                        foreach (var port in container.Ports.Where(p => p.PublicPort != 0).Take(3).ToList())
-                        {
-                            <div class="badge badge-info p-1 mr-1">
-                                <a href="http://localhost:@port.PublicPort" target="_blank" class="text-white">@($"{port.PublicPort}:{port.PrivatePort}")</a>
-                            </div>
-                        }
-                    }
-                </td>
-                <td>@container.Image</td>
-                <td>-</td>
-                <td>@container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                <td>
-                    <a href="/containers/logs/portainer" class="fa fa-file-alt px-1"></a>
-                    <a href="#" class="fa fa-info-circle px-1"></a>
-                    <a href="#" class="fa fa-chart-area px-1"></a>
-                    <a href="/containers/console/portainer" target="_blank" class="fa fa-terminal px-1"></a>
-                </td>
-            </TableRow>
-        </DockerTableWithPagination>
-        @foreach (var item in SelectedItems)
+        @if (PageLoaded)
         {
-            @item.Names.First()<br />
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="StartContainers">Start</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="StopContainers">Stop</button>
+            </div>
+            <div class="d-block d-sm-none py-1" />
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Pause</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Unpause</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Restart</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Kill</button>
+
+                <button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
+                    <div class="form-inline">
+                        <span class="fa fa-trash"></span>
+                        <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
+                    </div>
+                </button>
+
+            </div>
+            <div class="d-block d-sm-none py-1" />
+            <a class="btn btn-sm btn-success float-sm-right" href="/containers/add">
+                <span class="fa fa-plus"></span>Add new container
+            </a>
+            @*<div class="btn-group float-right">
+                    <button type="button" class="btn btn-sm btn-danger" disabled="@(IsBusy || !SelectedItems.Any())">
+                        <span class="fa fa-trash"></span> Remove
+                    </button>
+                </div>*@
+            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable">
+                <TableHeader>
+                    <th scope="col">Name</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Ports</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Stack</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
+                </TableHeader>
+                <TableRow>
+                    <td><a href="@($"/containers/{container.ID}")">@container.Names.First().Trim('/')</a></td>
+                    <td>
+                        @{
+                            switch (container.State)
+                            {
+                                case "running":
+                                    {
+                                        <div class="badge badge-success p-2">
+                                            Running
+                                        </div>
+                                        break;
+                                    }
+                                case "stopped":
+                                    {
+                                        <div class="badge badge-danger p-2">
+                                            Stopped
+                                        </div>
+                                        break;
+                                    }
+                                case "exited":
+                                    {
+                                        <div class="badge badge-danger p-2">
+                                            Stopped
+                                        </div>
+                                        break;
+                                    }
+                                case "paused":
+                                    {
+                                        <div class="badge badge-warning p-2">
+                                            Paused
+                                        </div>
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            foreach (var port in container.Ports.Where(p => p.PublicPort != 0).Take(3).ToList())
+                            {
+                                <div class="badge badge-info p-1 mr-1">
+                                    <a href="http://localhost:@port.PublicPort" target="_blank" class="text-white">@($"{port.PublicPort}:{port.PrivatePort}")</a>
+                                </div>
+                            }
+                        }
+                    </td>
+                    <td>@container.Image</td>
+                    <td>-</td>
+                    <td>@container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        <a href="/containers/logs/portainer" class="fa fa-file-alt px-1"></a>
+                        <a href="#" class="fa fa-info-circle px-1"></a>
+                        <a href="#" class="fa fa-chart-area px-1"></a>
+                        <a href="/containers/console/portainer" target="_blank" class="fa fa-terminal px-1"></a>
+                    </td>
+                </TableRow>
+            </DataTableWithPagination>
         }
-        @foreach (var item in Items)
+        else
+        {
+            <div class="text-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        }
+        @foreach (var item in SelectedItems)
         {
             @item.Names.First()<br />
         }
@@ -117,24 +122,13 @@
 </div>
 
 @code{
-
     [Inject]
     public IContainerService ContainerService { get; set; }
-
-    [Inject]
-    public IToastService ToastService { get; set; }
-
-    public bool IsBusy { get; set; } = false;
-
-    public double ProgressBarValue { get; set; } = 0;
-
-    public List<ContainerListResponse> SelectedItems { get; set; } = new List<ContainerListResponse>();
-
-    public List<ContainerListResponse> Items { get; set; } = new List<ContainerListResponse>();
 
     protected override async Task OnInitializedAsync()
     {
         await FetchData();
+        PageLoaded = true;
     }
 
     public async Task FetchData()
@@ -142,20 +136,16 @@
         try
         {
             IsBusy = true;
-            ProgressBarValue = 1;
             Items = await ContainerService.GetAllAsync();
-            foreach (var item in Items)
-            {
-                Console.WriteLine(item.ID);
-            }
+            if (DataTable != null)
+                await DataTable.RefreshContent();
         }
-        catch
+        catch (Exception ex)
         {
-            ToastService.ShowError("Error occured while fetching data from the server");
+            ToastService.ShowError("Error occured while fetching data from the server:\n" + ex.Message);
         }
         finally
         {
-            ProgressBarValue = 0;
             IsBusy = false;
         }
     }
@@ -170,9 +160,12 @@
                 var result = await ContainerService.StartContainerAsync(container.ID);
 
                 if (result)
-                    ToastService.ShowSuccess($"Started {container.ID}");
+                    ToastService.ShowSuccess($"Started {container.Names.First().Trim('/')}");
                 else
-                    ToastService.ShowWarning($"An error occured while starting {container.ID}");
+                    ToastService.ShowWarning($"An error occured while starting {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
             }
         }
         catch
@@ -181,6 +174,8 @@
         }
         finally
         {
+            ProgressBarValue = 0;
+            await FetchData();
             IsBusy = false;
         }
     }
@@ -195,9 +190,12 @@
                 var result = await ContainerService.StopContainerAsync(container.ID);
 
                 if (result)
-                    ToastService.ShowSuccess($"Stopped {container.ID}");
+                    ToastService.ShowSuccess($"Stopped {container.Names.First().Trim('/')}");
                 else
-                    ToastService.ShowWarning($"An error occured while stopping {container.ID}");
+                    ToastService.ShowWarning($"An error occured while stopping {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
             }
         }
         catch
@@ -206,6 +204,8 @@
         }
         finally
         {
+            ProgressBarValue = 0;
+            await FetchData();
             IsBusy = false;
         }
     }

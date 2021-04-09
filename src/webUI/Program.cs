@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Blazored.Toast;
+using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,8 @@ namespace Redpier.Web.UI
 
 
             builder.Services.AddScoped<IContainerService, ContainerService>();
+
+            builder.Services.AddScoped<IServiceBase<ContainerListResponse>, ContainerService>();
 
             builder.Services.AddBlazoredToast();
 

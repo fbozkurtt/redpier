@@ -1,0 +1,28 @@
+﻿@typeparam TItem
+<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="IsBusy"></ProgressBar>
+
+@code {
+    [Inject]
+    public IServiceBase<TItem> Service { get; set; }
+
+    [Inject]
+    public IToastService ToastService { get; set; }
+
+    public bool IsBusy { get; set; } = false;
+
+    public bool PageLoaded { get; set; } = false;
+
+    public double ProgressBarValue { get; set; } = 0;
+
+    protected DataTableWithPagination<TItem> DataTable;
+
+    public List<TItem> SelectedItems { get; set; } = new List<TItem>();
+
+    public List<TItem> Items { get; set; } = new List<TItem>();
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    await FetchData();
+    //    PageLoaded = true;
+    //}
+}

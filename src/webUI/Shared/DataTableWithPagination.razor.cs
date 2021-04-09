@@ -12,23 +12,10 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.UI.Shared
 {
-    public partial class DockerTableWithPagination<TItem> : ComponentBase
+    public partial class DataTableWithPagination<TItem> : ComponentBase
     {
-        private List<TItem> _items { get; set; }
-
         [Parameter]
-        public List<TItem> Items
-        {
-            get
-            {
-                return _items;
-            }
-            set
-            {
-                _items = value;
-                StateHasChanged();
-            }
-        }
+        public List<TItem> Items { get; set; }
 
         [Parameter]
         public List<TItem> SelectedItems { get; set; }
@@ -46,9 +33,6 @@ namespace Redpier.Web.UI.Shared
         public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
 
         [Parameter]
-        public EventCallback<List<TItem>> ItemsChanged { get; set; }
-
-        [Parameter]
         public int ColSpan { get; set; }
 
         [Parameter]
@@ -59,18 +43,24 @@ namespace Redpier.Web.UI.Shared
 
         public PaginatedList<TItem> Page { get; set; }
 
+        public async Task RefreshContent()
+        {
+            await SetPageAsync(Page?.PageIndex ?? 1);
+            //StateHasChanged();
+        }
+
         protected override async Task OnInitializedAsync()
         {
-            _items = Items;
-            await ItemsChanged.InvokeAsync(_items);
             await SetPageAsync(1);
+            //StateHasChanged();
         }
 
         public async Task SetPageAsync(int pageNumber)
         {
-            Page = _items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
+            Page = Items.AsQueryable().ToPaginatedList(pageNumber, PageSize);
+            //if (pageNumber != Page.PageIndex)
             SelectedItems.Clear();
-            Console.WriteLine(Page.Items.Count);
+
             await SelectedItemsChanged.InvokeAsync(SelectedItems);
         }
 

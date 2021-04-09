@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.UI.Interfaces
 {
-    public interface IContainerService
+    public interface IContainerService : IServiceBase<ContainerListResponse>
     {
-        Task<List<ContainerListResponse>> GetAllAsync();
-
         Task<bool> StartContainerAsync(string containerId);
 
         Task<bool> StopContainerAsync(string containerId);

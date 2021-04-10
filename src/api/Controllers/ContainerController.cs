@@ -62,7 +62,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Restart(RestartContainerCommand command)
+        public async Task<ActionResult> Restart([FromQuery] RestartContainerCommand command)
         {
             await Mediator.Send(command);
 
@@ -71,7 +71,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Pause(PauseContainerCommand command)
+        public async Task<ActionResult> Pause([FromQuery] PauseContainerCommand command)
         {
             await Mediator.Send(command);
 
@@ -80,7 +80,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Unpause(UnpauseContainerCommand command)
+        public async Task<ActionResult> Unpause([FromQuery] UnpauseContainerCommand command)
         {
             await Mediator.Send(command);
 
@@ -89,7 +89,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Kill(KillContainerCommand command)
+        public async Task<ActionResult> Kill([FromQuery] KillContainerCommand command)
         {
             await Mediator.Send(command);
 
@@ -123,7 +123,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpDelete("[action]")]
-        public async Task<ContainersPruneResponse> Prune(PruneContainersCommand command)
+        public async Task<ContainersPruneResponse> Prune([FromQuery] PruneContainersCommand command)
         {
             return await Mediator.Send(command);
         }

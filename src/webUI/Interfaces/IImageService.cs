@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.UI.Interfaces
 {
-    public interface IImageService : IServiceBase<ImageInspectResponse>
+    public interface IImageService : IServiceBase<ImagesListResponse>
     {
-        Task<ImageInspectResponse> InspectImage(string name);
+        Task<ImageInspectResponse> Inspect(string name);
 
-        Task<IList<ImageHistoryResponse>> GetImageHistory(string name);
+        Task<IList<ImageHistoryResponse>> GetHistory(string name);
+
+        Task<bool> Remove(string name, bool force = false);
     }
 }

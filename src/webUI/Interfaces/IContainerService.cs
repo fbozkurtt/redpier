@@ -10,20 +10,22 @@ namespace Redpier.Web.UI.Interfaces
 {
     public interface IContainerService : IServiceBase<ContainerListResponse>
     {
-        Task<bool> StartContainerAsync(string containerId);
+        Task<bool> StartAsync(string containerId);
 
-        Task<bool> StopContainerAsync(string containerId);
+        Task<bool> StopAsync(string containerId);
 
-        Task<bool> RemoveContainerAsync(string containerId, bool removeVolumes);
+        Task<bool> PauseAsync(string containerId);
 
-        Task<bool> PauseContainerAsync(string containerId);
+        Task<bool> UnpauseAsync(string containerId);
 
-        Task<bool> UnpauseContainerAsync(string containerId);
+        Task<bool> RestartAsync(string containerId);
 
-        Task<bool> RestartContainerAsync(string containerId);
+        Task<bool> KillAsync(string containerId);
 
-        Task<bool> RenameContainerAsync(string containerId, string name);
+        Task<bool> RemoveAsync(string containerId, bool removeVolumes = false);
 
-        Task<bool> PruneContainersAsync();
+        Task<bool> RenameAsync(string containerId, string name);
+
+        Task<bool> PruneAsync();
     }
 }

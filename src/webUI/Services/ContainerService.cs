@@ -37,17 +37,91 @@ namespace Redpier.Web.UI.Services
             return null;
         }
 
-        public Task<bool> PauseContainerAsync(string containerId)
+        public async Task<bool> StartAsync(string containerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/start?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
         }
 
-        public Task<bool> PruneContainersAsync()
+        public async Task<bool> StopAsync(string containerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/stop?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
         }
 
-        public async Task<bool> RemoveContainerAsync(string containerId, bool removeVolumes = false)
+        public async Task<bool> PauseAsync(string containerId)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/pause?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<bool> UnpauseAsync(string containerId)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/unpause?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<bool> RestartAsync(string containerId)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/restart?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<bool> KillAsync(string containerId)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/kill?Id={containerId}"));
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<bool> RemoveAsync(string containerId, bool removeVolumes = false)
         {
             try
             {
@@ -61,45 +135,12 @@ namespace Redpier.Web.UI.Services
             return false;
         }
 
-        public Task<bool> RenameContainerAsync(string containerId, string name)
+        public Task<bool> RenameAsync(string containerId, string name)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> RestartContainerAsync(string containerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> StartContainerAsync(string containerId)
-        {
-            try
-            {
-                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/start?Id={containerId}"));
-                return response.IsSuccessStatusCode;
-            }
-            catch (AccessTokenNotAvailableException ex)
-            {
-                ex.Redirect();
-                return false;
-            }
-        }
-
-        public async Task<bool> StopContainerAsync(string containerId)
-        {
-            try
-            {
-                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put, $"/api/container/stop?Id={containerId}"));
-                return response.IsSuccessStatusCode;
-            }
-            catch (AccessTokenNotAvailableException ex)
-            {
-                ex.Redirect();
-                return false;
-            }
-        }
-
-        public Task<bool> UnpauseContainerAsync(string containerId)
+        public Task<bool> PruneAsync()
         {
             throw new NotImplementedException();
         }

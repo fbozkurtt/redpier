@@ -3,6 +3,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Redpier.Application.Common.Mappings;
 using Redpier.Shared.Constants;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace Redpier.Application.Commands.Docker.Images
 {
     [Authorize(Roles = DefaultRoleNames.Admin)]
-    public class RemoveImageCommand : IRequest<IList<IDictionary<string, string>>>
+    public class RemoveImageCommand : IRequest<IList<IDictionary<string, string>>>, IMapFrom<ImageDeleteParameters>
     {
         [Required]
         public string Endpoint { get; set; }
@@ -20,7 +21,9 @@ namespace Redpier.Application.Commands.Docker.Images
         [Required]
         public string Name { get; set; }
 
-        public ImageDeleteParameters Parameters { get; set; }
+        public bool? Force { get; set; }
+
+        public bool? NoPrune { get; set; }
     }
 
     public class RemoveImageCommandHandler : IRequestHandler<RemoveImageCommand, IList<IDictionary<string, string>>>
@@ -38,7 +41,7 @@ namespace Redpier.Application.Commands.Docker.Images
         {
             return await _client.Images.DeleteImageAsync(
                 request.Name,
-                request.Parameters,
+                _mapper.Map<ImageDeleteParameters>(request),
                 cancellationToken);
         }
     }

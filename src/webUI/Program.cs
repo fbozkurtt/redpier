@@ -43,10 +43,13 @@ namespace Redpier.Web.UI
             builder.Services.AddTransient(sp =>
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 
-
             builder.Services.AddScoped<IContainerService, ContainerService>();
 
-            builder.Services.AddScoped<IServiceBase<ContainerListResponse>, ContainerService>();
+            builder.Services.AddScoped<IImageService, ImageService>();
+
+            builder.Services.AddScoped<IServiceBase<ContainerListResponse>>(sp => sp.GetRequiredService<IContainerService>());
+
+            builder.Services.AddScoped<IServiceBase<ImagesListResponse>>(sp => sp.GetRequiredService<IImageService>());
 
             builder.Services.AddBlazoredToast();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Docker.DotNet;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Redpier.Application.Common.Exceptions;
@@ -21,7 +22,8 @@ namespace Redpier.Web.API.Filters
                 { typeof(AlreadyExistsException), HandleAlreadyExistsException},
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ArgumentNullException), HandleArgumentNullException },
-                { typeof(InvalidOperationException), HandleInvalidOperationException}
+                { typeof(InvalidOperationException), HandleInvalidOperationException},
+                { typeof(DockerApiException), HandleDockerApiException}
             };
         }
 
@@ -166,6 +168,25 @@ namespace Redpier.Web.API.Filters
             context.Result = new ObjectResult(details)
             {
                 StatusCode = StatusCodes.Status400BadRequest,
+            };
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleDockerApiException(ExceptionContext context)
+        {
+            var exception = context.Exception as DockerApiException;
+
+            var details = new ProblemDetails()
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5",
+                Title = "Docker API exception.",
+                Detail = exception.ResponseBody.Split("\"")[3]
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = (int)exception.StatusCode,
             };
 
             context.ExceptionHandled = true;

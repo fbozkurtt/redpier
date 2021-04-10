@@ -2,7 +2,7 @@
 @inherits BaseComponentWithDataTable<ContainerListResponse>
 @using Docker.DotNet.Models
 
-<button @onclick="FetchData">fetch</button>
+<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="IsBusy"></ProgressBar>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         @if (PageLoaded)
@@ -13,12 +13,12 @@
             </div>
             <div class="d-block d-sm-none py-1" />
             <div class="btn-group btn-group-sm">
-                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Pause</button>
-                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Unpause</button>
-                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Restart</button>
-                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())">Kill</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="PauseContainers">Pause</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="UnPauseContainers">Unpause</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="RestartContainers">Restart</button>
+                <button type="button" class="btn btn-outline-primary" disabled="@(!SelectedItems.Any())" @onclick="KillContainers">Kill</button>
 
-                <button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())">
+                <button type="button" class="btn btn-danger" disabled="@(!SelectedItems.Any())" @onclick="RemoveContainers">
                     <div class="form-inline">
                         <span class="fa fa-trash"></span>
                         <span class="d-none d-lg-block text-nowrap pl-1">Remove</span>
@@ -35,7 +35,7 @@
                         <span class="fa fa-trash"></span> Remove
                     </button>
                 </div>*@
-            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable">
+            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable" PageSize="50">
                 <TableHeader>
                     <th scope="col">Name</th>
                     <th scope="col">State</th>
@@ -125,31 +125,6 @@
     [Inject]
     public IContainerService ContainerService { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await FetchData();
-        PageLoaded = true;
-    }
-
-    public async Task FetchData()
-    {
-        try
-        {
-            IsBusy = true;
-            Items = await ContainerService.GetAllAsync();
-            if (DataTable != null)
-                await DataTable.RefreshContent();
-        }
-        catch (Exception ex)
-        {
-            ToastService.ShowError("Error occured while fetching data from the server:\n" + ex.Message);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
     public async Task StartContainers()
     {
         try
@@ -157,7 +132,7 @@
             IsBusy = true;
             foreach (var container in SelectedItems)
             {
-                var result = await ContainerService.StartContainerAsync(container.ID);
+                var result = await ContainerService.StartAsync(container.ID);
 
                 if (result)
                     ToastService.ShowSuccess($"Started {container.Names.First().Trim('/')}");
@@ -187,7 +162,7 @@
             IsBusy = true;
             foreach (var container in SelectedItems)
             {
-                var result = await ContainerService.StopContainerAsync(container.ID);
+                var result = await ContainerService.StopAsync(container.ID);
 
                 if (result)
                     ToastService.ShowSuccess($"Stopped {container.Names.First().Trim('/')}");
@@ -201,6 +176,156 @@
         catch
         {
             ToastService.ShowError("An error occured while stopping container(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task PauseContainers()
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.PauseAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Paused {container.Names.First().Trim('/')}");
+                else
+                    ToastService.ShowWarning($"An error occured while pausing {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while pausing container(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task UnPauseContainers()
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.UnpauseAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Unpaused {container.Names.First().Trim('/')}");
+                else
+                    ToastService.ShowWarning($"An error occured while unpausing {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while unpausing container(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task RestartContainers()
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.RestartAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Restarted {container.Names.First().Trim('/')}");
+                else
+                    ToastService.ShowWarning($"An error occured while restarting {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while restarting container(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task KillContainers()
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.KillAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Unpaused {container.Names.First().Trim('/')}");
+                else
+                    ToastService.ShowWarning($"An error occured while killing {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while killing container(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task RemoveContainers()
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var container in SelectedItems)
+            {
+                var result = await ContainerService.RemoveAsync(container.ID);
+
+                if (result)
+                    ToastService.ShowSuccess($"Removed {container.Names.First().Trim('/')}");
+                else
+                    ToastService.ShowWarning($"An error occured while removing {container.Names.First().Trim('/')}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while removing container(s)");
         }
         finally
         {

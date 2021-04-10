@@ -52,7 +52,7 @@ namespace Redpier.Web.UI.Shared
         protected override async Task OnInitializedAsync()
         {
             await SetPageAsync(1);
-            //StateHasChanged();
+            StateHasChanged();
         }
 
         public async Task SetPageAsync(int pageNumber)

@@ -1,74 +1,79 @@
 ﻿@page "/images"
+@inherits BaseComponentWithDataTable<ImagesListResponse>
+@using Docker.DotNet.Models
 
+<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="IsBusy"></ProgressBar>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
         <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-danger">
-                <span class="fa fa-times-circle"></span> Remove
+            <button type="button" class="btn btn-sm btn-danger" disabled="@(!SelectedItems.Any())" @onclick="e => RemoveImages()">
+                <span class="fa fa-trash"></span> Remove
             </button>
-            <button type="button" class="btn btn-sm btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-sm btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" disabled="@(!SelectedItems.Any())" aria-haspopup="true" aria-expanded="false">
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Force remove</a>
+                <a class="dropdown-item" @onclick="e => RemoveImages(true)">Force remove</a>
             </div>
         </div>
         <a class="btn btn-sm btn-success float-right" href="/images/build">
             <span class="fa fa-plus"></span> Build new image
         </a>
-
-        <div class="table-responsive py-2">
-            <table class="table table-sm table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th><input type="checkbox" /></th>
-                        <th scope="col">Id</th>
-                        <th scope="col">Tags</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox" /></td>
-                        <td><a href="/images/portainer">sha256:e1691b73cb735c81d7b36f2d1b3735...</a></td>
-                        <td>alpine:latest</td>
-                        <td>5.6 MB</td>
-                        <td>17.03.2021 20:06</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" /></td>
-                        <td><a href="/images/portainer">sha256:e1691b73cb735c81d7b36f2d1b3735...</a></td>
-                        <td>alpine:latest</td>
-                        <td>5.6 MB</td>
-                        <td>17.03.2021 20:06</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" /></td>
-                        <td><a href="/images/portainer">sha256:e1691b73cb735c81d7b36f2d1b3735...</a></td>
-                        <td>alpine:latest</td>
-                        <td>5.6 MB</td>
-                        <td>17.03.2021 20:06</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <DataTableWithPagination Items="Items" TItem="ImagesListResponse" Context="image" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="5" @ref="DataTable" PageSize="10">
+            <TableHeader>
+                <th scope="col">Id</th>
+                <th scope="col">Tags</th>
+                <th scope="col">Size</th>
+                <th scope="col">Created</th>
+            </TableHeader>
+            <TableRow>
+                <td><a href=@($"/images/{image.ID}")>@image.ID</a></td>
+                <td>
+                    @foreach (var tag in image.RepoTags)
+                    {
+                        <div class="badge badge-info p-1 mr-1">
+                            @tag
+                        </div>
+                    }
+                </td>
+                <td>@(((double)image.Size / (1000 * 1000)).ToString("N1")) MB</td>
+                <td>@image.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+            </TableRow>
+        </DataTableWithPagination>
     </div>
 </div>
 
-@code {
+@code{
+    [Inject]
+    public IImageService ImageService { get; set; }
 
+    public async Task RemoveImages(bool force = false)
+    {
+        try
+        {
+            IsBusy = true;
+            foreach (var image in SelectedItems)
+            {
+                var result = await ImageService.Remove(image.ID, force);
+
+                if (result)
+                    ToastService.ShowSuccess($"Removed {image.ID}");
+                else
+                    ToastService.ShowWarning($"An error occured while removing {image.ID}");
+
+                ProgressBarValue += 1;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while removing image(s)");
+        }
+        finally
+        {
+            ProgressBarValue = 0;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
 }

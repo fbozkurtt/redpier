@@ -1,5 +1,4 @@
 ﻿@typeparam TItem
-<ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="IsBusy"></ProgressBar>
 
 @code {
     [Inject]
@@ -20,9 +19,29 @@
 
     public List<TItem> Items { get; set; } = new List<TItem>();
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await FetchData();
-    //    PageLoaded = true;
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchData();
+        PageLoaded = true;
+    }
+
+    public async Task FetchData()
+    {
+        try
+        {
+            IsBusy = true;
+            Items = await Service.GetAllAsync();
+            StateHasChanged();
+            if (DataTable != null)
+                await DataTable.RefreshContent();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error occured while fetching data from the server:\n" + ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 }

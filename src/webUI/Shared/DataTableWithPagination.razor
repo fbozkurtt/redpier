@@ -4,7 +4,7 @@
     <table class="table table-hover @(IsSmallTable ? "table-sm" : "")">
         <thead class="thead-light">
             <tr>
-                <th><input type="checkbox" checked="@SelectedItems.Any()" @onclick="SelectAllAsync" /></th>
+                <th><input type="checkbox" checked="@SelectedItems.Any()" @onclick="SelectAllAsync" disabled="@IsBusy" /></th>
                 @TableHeader
             </tr>
         </thead>
@@ -15,7 +15,7 @@
                 {
                     <tr>
                         <td>
-                            <input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="e => SelectAsync(item)" />
+                            <input type="checkbox" checked="@SelectedItems.Contains(item)" @onclick="e => SelectAsync(item)" disabled="@IsBusy" />
                         </td>
                         @TableRow(item)
                     </tr>

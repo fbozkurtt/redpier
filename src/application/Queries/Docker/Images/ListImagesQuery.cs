@@ -16,7 +16,7 @@ namespace Redpier.Application.Queries.Docker.Images
 
         public string MatchName { get; set; }
 
-        public bool? All { get; set; }
+        public bool? All { get; set; } = true;
     }
 
     public class ListImagesQueryHandler : IRequestHandler<ListImagesQuery, IList<ImagesListResponse>>

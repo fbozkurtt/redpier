@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Redpier.Application.Queries.Docker.Containers
 {
-    public class InspectContainersQuery : IRequest<ContainerInspectResponse>
+    public class InspectContainerQuery : IRequest<ContainerInspectResponse>
     {
         [Required]
         public Guid Endpoint { get; set; }
@@ -16,7 +16,7 @@ namespace Redpier.Application.Queries.Docker.Containers
         [Required]
         public string Id { get; set; }
     }
-    public class InspectContainersQueryHandler : IRequestHandler<InspectContainersQuery, ContainerInspectResponse>
+    public class InspectContainersQueryHandler : IRequestHandler<InspectContainerQuery, ContainerInspectResponse>
     {
         private readonly IDockerClient _client;
 
@@ -25,7 +25,7 @@ namespace Redpier.Application.Queries.Docker.Containers
             _client = client;
         }
 
-        public async Task<ContainerInspectResponse> Handle(InspectContainersQuery request, CancellationToken cancellationToken)
+        public async Task<ContainerInspectResponse> Handle(InspectContainerQuery request, CancellationToken cancellationToken)
         {
 
             var response = await _client.Containers.InspectContainerAsync(

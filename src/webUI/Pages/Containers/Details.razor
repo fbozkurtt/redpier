@@ -1,196 +1,277 @@
-﻿
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th colspan="2">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>Portainer</td>
-                </tr>
-                <tr>
-                    <th>ID</th>
-                    <td>f0164a72536b3dc4b97fe3ecf47eaf330b324aa0d5f28633a4426a3f4eea8426</td>
-                </tr>
-                <tr>
-                    <th>IP address</th>
-                    <td>172.17.17.17</td>
-                </tr>
-                <tr>
-                    <th>Status</th>
-                    <td>Up 5 hours</td>
-                </tr>
-                <tr>
-                    <th>Created</th>
-                    <td>17.03.2021 20:06</td>
-                </tr>
-            </tbody>
-        </table>
+﻿@page "/containers/{Id}"
+@using Docker.DotNet.Models
+
+@if (PageLoaded)
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="2">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>@Container.Name.Trim('/')</td>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <td>@Container.ID</td>
+                    </tr>
+                    <tr>
+                        <th>IP address</th>
+                        <td>@Container.NetworkSettings.IPAddress</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>@Container.State.Status</td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>@Container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    </tr>
+                    <tr>
+                        <th>Started</th>
+                        <td>@(Convert.ToDateTime(Container.State.StartedAt).ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th colspan="2">Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Image</th>
-                    <td>portainer/portainer-ce@sha256%3A96a1c6cc3d158fac0b5be75382b9b24d0a89ed5db7a59a3442d01556c139fff1</td>
-                </tr>
-                <tr>
-                    <th>Ports</th>
-                    <td id="ports">
-                        <div>
-                            0.0.0.0:8000 <i class="fa fa-long-arrow-alt-right"></i> 8000/tcp
-                        </div>
-                        <div>
-                            0.0.0.0:9000 <i class="fa fa-long-arrow-alt-right"></i> 9000/tcp
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Command</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Entrypoint</th>
-                    <td>/portainer</td>
-                </tr>
-                <tr>
-                    <th>Environment</th>
-                    <td>
-                        <table class="table table-bordered table-sm m-0">
-                            <tbody>
-                                <tr>
-                                    <td>PATH</td>
-                                    <td>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Restart behaviour</th>
-                    <td>
-                        <div class="form-group row">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="never" value="never">
-                                <label class="form-check-label" for="never">
-                                    Never
-                                </label>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="2">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Image</th>
+                        <td>@Container.Config.Image</td>
+                    </tr>
+                    <tr>
+                        <th>Ports</th>
+                        <td id="ports">
+                            <div>
+                                0.0.0.0:8000 <i class="fa fa-long-arrow-alt-right"></i> 8000/tcp
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="always" value="always" checked>
-                                <label class="form-check-label" for="always">
-                                    Always
-                                </label>
+                            <div>
+                                0.0.0.0:9000 <i class="fa fa-long-arrow-alt-right"></i> 9000/tcp
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="onFailure" value="onFailure">
-                                <label class="form-check-label" for="onFailure">
-                                    On failure
-                                </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Command</th>
+                        <td>
+                            <table class="table table-borderless table-sm m-0" hidden="@(Container.Config.Cmd == null)">
+                                <tbody>
+                                    @if (Container.Config.Cmd != null)
+                                    {
+                                        @foreach (var cmd in Container.Config.Cmd)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @cmd
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Entrypoint</th>
+                        <td>
+                            <table class="table table-borderless table-sm m-0" hidden="@(Container.Config.Entrypoint == null)">
+                                <tbody>
+                                    @if (Container.Config.Entrypoint != null)
+                                    {
+                                        @foreach (var ep in Container.Config.Entrypoint)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @ep
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Environment</th>
+                        <td>
+                            <table class="table table-bordered table-sm m-0" hidden="@(Container.Config.Env == null)">
+                                <tbody>
+                                    @if (Container.Config.Env != null)
+                                    {
+                                        @foreach (var env in Container.Config.Env)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @env
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Restart behaviour</th>
+                        <td>
+                            <div class="form-group row">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="restartRadios" id="never" value="never" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("no"))">
+                                    <label class="form-check-label" for="never">
+                                        Never
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="restartRadios" id="always" value="always" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("always"))">
+                                    <label class="form-check-label" for="always">
+                                        Always
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="restartRadios" id="onFailure" value="onFailure" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("on-failure"))">
+                                    <label class="form-check-label" for="onFailure">
+                                        On failure
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="restartRadios" id="unlessStopped" value="unlessStopped" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("unless-stopped"))">
+                                    <label class="form-check-label" for="unlessStopped">
+                                        Unless stopped
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary">Update</button>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="unlessStopped" value="unlessStopped">
-                                <label class="form-check-label" for="unlessStopped">
-                                    Unless stopped
-                                </label>
-                            </div>
-                            <a href="#" class="btn btn-primary">Update</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th colspan="3">Volumes</th>
-                </tr>
-            </thead>
-            <thead>
-                <tr>
-                    <th scope="col">Volume name</th>
-                    <th scope="col">Host path</th>
-                    <th scope="col">Container path</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>portainer_data</td>
-                    <td>/var/lib/docker/volumes/portainer_data/_data</td>
-                    <td>/data</td>
-                </tr>
-                <tr>
-                    <td>portainer_data</td>
-                    <td>/var/run/docker.sock</td>
-                    <td>/var/run/docker.sock</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="3">Volumes</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Volume name</th>
+                        <th scope="col">Host path</th>
+                        <th scope="col">Container path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var mount in Container.Mounts)
+                    {
+                        <tr>
+
+                            @if (mount.Type.Equals("volume"))
+                            {
+                                <td>@mount.Name</td>
+                            }
+                            else
+                            {
+                                <td class="text-muted">(bind mount)</td>
+                            }
+                            <td>@mount.Source</td>
+                            <td>@mount.Destination</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th colspan="3">Network</th>
-                    <th scope="col">
-                        <select class="form-control" id="network">
-                            <option selected>bridge</option>
-                            <option>Network 1</option>
-                            <option>Network 2</option>
-                            <option>Network 3</option>
-                        </select>
-                    </th>
-                    <th scope="col">
-                        <a href="#" class="btn-sm btn-success">
-                            <span class="fa fa-plus" /> Join
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-            <thead>
-                <tr>
-                    <th scope="col">Network</th>
-                    <th scope="col">IP Address</th>
-                    <th scope="col">Gateway</th>
-                    <th scope="col">MAC Address</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>bridge</td>
-                    <td>172.17.0.2</td>
-                    <td>172.17.0.1</td>
-                    <td>02:42:ac:11:00:02</td>
-                    <td>
-                        <a href="#" class="btn btn-sm btn-danger">
-                            <span class="fa fa-trash"></span> Leave
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th colspan="3">Network</th>
+                        <th scope="col">
+                            <select class="form-control" id="network">
+                                <option selected>bridge</option>
+                                <option>Network 1</option>
+                                <option>Network 2</option>
+                                <option>Network 3</option>
+                            </select>
+                        </th>
+                        <th scope="col">
+                            <a href="#" class="btn-sm btn-success">
+                                <span class="fa fa-plus" /> Join
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Network</th>
+                        <th scope="col">IP Address</th>
+                        <th scope="col">Gateway</th>
+                        <th scope="col">MAC Address</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>bridge</td>
+                        <td>172.17.0.2</td>
+                        <td>172.17.0.1</td>
+                        <td>02:42:ac:11:00:02</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-danger">
+                                <span class="fa fa-trash"></span> Leave
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <div class="text-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code{
+
+    [Inject]
+    public IContainerService ContainerService { get; set; }
+
     [Parameter]
     public string Id { get; set; }
+
+    public bool PageLoaded { get; set; } = false;
+
+    public ContainerInspectResponse Container { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Container = await ContainerService.InspectAsync(Id);
+        PageLoaded = true;
+    }
 }

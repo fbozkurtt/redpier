@@ -31,7 +31,7 @@ namespace Redpier.Web.API.Controllers
         //}
 
         [HttpGet("[action]")]
-        public async Task<ContainerInspectResponse> Inspect([FromQuery] InspectContainersQuery query)
+        public async Task<ContainerInspectResponse> Inspect([FromQuery] InspectContainerQuery query)
         {
             return await Mediator.Send(query);
         }

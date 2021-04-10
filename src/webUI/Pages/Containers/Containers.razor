@@ -35,7 +35,7 @@
                         <span class="fa fa-trash"></span> Remove
                     </button>
                 </div>*@
-            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable" PageSize="50">
+            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable" PageSize="8">
                 <TableHeader>
                     <th scope="col">Name</th>
                     <th scope="col">State</th>
@@ -113,10 +113,6 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-        }
-        @foreach (var item in SelectedItems)
-        {
-            @item.Names.First()<br />
         }
     </div>
 </div>

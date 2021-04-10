@@ -140,6 +140,24 @@ namespace Redpier.Web.UI.Services
             throw new NotImplementedException();
         }
 
+        public async Task<ContainerInspectResponse> InspectAsync(string containerId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/container/inspect?Id={containerId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ContainerInspectResponse>();
+                }
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
+        }
+
         public Task<bool> PruneAsync()
         {
             throw new NotImplementedException();

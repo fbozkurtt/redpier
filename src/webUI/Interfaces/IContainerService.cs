@@ -26,6 +26,8 @@ namespace Redpier.Web.UI.Interfaces
 
         Task<bool> RenameAsync(string containerId, string name);
 
+        Task<ContainerInspectResponse> InspectAsync(string containerId);
+
         Task<bool> PruneAsync();
     }
 }

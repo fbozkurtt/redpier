@@ -1,4 +1,5 @@
 ﻿using Docker.DotNet;
+using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
@@ -16,6 +17,8 @@ namespace Redpier.Application.Commands.Docker.Containers
 
         [Required]
         public string Id { get; set; }
+
+        public string Signal { get; set; }
     }
 
     public class KillContainersCommandHandler : IRequestHandler<KillContainerCommand>
@@ -31,7 +34,7 @@ namespace Redpier.Application.Commands.Docker.Containers
         {
             await _client.Containers.KillContainerAsync(
                 request.Id,
-                null,
+                new ContainerKillParameters() { Signal = request.Signal },
                 cancellationToken);
 
             return Unit.Value;

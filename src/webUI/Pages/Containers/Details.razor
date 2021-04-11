@@ -8,7 +8,8 @@
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th colspan="2">Status</th>
+                        <th scope="col" style="width: 15%">Status</th>
+                        <th scope="col" style="width: 85%">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +46,8 @@
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th colspan="2">Details</th>
+                        <th scope="col" style="width: 15%">Details</th>
+                        <th scope="col" style="width: 85%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,16 +109,15 @@
                     <tr>
                         <th>Environment</th>
                         <td>
-                            <table class="table table-bordered table-sm m-0" hidden="@(Container.Config.Env == null)">
+                            <table class="table table-borderless table-sm m-0" hidden="@(Container.Config.Env == null)">
                                 <tbody>
                                     @if (Container.Config.Env != null)
                                     {
                                         @foreach (var env in Container.Config.Env)
                                         {
                                             <tr>
-                                                <td>
-                                                    @env
-                                                </td>
+                                                <td class="text-muted">@env.Split('=')[0]</td>
+                                                <td class="text-muted">@env.Split('=')[1]</td>
                                             </tr>
                                         }
                                     }
@@ -165,7 +166,9 @@
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th colspan="3">Volumes</th>
+                        <th scope="col" style="width: 15%">Mounts</th>
+                        <th scope="col" style="width: 42.5%">Status</th>
+                        <th scope="col" style="width: 42.5%"></th>
                     </tr>
                 </thead>
                 <thead>
@@ -201,16 +204,18 @@
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th colspan="3">Network</th>
-                        <th scope="col">
+                        <th scope="col" style="width: 15%">Network</th>
+                        <th scope="col" style="width: 21.25%"></th>
+                        <th scope="col" style="width: 21.25%"></th>
+                        <th scope="col" style="width: 21.25%">
                             <select class="form-control" id="network">
-                                <option selected>bridge</option>
-                                <option>Network 1</option>
-                                <option>Network 2</option>
-                                <option>Network 3</option>
+                                @foreach (var network in Networks)
+                                {
+                                    <option>@network.Name</option>
+                                }
                             </select>
                         </th>
-                        <th scope="col">
+                        <th scope="col" style="width: 21.25%">
                             <a href="#" class="btn-sm btn-success">
                                 <span class="fa fa-plus" /> Join
                             </a>
@@ -227,17 +232,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>bridge</td>
-                        <td>172.17.0.2</td>
-                        <td>172.17.0.1</td>
-                        <td>02:42:ac:11:00:02</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-danger">
-                                <span class="fa fa-trash"></span> Leave
-                            </a>
-                        </td>
-                    </tr>
+                    @foreach (var network in Container.NetworkSettings.Networks)
+                    {
+                        <tr>
+                            <td>@network.Key</td>
+                            <td>@network.Value.IPAddress</td>
+                            <td>@network.Value.Gateway</td>
+                            <td>@network.Value.MacAddress</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger">
+                                    <span class="fa fa-trash"></span> Leave
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -262,6 +270,9 @@ else
     [Inject]
     public IContainerService ContainerService { get; set; }
 
+    [Inject]
+    public INetworkService NetworkService { get; set; }
+
     [Parameter]
     public string Id { get; set; }
 
@@ -269,9 +280,12 @@ else
 
     public ContainerInspectResponse Container { get; set; }
 
+    public List<NetworkResponse> Networks { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         Container = await ContainerService.InspectAsync(Id);
+        Networks = await NetworkService.GetAllAsync();
         PageLoaded = true;
     }
 }

@@ -10,7 +10,13 @@ namespace Redpier.Web.API.Controllers
     public class NetworkController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<IList<NetworkResponse>> GetNetworks(ListNetworksQuery query)
+        public async Task<IList<NetworkResponse>> GetNetworks()
+        {
+            return await Mediator.Send(new ListNetworksQuery());
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IList<NetworkResponse>> GetNetworks([FromBody] ListNetworksQuery query)
         {
             return await Mediator.Send(query);
         }

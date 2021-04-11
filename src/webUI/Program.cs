@@ -47,9 +47,13 @@ namespace Redpier.Web.UI
 
             builder.Services.AddScoped<IImageService, ImageService>();
 
+            builder.Services.AddScoped<INetworkService, NetworkService>();
+
             builder.Services.AddScoped<IServiceBase<ContainerListResponse>>(sp => sp.GetRequiredService<IContainerService>());
 
             builder.Services.AddScoped<IServiceBase<ImagesListResponse>>(sp => sp.GetRequiredService<IImageService>());
+
+            builder.Services.AddScoped<IServiceBase<NetworkResponse>>(sp => sp.GetRequiredService<INetworkService>());
 
             builder.Services.AddBlazoredToast();
 

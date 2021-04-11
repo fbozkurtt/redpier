@@ -11,10 +11,9 @@ namespace Redpier.Application.Queries.Docker.Networks
 {
     public class ListNetworksQuery : IRequest<IList<NetworkResponse>>
     {
-        [Required]
-        public Guid Endpoint { get; set; }
+        public Guid? Endpoint { get; set; }
 
-        public NetworksListParameters Parameters { get; set; }
+        public IDictionary<string, IDictionary<string, bool>> Filters { get; set; }
     }
 
     public class ListNetworksQueryHandler : IRequestHandler<ListNetworksQuery, IList<NetworkResponse>>
@@ -29,7 +28,7 @@ namespace Redpier.Application.Queries.Docker.Networks
         public async Task<IList<NetworkResponse>> Handle(ListNetworksQuery request, CancellationToken cancellationToken)
         {
             return await _client.Networks.ListNetworksAsync(
-                request.Parameters,
+                new NetworksListParameters() { Filters = request.Filters },
                 cancellationToken);
         }
     }

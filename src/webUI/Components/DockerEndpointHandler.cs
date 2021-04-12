@@ -1,6 +1,8 @@
 ﻿using Blazored.LocalStorage;
+using Redpier.Web.UI.ViewModels;
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace Redpier.Web.UI.Components
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var endpoint = await _localStorage.GetItemAsync<Guid>("selectedEndpointId");
+            var endpoint = await _localStorage.GetItemAsync<Endpoint>("selectedEndpoint");
 
             if (endpoint != default)
             {
@@ -27,11 +29,11 @@ namespace Redpier.Web.UI.Components
 
                 if (string.IsNullOrEmpty(uriBuilder.Query))
                 {
-                    uriBuilder.Query = $"endpoint={endpoint}";
+                    uriBuilder.Query = $"endpoint={Convert.ToBase64String(Encoding.UTF8.GetBytes(endpoint.Uri))}";
                 }
                 else
                 {
-                    uriBuilder.Query = $"{uriBuilder.Query}&endpoint={endpoint}";
+                    uriBuilder.Query = $"{uriBuilder.Query}&endpoint={Convert.ToBase64String(Encoding.UTF8.GetBytes(endpoint.Uri))}";
                 }
                 request.RequestUri = uriBuilder.Uri;
             }

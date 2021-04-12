@@ -12,7 +12,7 @@ namespace Redpier.Application.Queries.Docker.Containers
     public class ListContainersQuery : IRequest<IList<ContainerListResponse>>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public bool? All { get; set; } = true;
     }

@@ -41,8 +41,7 @@ namespace Redpier.Infrastructure
                 new DockerClientService(
                     sp.GetRequiredService<IApplicationDbContext>(),
                     sp.GetRequiredService<IHttpContextAccessor>())
-                .CreateClient()
-                .Result);
+                .CreateClient());
 
             services.AddIdentityCore<ApplicationUser>(options =>
             {

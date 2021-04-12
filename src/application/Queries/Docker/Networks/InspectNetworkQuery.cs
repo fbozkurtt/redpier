@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Networks
     public class InspectNetworkQuery : IRequest<NetworkResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public string Id { get; set; }
     }

@@ -162,5 +162,29 @@ namespace Redpier.Web.UI.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<ContainerUpdateResponse> Update(string containerId, ContainerUpdateParameters parameters)
+        {
+            try
+            {
+                var request = new
+                {
+                    Id = containerId,
+                    Parameters = parameters
+                };
+
+                var response = await _httpClient.PutAsJsonAsync($"/api/container", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ContainerUpdateResponse>();
+                }
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
+        }
     }
 }

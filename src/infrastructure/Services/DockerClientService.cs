@@ -5,6 +5,7 @@ using Redpier.Application.Common.Exceptions;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Domain.Entities;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Redpier.Infrastructure.Services
@@ -20,20 +21,21 @@ namespace Redpier.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IDockerClient> CreateClient()
+        public IDockerClient CreateClient()
         {
-            var dockerEndpointId = _httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString();
+            var dockerEndpoint = Encoding.UTF8.GetString(
+                Convert.FromBase64String(_httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString()));
 
-            if (String.IsNullOrEmpty(dockerEndpointId))
+            if (String.IsNullOrEmpty(dockerEndpoint))
                 throw new ArgumentNullException("endpoint");
 
-            var dockerEndpoint = await _dbContext.DockerEndpoints.FirstAsync(w => w.Id == new Guid(dockerEndpointId));
+            //var dockerEndpoint = await _dbContext.DockerEndpoints.AsNoTracking().FirstAsync(w => w.Id == new Guid(dockerEndpointId));
 
-            if (dockerEndpoint == null)
-                throw new NotFoundException(nameof(DockerEndpoint), nameof(DockerEndpoint.Id), dockerEndpointId);
+            //if (dockerEndpoint == null)
+            //    throw new NotFoundException(nameof(DockerEndpoint), nameof(DockerEndpoint.Id), dockerEndpointId);
 
             return new DockerClientConfiguration(
-                        new Uri(dockerEndpoint.Uri)
+                        new Uri(dockerEndpoint)
                         ).CreateClient();
         }
     }

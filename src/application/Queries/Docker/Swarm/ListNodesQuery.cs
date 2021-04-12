@@ -12,7 +12,7 @@ namespace Redpier.Application.Queries.Docker.Swarm
     public class ListNodesQuery : IRequest<IEnumerable<NodeListResponse>>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class ListNodesQueryHandler : IRequestHandler<ListNodesQuery, IEnumerable<NodeListResponse>>

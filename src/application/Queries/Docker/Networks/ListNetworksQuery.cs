@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Networks
 {
     public class ListNetworksQuery : IRequest<IList<NetworkResponse>>
     {
-        public Guid? Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public IDictionary<string, IDictionary<string, bool>> Filters { get; set; }
     }

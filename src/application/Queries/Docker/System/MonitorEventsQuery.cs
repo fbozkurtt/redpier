@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.System
     public class MonitorEventsQuery : IRequest<Unit>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public ContainerEventsParameters Parameters { get; set; }
 

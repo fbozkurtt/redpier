@@ -1,0 +1,8 @@
+﻿@code {
+    [Inject]
+    public IToastService ToastService { get; set; }
+
+    public bool IsBusy { get; set; } = false;
+
+    public bool PageLoaded { get; set; } = false;
+}

@@ -9,9 +9,9 @@
             @foreach (var endpoint in Endpoints.Items)
             {
                 <li>
-                    <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="async () => { await SelectEndpoint(endpoint.Id); }">
+                    <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="async () => { await SelectEndpoint(endpoint); }">
                         <span>@endpoint.Name</span>
-                        <span class="@(SelectedEndpointId.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
+                        <span class="@(SelectedEndpoint.Id.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
                     </a>
                 </li>
             }
@@ -49,7 +49,7 @@ else
 
     public PaginatedListViewModel<Endpoint> Endpoints;
 
-    public Guid SelectedEndpointId { get; set; }
+    public Endpoint SelectedEndpoint { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,14 +61,14 @@ else
             {
                 Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListViewModel<Endpoint>>();
 
-                var savedEndpointId = await localStorage.GetItemAsync<Guid>("selectedEndpointId");
-                if (savedEndpointId != default && Endpoints.Items.Select(e => e.Id).ToList().Contains(savedEndpointId))
+                var savedEndpoint = await localStorage.GetItemAsync<Endpoint>("selectedEndpoint");
+                if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))
                 {
-                    SelectedEndpointId = savedEndpointId;
+                    SelectedEndpoint = savedEndpoint;
                 }
                 else
                 {
-                    await SelectEndpoint(Endpoints.Items.First().Id);
+                    await SelectEndpoint(Endpoints.Items.First());
                 }
             }
         }
@@ -78,9 +78,9 @@ else
         }
     }
 
-    public async Task SelectEndpoint(Guid endpointId)
+    public async Task SelectEndpoint(Endpoint endpoint)
     {
-        await localStorage.SetItemAsync("selectedEndpointId", endpointId);
-        SelectedEndpointId = endpointId;
+        await localStorage.SetItemAsync("selectedEndpoint", endpoint);
+        SelectedEndpoint = endpoint;
     }
 }

@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Swarm
     public class InspectSwarmQuery : IRequest<SwarmInspectResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class InspectSwarmQueryHandler : IRequestHandler<InspectSwarmQuery, SwarmInspectResponse>

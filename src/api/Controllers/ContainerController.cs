@@ -106,8 +106,8 @@ namespace Redpier.Web.API.Controllers
         }
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
-        [HttpPut("[action]")]
-        public async Task<ContainerUpdateResponse> Update([FromBody] UpdateContainerCommand command)
+        [HttpPut]
+        public async Task<ContainerUpdateResponse> Update(UpdateContainerCommand command)
         {
             return await Mediator.Send(command);
         }

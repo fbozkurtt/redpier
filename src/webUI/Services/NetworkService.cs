@@ -36,5 +36,42 @@ namespace Redpier.Web.UI.Services
             }
             return null;
         }
+
+        public async Task<bool> ConnectAsync(string id, NetworkConnectParameters parameters)
+        {
+            try
+            {
+                var request = new
+                {
+                    Id = id,
+                    Parameters = parameters
+                };
+
+                var response = await _httpClient.PutAsJsonAsync($"/api/network/connect", request);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<bool> DisconnectAsync(string id, string containerId, bool force = false)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Put,
+                    $"/api/network/disconnect?id={id}&containerId={containerId}&force={force}"));
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
     }
 }

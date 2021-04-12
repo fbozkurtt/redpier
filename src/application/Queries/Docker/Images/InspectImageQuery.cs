@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Images
     public class InspectImageQuery : IRequest<ImageInspectResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public string Name { get; set; }
     }

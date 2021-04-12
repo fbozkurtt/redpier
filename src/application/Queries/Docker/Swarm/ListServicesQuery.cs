@@ -12,7 +12,7 @@ namespace Redpier.Application.Queries.Docker.Swarm
     public class ListServicesQuery : IRequest<IEnumerable<SwarmService>>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public ServicesListParameters Parameters { get; set; }
     }

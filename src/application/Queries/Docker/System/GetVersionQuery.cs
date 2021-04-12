@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.System
     public class GetVersionQuery : IRequest<VersionResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class GetVersionQueryHandler : IRequestHandler<GetVersionQuery, VersionResponse>

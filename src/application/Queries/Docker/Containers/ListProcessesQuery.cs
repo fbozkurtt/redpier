@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Containers
     public class ListProcessesQuery : IRequest<ContainerProcessesResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public string Id { get; set; }
 

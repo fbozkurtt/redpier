@@ -10,7 +10,7 @@ namespace Redpier.Application.Queries.Docker.System
     public class PingQuery : IRequest
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class PingQueryHandler : IRequestHandler<PingQuery>

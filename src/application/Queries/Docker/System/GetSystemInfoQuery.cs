@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.System
     public class GetSystemInfoQuery : IRequest<SystemInfoResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
     }
 

@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Swarm
     public class InspectNodeQuery : IRequest<NodeListResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public string Id { get; set; }
     }

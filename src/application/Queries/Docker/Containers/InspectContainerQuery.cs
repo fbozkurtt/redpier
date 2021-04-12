@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Containers
     public class InspectContainerQuery : IRequest<ContainerInspectResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         [Required]
         public string Id { get; set; }

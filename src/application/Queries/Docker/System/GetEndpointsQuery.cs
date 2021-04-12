@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Application.DTOs;
 using Redpier.Shared.Extensions;
@@ -35,6 +36,7 @@ namespace Redpier.Application.Queries.Docker.System
         {
             return
                 await _context.DockerEndpoints
+                .AsNoTracking()
                 .OrderBy(w => w.Created)
                 .ProjectTo<DockerEndpointDto>(_mapper.ConfigurationProvider)
                 .ToPaginatedListAsync(request.PageNumber, request.All ? Int32.MaxValue : request.PageSize);

@@ -12,7 +12,7 @@ namespace Redpier.Application.Queries.Docker.Images
     public class SearchImagesQuery : IRequest<IList<ImageSearchResponse>>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
         public string Term { get; set; }
 

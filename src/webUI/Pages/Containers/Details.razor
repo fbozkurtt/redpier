@@ -1,15 +1,16 @@
 ﻿@page "/containers/{Id}"
+@inherits BaseComponent
 @using Docker.DotNet.Models
 
 @if (PageLoaded)
 {
     <div class="row">
         <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-            <table class="table">
+            <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" style="width: 15%">Status</th>
-                        <th scope="col" style="width: 85%">Status</th>
+                        <th scope="col" style="width: 85%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,7 +44,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-            <table class="table">
+            <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" style="width: 15%">Details</th>
@@ -76,7 +77,7 @@
                                         @foreach (var cmd in Container.Config.Cmd)
                                         {
                                             <tr>
-                                                <td>
+                                                <td class="text-muted">
                                                     @cmd
                                                 </td>
                                             </tr>
@@ -128,33 +129,27 @@
                     <tr>
                         <th>Restart behaviour</th>
                         <td>
-                            <div class="form-group row">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="restartRadios" id="never" value="never" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("no"))">
-                                    <label class="form-check-label" for="never">
-                                        Never
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="restartRadios" id="always" value="always" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("always"))">
-                                    <label class="form-check-label" for="always">
-                                        Always
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="restartRadios" id="onFailure" value="onFailure" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("on-failure"))">
-                                    <label class="form-check-label" for="onFailure">
-                                        On failure
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="restartRadios" id="unlessStopped" value="unlessStopped" checked="@(Container.HostConfig.RestartPolicy.Name.Equals("unless-stopped"))">
-                                    <label class="form-check-label" for="unlessStopped">
-                                        Unless stopped
-                                    </label>
-                                </div>
-                                <button class="btn btn-primary">Update</button>
-                            </div>
+                            <EditForm Model="_restartPolicy" OnValidSubmit="UpdateRestartPolicy" class="form-inline">
+                                <InputRadioGroup @bind-Value="_restartPolicy">
+                                    <div class="form-check form-check-inline">
+                                        <InputRadio Value="RestartPolicyKind.No" class="form-check-input" />
+                                        <label class="form-check-label">Never</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <InputRadio Value="RestartPolicyKind.Always" class="form-check-input" />
+                                        <label class="form-check-label">Always</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <InputRadio Value="RestartPolicyKind.OnFailure" class="form-check-input" />
+                                        <label class="form-check-label">On failure</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <InputRadio Value="RestartPolicyKind.UnlessStopped" class="form-check-input" />
+                                        <label class="form-check-label">Unless stopped</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </InputRadioGroup>
+                            </EditForm>
                         </td>
                     </tr>
                 </tbody>
@@ -163,11 +158,11 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-            <table class="table">
+            <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" style="width: 15%">Mounts</th>
-                        <th scope="col" style="width: 42.5%">Status</th>
+                        <th scope="col" style="width: 42.5%"></th>
                         <th scope="col" style="width: 42.5%"></th>
                     </tr>
                 </thead>
@@ -195,30 +190,35 @@
                             <td>@mount.Destination</td>
                         </tr>
                     }
+                    @if (Container.Mounts.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No data</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-            <table class="table">
+            <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col" style="width: 15%">Network</th>
-                        <th scope="col" style="width: 21.25%"></th>
-                        <th scope="col" style="width: 21.25%"></th>
-                        <th scope="col" style="width: 21.25%">
-                            <select class="form-control" id="network">
+                        <th scope="col">Network</th>
+                        <th colspan="2">
+                            <select class="form-control" id="network" @bind="NetworkToConnect">
+                                <option hidden disabled selected value="">Connect to a network</option>
                                 @foreach (var network in Networks)
                                 {
-                                    <option>@network.Name</option>
+                                    <option value="@network.ID">@network.Name</option>
                                 }
                             </select>
                         </th>
-                        <th scope="col" style="width: 21.25%">
-                            <a href="#" class="btn-sm btn-success">
+                        <th colspan="2" class="pb-2">
+                            <button class="btn btn-sm btn-success" @onclick="e => Connect(NetworkToConnect)" disabled="@(string.IsNullOrWhiteSpace(NetworkToConnect) || IsBusy)">
                                 <span class="fa fa-plus" /> Join
-                            </a>
+                            </button>
                         </th>
                     </tr>
                 </thead>
@@ -240,10 +240,16 @@
                             <td>@network.Value.Gateway</td>
                             <td>@network.Value.MacAddress</td>
                             <td>
-                                <button class="btn btn-sm btn-danger">
+                                <button class="btn btn-sm btn-danger" @onclick="e => Disconnect(network.Value.NetworkID)" disabled="@IsBusy">
                                     <span class="fa fa-trash"></span> Leave
                                 </button>
                             </td>
+                        </tr>
+                    }
+                    @if (Container.NetworkSettings.Networks.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No data</td>
                         </tr>
                     }
                 </tbody>
@@ -267,6 +273,8 @@ else
 
 @code{
 
+    private RestartPolicyKind _restartPolicy { get; set; }
+
     [Inject]
     public IContainerService ContainerService { get; set; }
 
@@ -276,16 +284,82 @@ else
     [Parameter]
     public string Id { get; set; }
 
-    public bool PageLoaded { get; set; } = false;
-
     public ContainerInspectResponse Container { get; set; }
 
     public List<NetworkResponse> Networks { get; set; }
 
+    public string NetworkToConnect { get; set; }
+
     protected override async Task OnInitializedAsync()
+    {
+        await FetchData();
+        PageLoaded = true;
+    }
+
+    public async Task FetchData()
     {
         Container = await ContainerService.InspectAsync(Id);
         Networks = await NetworkService.GetAllAsync();
-        PageLoaded = true;
+        _restartPolicy = Container.HostConfig.RestartPolicy.Name;
+    }
+
+    public async Task Connect(string networkId)
+    {
+        try
+        {
+            IsBusy = true;
+            if (networkId != null)
+            {
+                var result = await NetworkService.ConnectAsync(networkId, new NetworkConnectParameters() { Container = Container.ID });
+                if (result)
+                    ToastService.ShowSuccess("Connected to the network");
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while connecting to the network");
+        }
+        finally
+        {
+            NetworkToConnect = string.Empty;
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task Disconnect(string networkId)
+    {
+        try
+        {
+            IsBusy = true;
+
+            if (networkId != null)
+            {
+                var result = await NetworkService.DisconnectAsync(networkId, Container.ID);
+                if (result)
+                    ToastService.ShowSuccess("Disconnected from the network");
+            }
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while disconnecting from network");
+        }
+        finally
+        {
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task UpdateRestartPolicy()
+    {
+        var result = await ContainerService.Update(Container.ID,
+            new ContainerUpdateParameters()
+            {
+                RestartPolicy = new RestartPolicy() { Name = _restartPolicy }
+            });
+
+        if (result != null)
+            ToastService.ShowSuccess("Restart policy updated");
     }
 }

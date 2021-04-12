@@ -5,6 +5,6 @@ namespace Redpier.Application.Common.Interfaces
 {
     public interface IDockerClientService
     {
-        Task<IDockerClient> CreateClient();
+        IDockerClient CreateClient();
     }
 }

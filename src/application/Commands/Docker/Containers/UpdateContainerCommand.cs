@@ -12,7 +12,6 @@ namespace Redpier.Application.Commands.Docker.Containers
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class UpdateContainerCommand : IRequest<ContainerUpdateResponse>
     {
-        [Required]
         public string Endpoint { get; set; }
 
         [Required]

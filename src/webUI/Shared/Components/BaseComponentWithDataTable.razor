@@ -1,15 +1,9 @@
 ﻿@typeparam TItem
+@inherits BaseComponent
 
 @code {
     [Inject]
     public IServiceBase<TItem> Service { get; set; }
-
-    [Inject]
-    public IToastService ToastService { get; set; }
-
-    public bool IsBusy { get; set; } = false;
-
-    public bool PageLoaded { get; set; } = false;
 
     public double ProgressBarValue { get; set; } = 0;
 

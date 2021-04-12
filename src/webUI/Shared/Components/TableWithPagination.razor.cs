@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Redpier.Web.UI.Shared
+namespace Redpier.Web.UI.Shared.Components
 {
     public partial class TableWithPagination<TItem> : ComponentBase
     {

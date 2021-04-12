@@ -28,14 +28,14 @@
             </div>
             <div class="d-block d-sm-none py-1" />
             <a class="btn btn-sm btn-success float-sm-right" href="/containers/add">
-                <span class="fa fa-plus"></span>Add new container
+                <span class="fa fa-plus"></span> Add new container
             </a>
             @*<div class="btn-group float-right">
                     <button type="button" class="btn btn-sm btn-danger" disabled="@(IsBusy || !SelectedItems.Any())">
                         <span class="fa fa-trash"></span> Remove
                     </button>
                 </div>*@
-            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable" PageSize="8">
+            <DataTableWithPagination Items="Items" TItem="ContainerListResponse" Context="container" @bind-SelectedItems="SelectedItems" IsBusy="IsBusy" ColSpan="8" @ref="DataTable" PageSize="10">
                 <TableHeader>
                     <th scope="col">Name</th>
                     <th scope="col">State</th>

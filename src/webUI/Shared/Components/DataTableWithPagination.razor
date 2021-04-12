@@ -49,10 +49,14 @@
             <li class="page-item @(Page.HasPreviousPage ? "" : "disabled")">
                 <a class="page-link" tabindex="-1" @onclick="e => SetPageAsync(Page.PageIndex - 1)">Previous</a>
             </li>
-            @for (int i = 1; i <= Page.TotalPages; i++)
+            @if (Page.HasPreviousPage)
             {
-                var index = i;
-                <li class="page-item"><a class="page-link @(index == Page.PageIndex ? "active disabled" : "")" @onclick="e => SetPageAsync(index)">@index</a></li>
+                <li class="page-item"><a class="page-link" @onclick="e => SetPageAsync(Page.PageIndex - 1)">@(Page.PageIndex - 1)</a></li>
+            }
+            <li class="page-item"><a class="page-link active disabled">@Page.PageIndex</a></li>
+            @if (Page.HasNextPage)
+            {
+                <li class="page-item"><a class="page-link" @onclick="e => SetPageAsync(Page.PageIndex + 1)">@(Page.PageIndex + 1)</a></li>
             }
             <li class="page-item @(Page.HasNextPage ? "" : "disabled")">
                 <a class="page-link" @onclick="e => SetPageAsync(Page.PageIndex + 1)">Next</a>

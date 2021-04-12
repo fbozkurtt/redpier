@@ -11,7 +11,7 @@ namespace Redpier.Application.Queries.Docker.Volumes
     public class ListVolumesQuery : IRequest<VolumesListResponse>
     {
         [Required]
-        public Guid Endpoint { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class ListVolumesQueryHandler : IRequestHandler<ListVolumesQuery, VolumesListResponse>

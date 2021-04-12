@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,13 +13,14 @@ namespace Redpier.Application.Commands.Docker.Networks
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class DisconnectNetworkCommand : IRequest
     {
-        [Required]
         public string Endpoint { get; set; }
 
         [Required]
         public string Id { get; set; }
 
-        public NetworkDisconnectParameters Parameters { get; set; }
+        public string ContainerId { get; set; }
+
+        public bool Force { get; set; } = false;
     }
 
     public class DisconnectNetworkCommandHandler : IRequestHandler<DisconnectNetworkCommand>
@@ -34,7 +36,7 @@ namespace Redpier.Application.Commands.Docker.Networks
         {
             await _client.Networks.DisconnectNetworkAsync(
                   request.Id,
-                  request.Parameters,
+                  new NetworkDisconnectParameters() { Container = request.ContainerId, Force = request.Force },
                   cancellationToken);
 
             return Unit.Value;

@@ -244,7 +244,11 @@ option:focus, option:hover, option.active {
         border-color: #c45c5c;
     }
 
-.page-item {
+    .page-link.disabled {
+        cursor: default;
+    }
+
+.page-item:not(.disabled) {
     cursor: pointer;
 }
 

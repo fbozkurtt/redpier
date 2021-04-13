@@ -73,5 +73,38 @@ namespace Redpier.Web.UI.Services
             }
             return false;
         }
+
+        public async Task<bool> RemoveAsync(string id)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"/api/network?id={id}");
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
+
+        public async Task<NetworkResponse> InspectAsync(string id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/network/inspect?id={id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<NetworkResponse>();
+                }
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
+        }
     }
 }

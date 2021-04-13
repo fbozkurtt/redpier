@@ -1,6 +1,6 @@
 ﻿@page "/containers/{Id}"
-@inherits BaseComponent
 @using Docker.DotNet.Models
+@inherits BaseComponent
 
 @if (PageLoaded)
 {
@@ -235,7 +235,7 @@
                     @foreach (var network in Container.NetworkSettings.Networks)
                     {
                         <tr>
-                            <td>@network.Key</td>
+                            <td><a href="@($"/networks/{network.Value.NetworkID}")">@network.Key</a></td>
                             <td>@network.Value.IPAddress</td>
                             <td>@network.Value.Gateway</td>
                             <td>@network.Value.MacAddress</td>

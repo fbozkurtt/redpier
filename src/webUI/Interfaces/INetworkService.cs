@@ -9,6 +9,11 @@ namespace Redpier.Web.UI.Interfaces
     public interface INetworkService : IServiceBase<NetworkResponse>
     {
         public Task<bool> ConnectAsync(string id, NetworkConnectParameters parameters);
+
         public Task<bool> DisconnectAsync(string id, string containerId, bool force = false);
+
+        public Task<bool> RemoveAsync(string id);
+
+        public Task<NetworkResponse> InspectAsync(string id);
     }
 }

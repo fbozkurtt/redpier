@@ -24,7 +24,7 @@ namespace Redpier.Web.API.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<NetworkResponse> Inspect(InspectNetworkQuery query)
+        public async Task<NetworkResponse> Inspect([FromQuery] InspectNetworkQuery query)
         {
             return await Mediator.Send(query);
         }
@@ -56,7 +56,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpDelete]
-        public async Task<ActionResult> Delete(DeleteNetworkCommand command)
+        public async Task<ActionResult> Delete([FromQuery] DeleteNetworkCommand command)
         {
             await Mediator.Send(command);
 

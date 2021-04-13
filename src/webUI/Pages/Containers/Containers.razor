@@ -1,6 +1,6 @@
 ﻿@page "/containers"
-@inherits BaseComponentWithDataTable<ContainerListResponse>
 @using Docker.DotNet.Models
+@inherits BaseComponentWithDataTable<ContainerListResponse>
 
 <ProgressBar ProgressBarMaxValue="SelectedItems.Count" ProgressBarValue="ProgressBarValue" ShowProgressBar="IsBusy"></ProgressBar>
 <div class="row">

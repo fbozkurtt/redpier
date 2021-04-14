@@ -269,3 +269,10 @@ option:focus, option:hover, option.active {
     color: #f7f7f7;
     background-color: #db4646;
 }
+
+/*Blazored Typeahead*/
+.blazored-typeahead:focus-within {
+    box-shadow: 0 0 0 0.2rem #c45c5c;
+    border-color: #ba1c1c;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}

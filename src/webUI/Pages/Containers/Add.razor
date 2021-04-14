@@ -1,4 +1,5 @@
 ﻿@page "/containers/add"
+@inherits BaseComponent
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
@@ -22,24 +23,18 @@
                 <a class="flex-sm-fill text-sm-center nav-link" id="resourceTab" data-toggle="tab" href="#resources" role="tab" aria-controls="resources" aria-selected="false">Resources</a>
             </li>
         </ul>
-        <form>
+        <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
             <div class="tab-content">
                 <div class="tab-pane active py-4" id="basic" role="tabpanel" aria-labelledby="basicTab">
                     <div class="form-group row">
-                        <label for="name" class="col-sm-1 col-form-label">Name:</label>
-                        <div class="col-sm-11">
-                            <input type="text" class="form-control" id="name" placeholder="can be anything even nothing">
+                        <label for="name" class="col-lg-1 col-form-label">Name:</label>
+                        <div class="col-lg-11">
+                            <input @bind-value="Model.Name" type="text" class="form-control" id="name" placeholder="can be anything even nothing">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="image" class="col-sm-1 col-form-label">Image:</label>
-                        <div class="col-sm-11">
-                            <input type="text" class="form-control" id="image" placeholder="docker/getting-started:latest" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="console" class="col-sm-1 col-form-label">Restart:</label>
-                        <div class="col-sm-11 mt-1">
+                        <label for="console" class="col-lg-1 col-form-label">Restart:</label>
+                        <div class="col-lg-11 mt-1">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="restartRadios" id="never" value="never" checked>
                                 <label class="form-check-label" for="never">
@@ -66,38 +61,83 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-section-title">
+                        Image
+                    </div>
+                    <div class="form-group form-check">
+                        <input @bind-value="PullImage" class="form-check-input" type="checkbox">
+                        <label class="form-check-label">
+                            Pull new image
+                        </label>
+                    </div>
+                    @if (PullImage)
+                    {
+                        <div class="form-group row">
+                            <label for="network" class="col-lg-1 col-form-label">Registry:</label>
+                            <div class="col-lg-11">
+                                <select class="form-control">
+                                    <option selected>DockerHub</option>
+                                    <option value="registry1">Registry1</option>
+                                    <option value="registry2">Registry2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-lg-1 col-form-label">Image:</label>
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control" placeholder="docker/getting-started:latest" required>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group row">
+                            <label for="network" class="col-lg-1 col-form-label">Image:</label>
+                            <div class="col-lg-11">
+                                <select class="form-control" required>
+                                    <option hidden disabled selected value="">Select an image</option>
+                                    @foreach (var image in LocalImages)
+                                    {
+                                        <option value="@image">@image</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="tab-pane py-4" id="command" role="tabpanel" aria-labelledby="profileTab">
                     <div class="form-group row">
                         <div class="col">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" value="" id="overrideDefaultCommand">
+                                <input @bind-value="OverrideDefaultCommand" class="form-check-input" type="checkbox" id="overrideDefaultCommand">
                                 <label class="form-check-label text-wrap" for="overrideDefaultCommand">
                                     Override default command
                                 </label>
                             </div>
-                            <input type="text" class="form-control" id="command" placeholder="'-logtostderr' '--housekeeping_interval=5s'" disabled>
-
+                            <input @onchange="e => { Model.Cmd[0] = e.Value.ToString(); }" type="text" class="form-control" id="command" placeholder="'-logtostderr' '--housekeeping_interval=5s'" disabled="@(!OverrideDefaultCommand)">
                         </div>
-
                     </div>
                     <div class="form-group row">
                         <div class="col">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" value="" id="overrideDefaultEntrypoint">
+                                <input @bind-value="OverrideDefaultEntryPoint" class="form-check-input" type="checkbox" id="overrideDefaultEntrypoint">
                                 <label class="form-check-label text-wrap" for="overrideDefaultEntrypoint">
                                     Override default entrypoint
                                 </label>
                             </div>
-                            <input type="text" class="form-control" id="entrypoint" placeholder="/bin/sh -c" disabled>
+                            <input @onchange="e => { Model.Entrypoint[0] = e.Value.ToString(); }" type="text" class="form-control" id="entrypoint" placeholder="/bin/sh -c" disabled="@(!OverrideDefaultEntryPoint)">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">
                             <label for="workingDir" class="col-form-label">Working directory:</label>
-                            <input type="text" class="form-control" id="workingDir" placeholder="/app">
+                            <input @bind-value="Model.WorkingDir" type="text" class="form-control" id="workingDir" placeholder="/app">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
                             <label for="user" class="col-form-label">User:</label>
-                            <input type="text" class="form-control" id="user" placeholder="root">
+                            <input @bind-value="Model.User" type="text" class="form-control" id="user" placeholder="root">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -290,6 +330,6 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary my-2">Deploy container</button>
-        </form>
+        </EditForm>
     </div>
 </div>

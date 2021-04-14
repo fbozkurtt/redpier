@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12">
-        <EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+        <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
             <div class="form-section-title">
                 Attention
             </div>
@@ -32,7 +32,7 @@
             <div class="form-group row">
                 <label for="name" class="col-sm-1 col-form-label">Name:</label>
                 <div class="col-sm-11">
-                    <input @bind-value="model.Name" type="text" class="form-control" id="name" placeholder="can be anything" required>
+                    <input @bind-value="Model.Name" type="text" class="form-control" id="name" placeholder="can be anything" required>
                 </div>
             </div>
             <div class="form-group form-check">
@@ -44,7 +44,7 @@
                 <div class="form-group row">
                     <label for="endpointURL" class="col-sm-1 col-form-label">Endpoint URL:</label>
                     <div class="col-sm-11">
-                        <input @bind-value="model.Uri" type="text" class="form-control" id="endpointURL" placeholder="10.20.30.40:2375, somedomain.com:2375, docker.mydomain.com" required>
+                        <input @bind-value="Model.Uri" type="text" class="form-control" id="endpointURL" placeholder="10.20.30.40:2375, somedomain.com:2375, docker.mydomain.com" required>
                     </div>
                 </div>
             }
@@ -60,7 +60,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-1 col-form-label">Socket URI:</label>
                     <div class="col-sm-11">
-                        <input @bind-value="model.Uri" type="text" class="form-control" id="sockerUri" placeholder="defaults are /var/run/docker.sock and npipe://./pipe/docker_engine" required>
+                        <input @bind-value="Model.Uri" type="text" class="form-control" id="sockerUri" placeholder="defaults are /var/run/docker.sock and npipe://./pipe/docker_engine" required>
                     </div>
                 </div>
             }
@@ -73,7 +73,7 @@
 </div>
 
 @code{
-    private AddEndpointModel model = new AddEndpointModel();
+    private AddEndpointModel Model = new AddEndpointModel();
 
     public bool IsInProgress { get; set; } = false;
 
@@ -85,7 +85,7 @@
 
         try
         {
-            var response = await Client.PostAsJsonAsync("/api/endpoint", model);
+            var response = await Client.PostAsJsonAsync("/api/endpoint", Model);
 
             if (response.IsSuccessStatusCode)
             {

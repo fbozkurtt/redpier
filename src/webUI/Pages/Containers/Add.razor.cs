@@ -19,8 +19,18 @@ namespace Redpier.Web.UI.Pages.Containers
 
         CreateContainerParameters Model { get; set; } = new CreateContainerParameters()
         {
-            Cmd = new List<string>(),
-            Entrypoint = new List<string>() { "" }
+            Cmd = new List<string>() { "" },
+            Entrypoint = new List<string>() { "" },
+            NetworkingConfig = new NetworkingConfig()
+            {
+                EndpointsConfig = new Dictionary<string, EndpointSettings>() { { "bridge", new EndpointSettings() {
+                    IPAMConfig = new EndpointIPAMConfig() 
+                    {
+                        IPv4Address="",
+                        IPv6Address=""
+                    }
+                } } }
+            }
         };
 
         public List<string> LocalImages { get; set; } = new List<string>();

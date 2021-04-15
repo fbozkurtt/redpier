@@ -125,7 +125,7 @@
                                     Override default entrypoint
                                 </label>
                             </div>
-                            <input @onchange="e => { Model.Entrypoint[0] = e.Value.ToString(); }" type="text" class="form-control" id="entrypoint" placeholder="/bin/sh -c" disabled="@(!OverrideDefaultEntryPoint)">
+                            <input @onchange="e => { Model.Entrypoint = e.Value.ToString().Split(' '); }" type="text" class="form-control" id="entrypoint" placeholder="/bin/sh -c" disabled="@(!OverrideDefaultEntryPoint)">
                         </div>
                     </div>
                     <div class="form-group row">

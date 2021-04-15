@@ -85,7 +85,7 @@
                         <div class="form-group row">
                             <label for="name" class="col-lg-1 col-form-label">Image:</label>
                             <div class="col-lg-11">
-                                <input type="text" class="form-control" placeholder="docker/getting-started:latest" required>
+                                <input @bind-value="Model.Image" type="text" class="form-control" placeholder="docker/getting-started:latest" required>
                             </div>
                         </div>
                     }
@@ -94,7 +94,7 @@
                         <div class="form-group row">
                             <label for="network" class="col-lg-1 col-form-label">Image:</label>
                             <div class="col-lg-11">
-                                <select class="form-control" required>
+                                <select class="form-control" @bind="Model.Image" required>
                                     <option hidden disabled selected value="">Select an image</option>
                                     @foreach (var image in LocalImages)
                                     {
@@ -114,7 +114,7 @@
                                     Override default command
                                 </label>
                             </div>
-                            <input @onchange="e => { Model.Cmd[0] = e.Value.ToString(); }" type="text" class="form-control" id="command" placeholder="'-logtostderr' '--housekeeping_interval=5s'" disabled="@(!OverrideDefaultCommand)">
+                            <input @onchange="e => { Model.Cmd = e.Value.ToString().Split(' '); }" type="text" class="form-control" id="command" placeholder="'-logtostderr' '--housekeeping_interval=5s'" disabled="@(!OverrideDefaultCommand)">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -329,7 +329,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary my-2">Deploy container</button>
+            <button type="submit" class="btn btn-primary my-2" disabled="@IsBusy">Deploy container</button>
         </EditForm>
     </div>
 </div>

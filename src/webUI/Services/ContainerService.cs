@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Redpier.Web.UI.Interfaces;
+using Redpier.Web.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,6 +180,26 @@ namespace Redpier.Web.UI.Services
                 {
                     return await response.Content.ReadFromJsonAsync<ContainerUpdateResponse>();
                 }
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
+        }
+
+        public async Task<CreateContainerResponse> Create(CreateContainerParameters parameters)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"/api/container", new { Parameters = parameters });
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<CreateContainerResponse>();
+                }
+                var exception = await response.Content.ReadFromJsonAsync<ApiExceptionResponse>();
+                throw new Exception(exception.Detail);
             }
             catch (AccessTokenNotAvailableException ex)
             {

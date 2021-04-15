@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Redpier.Shared.Constants;
+using Serilog;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -13,7 +14,6 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateImageCommand : IRequest
     {
-        [Required]
         public string Endpoint { get; set; }
 
         public ImagesCreateParameters Parameters { get; set; }
@@ -32,10 +32,14 @@ namespace Redpier.Application.Commands.Docker.Images
 
         public async Task<Unit> Handle(CreateImageCommand request, CancellationToken cancellationToken)
         {
+            var Progress = new Progress<JSONMessage>((report) => {
+                Log.Information($"{report.Status}");
+            });
+
             await _client.Images.CreateImageAsync(
                 request.Parameters,
                 request.AuthConfig,
-                new Progress<JSONMessage>(),
+                Progress,
                 cancellationToken);
 
             return Unit.Value;

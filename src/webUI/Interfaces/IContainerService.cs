@@ -31,5 +31,7 @@ namespace Redpier.Web.UI.Interfaces
         Task<bool> PruneAsync();
 
         Task<ContainerUpdateResponse> Update(string containerId, ContainerUpdateParameters parameters);
+
+        Task<CreateContainerResponse> Create(CreateContainerParameters parameters);
     }
 }

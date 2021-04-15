@@ -12,7 +12,6 @@ namespace Redpier.Application.Commands.Docker.Containers
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class CreateContainerCommand : IRequest<CreateContainerResponse>
     {
-        [Required]
         public string Endpoint { get; set; }
 
         public CreateContainerParameters Parameters { get; set; }

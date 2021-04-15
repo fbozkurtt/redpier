@@ -18,6 +18,12 @@ namespace Redpier.Web.API.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpPost]
+        public async Task<CreateContainerResponse> Create(CreateContainerCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
         //[HttpGet]
         //public async Task<Unit> Logs(GetContainerLogsQuery query)
         //{

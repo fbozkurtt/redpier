@@ -108,7 +108,7 @@ namespace Redpier.Web.UI.Pages.Containers
 
         public int MemoryLimit { get; set; }
 
-        public double CpuLimit { get; set; } = 0;
+        public long CpuLimit { get; set; } = 0;
 
         protected override async Task OnInitializedAsync()
         {
@@ -129,7 +129,13 @@ namespace Redpier.Web.UI.Pages.Containers
                 if (OverrideDefaultEntryPoint && !string.IsNullOrWhiteSpace(Command) && !string.IsNullOrWhiteSpace(Entrypoint))
                     Model.Entrypoint = new List<string>() { Entrypoint };
 
-                var result = await ContainerService.CreateAsync(Model);
+                if (MemoryLimit > 0)
+                    Model.HostConfig.Memory = MemoryLimit * 1024 * 1024;
+
+                if (CpuLimit > 0)
+                    Model.HostConfig.NanoCPUs = CpuLimit * 1000000000;
+
+                    var result = await ContainerService.CreateAsync(Model);
 
                 if (result.ID != null)
                     ToastService.ShowSuccess($"Created container {result.ID}");

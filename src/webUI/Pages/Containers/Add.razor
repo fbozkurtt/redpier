@@ -297,7 +297,7 @@
                     <div class="form-group row">
                         <label for="secondaryDNS" class="col-lg-1 col-form-label">2nd DNS:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="secondaryDNS" placeholder="8.8.4.4">
+                            <input @bind-value="@(Model.NetworkingConfig.EndpointsConfig["bridge"].IPAMConfig)" type="text" class="form-control" id="secondaryDNS" placeholder="8.8.4.4">
                         </div>
                     </div>
                 </div>
@@ -322,7 +322,7 @@
                                 <label for="cpuLimit" class="col-form-label">CPU limit (Threads):</label>
                             </div>
                             <div class="col-lg-8">
-                                <input @onchange="e=> { CpuLimit = double.Parse(e.Value.ToString()); }" type="range" class="form-control-range ml-auto mt-2" min="0" max="12" id="cpuLimit" step="0.25">
+                                <input @onchange="e=> { CpuLimit = long.Parse(e.Value.ToString()); }" type="range" class="form-control-range ml-auto mt-2" min="0" max="12" id="cpuLimit" step="0.25">
                                 <label class="text-muted"><span hidden="@(CpuLimit > 0)">Unlimited</span><span hidden="@(CpuLimit == 0)">@CpuLimit</span></label>
                             </div>
                         </div>

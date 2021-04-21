@@ -270,7 +270,6 @@ else
     </div>
 }
 
-
 @code{
 
     private RestartPolicyKind _restartPolicy { get; set; }
@@ -353,7 +352,7 @@ else
 
     public async Task UpdateRestartPolicy()
     {
-        var result = await ContainerService.Update(Container.ID,
+        var result = await ContainerService.UpdateAsync(Container.ID,
             new ContainerUpdateParameters()
             {
                 RestartPolicy = new RestartPolicy() { Name = _restartPolicy }

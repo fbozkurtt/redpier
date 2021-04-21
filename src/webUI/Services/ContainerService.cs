@@ -164,7 +164,7 @@ namespace Redpier.Web.UI.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ContainerUpdateResponse> Update(string containerId, ContainerUpdateParameters parameters)
+        public async Task<ContainerUpdateResponse> UpdateAsync(string containerId, ContainerUpdateParameters parameters)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace Redpier.Web.UI.Services
             return null;
         }
 
-        public async Task<CreateContainerResponse> Create(CreateContainerParameters parameters)
+        public async Task<CreateContainerResponse> CreateAsync(CreateContainerParameters parameters)
         {
             try
             {

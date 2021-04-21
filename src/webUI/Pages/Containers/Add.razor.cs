@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Components;
 using Redpier.Web.UI.Interfaces;
+using Redpier.Web.UI.Helpers;
 
 namespace Redpier.Web.UI.Pages.Containers
 {
@@ -19,18 +20,78 @@ namespace Redpier.Web.UI.Pages.Containers
 
         CreateContainerParameters Model { get; set; } = new CreateContainerParameters()
         {
-            Cmd = new List<string>() { "" },
-            Entrypoint = new List<string>() { "" },
+            Env = new List<string>(),
+            Cmd = null,
+            ExposedPorts = new Dictionary<string, EmptyStruct>(),
+            Entrypoint = null,
+            HostConfig = new HostConfig()
+            {
+                RestartPolicy = new RestartPolicy() { Name = RestartPolicyKind.No },
+                PortBindings = new Dictionary<string, IList<PortBinding>>(),
+                PublishAllPorts = false,
+                Binds = new List<string>(),
+                AutoRemove = false,
+                NetworkMode = "bridge",
+                Privileged = false,
+                Init = false,
+                Runtime = null,
+                ExtraHosts = new List<string>(),
+                Devices = new List<DeviceMapping>(),
+                //Memory = 1024 * 1024 * 1024,
+                //MemoryReservation = 1024 * 1024 * 1024,
+                //NanoCPUs = 2 * 1000000000,
+                //CapAdd = new List<string>()
+                //{
+                //    "SETPCAP",
+                //    "MKNOD",
+                //    "AUDIT_WRITE",
+                //    "CHOWN",
+                //    "NET_RAW",
+                //    "DAC_OVERRIDE",
+                //    "FOWNER",
+                //    "FSETID",
+                //    "KILL",
+                //    "SETGID",
+                //    "SETUID",
+                //    "NET_BIND_SERVICE",
+                //    "SYS_CHROOT",
+                //    "SETFCAP",
+                //},
+                //CapDrop = new List<string>()
+                //{
+                //    "SYS_MODULE",
+                //    "SYS_RAWIO",
+                //    "SYS_PACCT",
+                //    "SYS_ADMIN",
+                //    "SYS_NICE",
+                //    "SYS_RESOURCE",
+                //    "SYS_TIME",
+                //    "SYS_TTY_CONFIG",
+                //    "AUDIT_CONTROL",
+                //    "MAC_ADMIN",
+                //    "MAC_OVERRIDE",
+                //    "NET_ADMIN",
+                //    "SYSLOG",
+                //    "DAC_READ_SEARCH",
+                //    "LINUX_IMMUTABLE",
+                //    "NET_BROADCAST",
+                //    "IPC_LOCK",
+                //    "IPC_OWNER",
+                //    "SYS_PTRACE",
+                //    "SYS_BOOT",
+                //    "LEASE",
+                //    "WAKE_ALARM",
+                //    "BLOCK_SUSPEND"
+                //},
+                Sysctls = new Dictionary<string, string>()
+            },
             NetworkingConfig = new NetworkingConfig()
             {
-                EndpointsConfig = new Dictionary<string, EndpointSettings>() { { "bridge", new EndpointSettings() {
-                    IPAMConfig = new EndpointIPAMConfig() 
-                    {
-                        IPv4Address="",
-                        IPv6Address=""
-                    }
-                } } }
-            }
+                EndpointsConfig = new Dictionary<string, EndpointSettings>()
+            },
+            Labels = new Dictionary<string, string>(),
+            OpenStdin = false,
+            Tty = false
         };
 
         public List<string> LocalImages { get; set; } = new List<string>();
@@ -39,7 +100,15 @@ namespace Redpier.Web.UI.Pages.Containers
 
         public bool OverrideDefaultEntryPoint { get; set; } = false;
 
+        public string Command { get; set; }
+
+        public string Entrypoint { get; set; }
+
         public bool PullImage { get; set; } = false;
+
+        public int MemoryLimit { get; set; }
+
+        public double CpuLimit { get; set; } = 0;
 
         protected override async Task OnInitializedAsync()
         {
@@ -53,9 +122,18 @@ namespace Redpier.Web.UI.Pages.Containers
             try
             {
                 IsBusy = true;
-                var result = await ContainerService.Create(Model);
+
+                if (OverrideDefaultCommand && !string.IsNullOrWhiteSpace(Command))
+                    Model.Cmd = ContainerHelper.CommandStringToArray(Command);
+
+                if (OverrideDefaultEntryPoint && !string.IsNullOrWhiteSpace(Command) && !string.IsNullOrWhiteSpace(Entrypoint))
+                    Model.Entrypoint = new List<string>() { Entrypoint };
+
+                var result = await ContainerService.CreateAsync(Model);
+
                 if (result.ID != null)
                     ToastService.ShowSuccess($"Created container {result.ID}");
+
                 if (result.Warnings.Count > 0)
                     ToastService.ShowWarning($"{result.Warnings.Aggregate((a, b) => a + "\n" + b)}");
             }

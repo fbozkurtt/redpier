@@ -73,9 +73,9 @@
                     @if (PullImage)
                     {
                         <div class="form-group row">
-                            <label for="network" class="col-lg-1 col-form-label">Registry:</label>
+                            <label for="registry" class="col-lg-1 col-form-label">Registry:</label>
                             <div class="col-lg-11">
-                                <select class="form-control">
+                                <select class="form-control" id="registry">
                                     <option selected>DockerHub</option>
                                     <option value="registry1">Registry1</option>
                                     <option value="registry2">Registry2</option>
@@ -92,9 +92,9 @@
                     else
                     {
                         <div class="form-group row">
-                            <label for="network" class="col-lg-1 col-form-label">Image:</label>
+                            <label for="image" class="col-lg-1 col-form-label">Image:</label>
                             <div class="col-lg-11">
-                                <select class="form-control" @bind="Model.Image" required>
+                                <select @bind="Model.Image" class="form-control" id="image" required>
                                     <option hidden disabled selected value="">Select an image</option>
                                     @foreach (var image in LocalImages)
                                     {
@@ -250,54 +250,54 @@
                     <div class="form-group row">
                         <label for="network" class="col-lg-1 col-form-label">Network:</label>
                         <div class="col-lg-11">
-                            <select class="form-control" id="network">
-                                <option selected>bridge</option>
-                                <option value="network1">Network 1</option>
-                                <option value="network2">Network 2</option>
-                                <option value="network3">Network 3</option>
+                            <select @bind="NetworkMode" class="form-control" id="network">
+                                @foreach (var network in Networks)
+                                {
+                                    <option value="@network">@network</option>
+                                }
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="hostName" class="col-lg-1 col-form-label">Hostname:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="hostName" placeholder="hostname">
+                            <input @bind="Model.Hostname" type="text" class="form-control" id="hostName" placeholder="hostname">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="domainName" class="col-lg-1 col-form-label">Domain Name:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="domainName" placeholder="somedomain.com">
+                            <input @bind="Model.Domainname" type="text" class="form-control" id="domainName" placeholder="somedomain.com">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="macAddress" class="col-lg-1 col-form-label">Mac Address:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="macAddress" placeholder="12:34:ab:cd:ef:56">
+                            <input @bind="Model.NetworkingConfig.EndpointsConfig[Model.HostConfig.NetworkMode].MacAddress" type="text" class="form-control" id="macAddress" placeholder="12:34:ab:cd:ef:56">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="ipv4" class="col-lg-1 col-form-label">IPv4 Address:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="ipv4" placeholder="175.15.15.20">
+                            <input @bind="Model.NetworkingConfig.EndpointsConfig[Model.HostConfig.NetworkMode].IPAMConfig.IPv4Address" type="text" class="form-control" id="ipv4" placeholder="175.15.15.20">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="ipv6" class="col-lg-1 col-form-label">IPv6 Address:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="ipv6" placeholder="fe80::5461:1c36:e4a1:be7c%23">
+                            <input @bind="Model.NetworkingConfig.EndpointsConfig[Model.HostConfig.NetworkMode].IPAMConfig.IPv6Address" type="text" class="form-control" id="ipv6" placeholder="fe80::5461:1c36:e4a1:be7c%23">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="primaryDNS" class="col-lg-1 col-form-label">1st DNS:</label>
                         <div class="col-lg-11">
-                            <input type="text" class="form-control" id="primaryDNS" placeholder="8.8.8.8">
+                            <input @bind="FirstDns" type="text" class="form-control" id="primaryDNS" placeholder="8.8.8.8">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="secondaryDNS" class="col-lg-1 col-form-label">2nd DNS:</label>
                         <div class="col-lg-11">
-                            <input @bind-value="@(Model.NetworkingConfig.EndpointsConfig["bridge"].IPAMConfig)" type="text" class="form-control" id="secondaryDNS" placeholder="8.8.4.4">
+                            <input @bind="SecondDns" type="text" class="form-control" id="secondaryDNS" placeholder="8.8.4.4">
                         </div>
                     </div>
                 </div>

@@ -58,14 +58,14 @@ namespace Redpier.Infrastructure.Identity
 
         public async Task<bool> IsInRoleAsync(Guid userId, string role)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             return await _userManager.IsInRoleAsync(user, role);
         }
 
         public async Task<bool> AuthorizeAsync(Guid userId, string policyName)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
 
@@ -76,7 +76,7 @@ namespace Redpier.Infrastructure.Identity
 
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user != null)
             {
@@ -88,7 +88,7 @@ namespace Redpier.Infrastructure.Identity
 
         public async Task<bool> DeleteUserAsync(string username)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.UserName == username);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.UserName == username);
 
             if (user != null)
             {

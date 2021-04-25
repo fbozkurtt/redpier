@@ -18,6 +18,9 @@ namespace Redpier.Web.UI.Pages.Containers
         [Inject]
         public IContainerService ContainerService { get; set; }
 
+        [Inject]
+        public INetworkService NetworkService { get; set; }
+
         CreateContainerParameters Model { get; set; } = new CreateContainerParameters()
         {
             Env = new List<string>(),
@@ -88,6 +91,9 @@ namespace Redpier.Web.UI.Pages.Containers
             NetworkingConfig = new NetworkingConfig()
             {
                 EndpointsConfig = new Dictionary<string, EndpointSettings>()
+                {
+                    { "bridge", new EndpointSettings() {  IPAMConfig = new EndpointIPAMConfig() } },
+                }
             },
             Labels = new Dictionary<string, string>(),
             OpenStdin = false,
@@ -95,6 +101,8 @@ namespace Redpier.Web.UI.Pages.Containers
         };
 
         public List<string> LocalImages { get; set; } = new List<string>();
+
+        public List<string> Networks { get; set; } = new List<string>();
 
         public bool OverrideDefaultCommand { get; set; } = false;
 
@@ -110,10 +118,32 @@ namespace Redpier.Web.UI.Pages.Containers
 
         public long CpuLimit { get; set; } = 0;
 
+        public string NetworkMode
+        {
+            get
+            {
+                return Model.HostConfig.NetworkMode;
+            }
+            set
+            {
+                ResetNetworkConfig();
+                Model.HostConfig.NetworkMode = value;
+                Model.NetworkingConfig.EndpointsConfig.Add(value, new EndpointSettings() { IPAMConfig = new EndpointIPAMConfig() });
+            }
+        }
+
+        public string FirstDns { get; set; }
+
+        public string SecondDns { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            var response = await ImageService.GetAllAsync();
-            LocalImages = response.Select(i => i.RepoTags).Aggregate((a, b) => a.Concat(b).ToList()).ToList();
+            var images = await ImageService.GetAllAsync();
+            LocalImages = images.Select(i => i.RepoTags).Aggregate((a, b) => a.Concat(b).ToList()).ToList();
+
+            var networks = await NetworkService.GetAllAsync();
+            Networks = networks.Select(n => n.Name).ToList();
+
             PageLoaded = true;
         }
 
@@ -135,7 +165,13 @@ namespace Redpier.Web.UI.Pages.Containers
                 if (CpuLimit > 0)
                     Model.HostConfig.NanoCPUs = CpuLimit * 1000000000;
 
-                    var result = await ContainerService.CreateAsync(Model);
+                if (!string.IsNullOrWhiteSpace(FirstDns))
+                    Model.HostConfig.DNS.Add(FirstDns);
+
+                if (!string.IsNullOrWhiteSpace(SecondDns))
+                    Model.HostConfig.DNS.Add(SecondDns);
+
+                var result = await ContainerService.CreateAsync(Model);
 
                 if (result.ID != null)
                     ToastService.ShowSuccess($"Created container {result.ID}");
@@ -151,6 +187,14 @@ namespace Redpier.Web.UI.Pages.Containers
             {
                 IsBusy = false;
             }
+        }
+
+        private void ResetNetworkConfig()
+        {
+            Model.NetworkingConfig = new NetworkingConfig()
+            {
+                EndpointsConfig = new Dictionary<string, EndpointSettings>()
+            };
         }
 
         private async Task<IEnumerable<string>> SearchImages(string searchText)

@@ -19,7 +19,7 @@ namespace Redpier.Application.Common.Behaviours
             {
                 var requestName = typeof(TRequest).Name;
 
-                Log.Error(ex, "Redpier API Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
+                Log.Error(ex, "Redpier API Request: Unknown Exception for Request {Name} {@Request}", requestName, request);
 
                 throw;
             }

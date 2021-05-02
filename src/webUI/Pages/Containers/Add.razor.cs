@@ -21,18 +21,23 @@ namespace Redpier.Web.UI.Pages.Containers
         [Inject]
         public INetworkService NetworkService { get; set; }
 
+        [Inject]
+        public IVolumeService VolumeService { get; set; }
+
         CreateContainerParameters Model { get; set; } = new CreateContainerParameters()
         {
             Env = new List<string>(),
             Cmd = null,
             ExposedPorts = new Dictionary<string, EmptyStruct>(),
             Entrypoint = null,
+            //Volumes = new Dictionary<string, EmptyStruct>(),
             HostConfig = new HostConfig()
             {
                 RestartPolicy = new RestartPolicy() { Name = RestartPolicyKind.No },
                 PortBindings = new Dictionary<string, IList<PortBinding>>(),
                 PublishAllPorts = false,
-                Binds = new List<string>(),
+                //Binds = new List<string>(),
+                Mounts = new List<Mount>(),
                 AutoRemove = false,
                 NetworkMode = "bridge",
                 Privileged = false,
@@ -104,6 +109,8 @@ namespace Redpier.Web.UI.Pages.Containers
 
         public List<string> Networks { get; set; } = new List<string>();
 
+        public List<string> ExistingVolumes { get; set; } = new List<string>();
+
         public bool OverrideDefaultCommand { get; set; } = false;
 
         public bool OverrideDefaultEntryPoint { get; set; } = false;
@@ -136,13 +143,20 @@ namespace Redpier.Web.UI.Pages.Containers
 
         public string SecondDns { get; set; }
 
+        public List<Mount> Binds { get; set; } = new List<Mount>();
+
+        public List<Mount> Volumes { get; set; } = new List<Mount>();
+
         protected override async Task OnInitializedAsync()
         {
-            var images = await ImageService.GetAllAsync();
+            var images = await ImageService.GetAllAsync().ConfigureAwait(false);
             LocalImages = images.Select(i => i.RepoTags).Aggregate((a, b) => a.Concat(b).ToList()).ToList();
 
-            var networks = await NetworkService.GetAllAsync();
+            var networks = await NetworkService.GetAllAsync().ConfigureAwait(false);
             Networks = networks.Select(n => n.Name).ToList();
+
+            var volumes = await VolumeService.GetAllAsync().ConfigureAwait(false);
+            ExistingVolumes = volumes.Select(v => v.Name).ToList();
 
             PageLoaded = true;
         }
@@ -171,6 +185,12 @@ namespace Redpier.Web.UI.Pages.Containers
                 if (!string.IsNullOrWhiteSpace(SecondDns))
                     Model.HostConfig.DNS.Add(SecondDns);
 
+                if (Volumes.Count > 0)
+                    Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(Volumes).ToList();
+
+                if (Binds.Count > 0)
+                    Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(Binds).ToList();
+
                 var result = await ContainerService.CreateAsync(Model);
 
                 if (result.ID != null)
@@ -187,6 +207,16 @@ namespace Redpier.Web.UI.Pages.Containers
             {
                 IsBusy = false;
             }
+        }
+
+        private void AddVolume()
+        {
+            Volumes.Add(new Mount() { Type = "volume" });
+        }
+
+        private void AddBindMount()
+        {
+            Binds.Add(new Mount() { Type = "bind" });
         }
 
         private void ResetNetworkConfig()

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Controllers
 {
-    [Authorize]
     public class IdentityController : ApiControllerBase
     {
         [AllowAnonymous]

@@ -12,10 +12,9 @@ namespace Redpier.Application.Commands.Docker.Volumes
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class PruneVolumesCommand : IRequest<VolumesPruneResponse>
     {
-        [Required]
         public string Endpoint { get; set; }
 
-        //public VolumesPruneParameters Parameters { get; set; }
+        public VolumesPruneParameters Parameters { get; set; }
     }
 
     public class PruneVolumesCommandHandler : IRequestHandler<PruneVolumesCommand, VolumesPruneResponse>

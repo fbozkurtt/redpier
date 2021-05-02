@@ -205,45 +205,53 @@
                 </div>
                 <div class="tab-pane py-4" id="mounts" role="tabpanel" aria-labelledby="mountsTab">
                     <div class="form-group">
-                        <a href="#" class="btn-sm btn-success">
+                        <a @onclick="e => AddBindMount()" class="btn-sm btn-success">
                             <span class="fa fa-plus"></span> Add bind mount
                         </a>
-                        <a href="#" class="btn-sm btn-success mx-2">
+                        <a @onclick="e => AddVolume()" class="btn-sm btn-success mx-2">
                             <span class="fa fa-plus"></span> Add named volume
                         </a>
-                        <div class="form-row my-2">
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Path in host machine">
+                        @for (int i = 0; i < Binds.Count; i++)
+                        {
+                            var index = i;
+                            <div class="form-row my-2">
+                                <div class="col-sm-5">
+                                    <input @bind="Model.HostConfig.Mounts[index].Source" type="text" class="form-control" placeholder="Path in host machine">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input @bind="Model.HostConfig.Mounts[index].Target" type="text" class="form-control" placeholder="Path in container">
+                                </div>
+                                <div class="col">
+                                    <a @onclick="e => Binds.RemoveAt(index)" href="#" class="btn btn-danger">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Path in container">
+
+                        }
+                        @for (int i = 0; i < Volumes.Count; i++)
+                        {
+                            var index = i;
+                            <div class="form-row my-2">
+                                <div class="col-sm-5">
+                                    <select @onchange="e => { Volumes[index].Source = e.Value.ToString(); }" class="form-control" id="volumeSelect">
+                                        <option hidden disabled selected value="">Select an volume</option>
+                                        @foreach (var volume in ExistingVolumes)
+                                        {
+                                            <option value="@volume">@volume</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input @bind="Volumes[i].Target" type="text" class="form-control" placeholder="Path in container">
+                                </div>
+                                <div class="col">
+                                    <a @onclick="e => Volumes.RemoveAt(index)" class="btn btn-danger">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col">
-                                <a href="#" class="btn btn-danger">
-                                    <span class="fa fa-trash"></span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="form-row my-2">
-                            <div class="col-sm-5">
-                                <select class="form-control" id="volumeSelect">
-                                    <option selected>Select a volume</option>
-                                    <option value="volume1">volume 1</option>
-                                    <option value="volume2">volume 2</option>
-                                    <option value="volume3">volume 3</option>
-                                    <option value="volume4">volume 4</option>
-                                    <option value="volume5">volume 5</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Path in container">
-                            </div>
-                            <div class="col">
-                                <a href="#" class="btn btn-danger">
-                                    <span class="fa fa-trash"></span>
-                                </a>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div class="tab-pane py-4" id="network" role="tabpanel" aria-labelledby="networkTab">

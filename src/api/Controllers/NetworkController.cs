@@ -13,28 +13,20 @@ namespace Redpier.Web.API.Controllers
     {
         [HttpGet]
         public async Task<IList<NetworkResponse>> GetNetworks()
-        {
-            return await Mediator.Send(new ListNetworksQuery());
-        }
+            => await Mediator.Send(new ListNetworksQuery());
 
         [HttpGet("[action]")]
         public async Task<IList<NetworkResponse>> GetNetworks([FromBody] ListNetworksQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+            => await Mediator.Send(query);
 
         [HttpGet("[action]")]
         public async Task<NetworkResponse> Inspect([FromQuery] InspectNetworkQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+            => await Mediator.Send(query);
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPost]
         public async Task<NetworksCreateResponse> Create(CreateNetworkCommand command)
-        {
-            return await Mediator.Send(command);
-        }
+            => await Mediator.Send(command);
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
@@ -66,8 +58,6 @@ namespace Redpier.Web.API.Controllers
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpDelete("[action]")]
         public async Task<NetworksPruneResponse> Prune(PruneNetworksCommand command)
-        {
-            return await Mediator.Send(command);
-        }
+            => await Mediator.Send(command);
     }
 }

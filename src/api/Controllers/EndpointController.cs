@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Controllers
 {
-    [Authorize]
     public class EndpointController : ApiControllerBase
     {
         [HttpGet]

@@ -288,7 +288,7 @@
                 var result = await ContainerService.KillAsync(container.ID);
 
                 if (result)
-                    ToastService.ShowSuccess($"Unpaused {container.Names.First().Trim('/')}");
+                    ToastService.ShowSuccess($"Killed {container.Names.First().Trim('/')}");
                 else
                     ToastService.ShowWarning($"An error occured while killing {container.Names.First().Trim('/')}");
 

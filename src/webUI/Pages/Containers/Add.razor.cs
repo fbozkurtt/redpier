@@ -7,6 +7,7 @@ using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Components;
 using Redpier.Web.UI.Interfaces;
 using Redpier.Web.UI.Helpers;
+using Redpier.Web.UI.Models;
 
 namespace Redpier.Web.UI.Pages.Containers
 {
@@ -31,6 +32,7 @@ namespace Redpier.Web.UI.Pages.Containers
             ExposedPorts = new Dictionary<string, EmptyStruct>(),
             Entrypoint = null,
             //Volumes = new Dictionary<string, EmptyStruct>(),
+            Labels = new Dictionary<string, string>(),
             HostConfig = new HostConfig()
             {
                 RestartPolicy = new RestartPolicy() { Name = RestartPolicyKind.No },
@@ -100,32 +102,31 @@ namespace Redpier.Web.UI.Pages.Containers
                     { "bridge", new EndpointSettings() {  IPAMConfig = new EndpointIPAMConfig() } },
                 }
             },
-            Labels = new Dictionary<string, string>(),
             OpenStdin = false,
             Tty = false
         };
 
-        public List<string> LocalImages { get; set; } = new List<string>();
+        private List<string> LocalImages { get; set; } = new List<string>();
 
-        public List<string> Networks { get; set; } = new List<string>();
+        private List<string> Networks { get; set; } = new List<string>();
 
-        public List<string> ExistingVolumes { get; set; } = new List<string>();
+        private List<string> ExistingVolumes { get; set; } = new List<string>();
 
-        public bool OverrideDefaultCommand { get; set; } = false;
+        private bool OverrideDefaultCommand { get; set; } = false;
 
-        public bool OverrideDefaultEntryPoint { get; set; } = false;
+        private bool OverrideDefaultEntryPoint { get; set; } = false;
 
-        public string Command { get; set; }
+        private string Command { get; set; }
 
-        public string Entrypoint { get; set; }
+        private string Entrypoint { get; set; }
 
-        public bool PullImage { get; set; } = false;
+        private bool PullImage { get; set; } = false;
 
-        public int MemoryLimit { get; set; }
+        private int MemoryLimit { get; set; }
 
-        public long CpuLimit { get; set; } = 0;
+        private long CpuLimit { get; set; } = 0;
 
-        public string NetworkMode
+        private string NetworkMode
         {
             get
             {
@@ -139,13 +140,21 @@ namespace Redpier.Web.UI.Pages.Containers
             }
         }
 
-        public string FirstDns { get; set; }
+        private string FirstDns { get; set; }
 
-        public string SecondDns { get; set; }
+        private string SecondDns { get; set; }
 
-        public List<Mount> Binds { get; set; } = new List<Mount>();
+        private List<Mount> Binds { get; set; } = new List<Mount>();
 
-        public List<Mount> Volumes { get; set; } = new List<Mount>();
+        private List<Mount> Volumes { get; set; } = new List<Mount>();
+
+        private List<Label> Labels = new List<Label>();
+
+        private string LabelName;
+
+        private string LabelValue;
+
+        private ConsoleType Console { get; set; } = ConsoleType.None;
 
         protected override async Task OnInitializedAsync()
         {
@@ -191,6 +200,16 @@ namespace Redpier.Web.UI.Pages.Containers
                 if (Binds.Count > 0)
                     Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(Binds).ToList();
 
+                if (Labels.Count > 0)
+                {
+                    foreach (var label in Labels)
+                    {
+                        Model.Labels.Add(label.Name, label.Value);
+                    }
+                }
+
+                SetConsole();
+
                 var result = await ContainerService.CreateAsync(Model);
 
                 if (result.ID != null)
@@ -219,6 +238,30 @@ namespace Redpier.Web.UI.Pages.Containers
             Binds.Add(new Mount() { Type = "bind" });
         }
 
+        private void AddLabel()
+        {
+            if (string.IsNullOrWhiteSpace(LabelValue) || string.IsNullOrWhiteSpace(LabelName))
+                return;
+            Labels.Add(new Label() { Name = LabelName, Value = LabelValue });
+            LabelName = string.Empty;
+            LabelValue = string.Empty;
+        }
+
+        private void RemoveLabel(Label label)
+        {
+            Labels.Remove(label);
+        }
+
+        private void RemoveVolume(Mount bind)
+        {
+            Volumes.Remove(bind);
+        }
+
+        private void RemoveBind(Mount bind)
+        {
+            Binds.Remove(bind);
+        }
+
         private void ResetNetworkConfig()
         {
             Model.NetworkingConfig = new NetworkingConfig()
@@ -227,9 +270,35 @@ namespace Redpier.Web.UI.Pages.Containers
             };
         }
 
+        private void SetConsole()
+        {
+            var openStdin = true;
+            var tty = true;
+            if (Console.Equals(ConsoleType.Tty))
+            {
+                openStdin = false;
+            }
+            else if (Console.Equals(ConsoleType.Interactive))
+            {
+                tty = false;
+            }
+            else if (Console.Equals(ConsoleType.None))
+            {
+                openStdin = false;
+                tty = false;
+            }
+            Model.OpenStdin = openStdin;
+            Model.Tty = tty;
+        }
         private async Task<IEnumerable<string>> SearchImages(string searchText)
         {
             return await Task.FromResult(LocalImages.Where(i => i.ToLowerInvariant().Contains(searchText.ToLowerInvariant())).ToList());
+        }
+
+        private class Label
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
         }
     }
 }

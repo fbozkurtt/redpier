@@ -59,12 +59,12 @@
                     <tr>
                         <th>Ports</th>
                         <td id="ports">
-                            <div>
-                                0.0.0.0:8000 <i class="fa fa-long-arrow-alt-right"></i> 8000/tcp
-                            </div>
-                            <div>
-                                0.0.0.0:9000 <i class="fa fa-long-arrow-alt-right"></i> 9000/tcp
-                            </div>
+                            @foreach (var port in Container.NetworkSettings.Ports)
+                            {
+                                <div>
+                                    @port.Value.First().HostIP:@port.Value.First().HostPort <i class="fa fa-long-arrow-alt-right"></i> @port.Key
+                                </div>
+                            }
                         </td>
                     </tr>
                     <tr>
@@ -117,8 +117,27 @@
                                         @foreach (var env in Container.Config.Env)
                                         {
                                             <tr>
-                                                <td class="text-muted">@env.Split('=')[0]</td>
+                                                <td class="text-muted" style="width: 50%">@env.Split('=')[0]</td>
                                                 <td class="text-muted">@env.Split('=')[1]</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Labels</th>
+                        <td>
+                            <table class="table table-borderless table-sm m-0" hidden="@(Container.Config.Labels == null)">
+                                <tbody>
+                                    @if (Container.Config.Labels != null)
+                                    {
+                                        @foreach (var label in Container.Config.Labels)
+                                        {
+                                            <tr>
+                                                <td class="text-muted" style="width: 50%">@label.Key</td>
+                                                <td class="text-muted">@label.Value</td>
                                             </tr>
                                         }
                                     }

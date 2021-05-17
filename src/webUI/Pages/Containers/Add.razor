@@ -1,4 +1,5 @@
 ﻿@page "/containers/add"
+@using Docker.DotNet.Models
 @inherits BaseComponent
 
 <div class="row">
@@ -35,30 +36,24 @@
                     <div class="form-group row">
                         <label for="console" class="col-lg-1 col-form-label">Restart:</label>
                         <div class="col-lg-11 mt-1">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="never" value="never" checked>
-                                <label class="form-check-label" for="never">
-                                    Never
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="always" value="always">
-                                <label class="form-check-label" for="always">
-                                    Always
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="onFailure" value="onFailure">
-                                <label class="form-check-label" for="onFailure">
-                                    On failure
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="restartRadios" id="unlessStopped" value="unlessStopped">
-                                <label class="form-check-label" for="unlessStopped">
-                                    Unless stopped
-                                </label>
-                            </div>
+                            <InputRadioGroup @bind-Value="Model.HostConfig.RestartPolicy.Name">
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="RestartPolicyKind.No" class="form-check-input" />
+                                    <label class="form-check-label">Never</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="RestartPolicyKind.Always" class="form-check-input" />
+                                    <label class="form-check-label">Always</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="RestartPolicyKind.OnFailure" class="form-check-input" />
+                                    <label class="form-check-label">On failure</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="RestartPolicyKind.UnlessStopped" class="form-check-input" />
+                                    <label class="form-check-label">Unless stopped</label>
+                                </div>
+                            </InputRadioGroup>
                         </div>
                     </div>
                     <div class="form-section-title">
@@ -143,110 +138,105 @@
                     <div class="form-group row">
                         <div class="col">
                             <label for="console" class="col-form-label pr-3">Console:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="consoleRadios" id="consoleNone" value="none" checked>
-                                <label class="form-check-label" for="consoleNone">
-                                    None
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="consoleRadios" id="tty" value="tty">
-                                <label class="form-check-label" for="tty">
-                                    TTY
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="consoleRadios" id="interactive" value="interactive">
-                                <label class="form-check-label" for="interactive">
-                                    Interactive
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="consoleRadios" id="ttyInteractive" value="ttyInteractive">
-                                <label class="form-check-label" for="ttyInteractive">
-                                    TTY & Interactive
-                                </label>
-                            </div>
+                            <InputRadioGroup @bind-Value="Console">
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="ConsoleType.None" class="form-check-input" />
+                                    <label class="form-check-label">None</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="ConsoleType.Tty" class="form-check-input" />
+                                    <label class="form-check-label">TTY</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="ConsoleType.Interactive" class="form-check-input" />
+                                    <label class="form-check-label">Interactive</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <InputRadio Value="ConsoleType.TtyInteractive" class="form-check-input" />
+                                    <label class="form-check-label">TTY & Interactive</label>
+                                </div>
+                            </InputRadioGroup>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane py-4" id="labels" role="tabpanel" aria-labelledby="labelsTab">
                     <div class="form-group">
-                        <a href="#" class="btn-sm btn-success">
-                            <span class="fa fa-plus"></span> Add new
-                        </a>
+                        @*<a @onclick="AddLabel" class="btn-sm btn-success">
+                                <span class="fa fa-plus"></span> Add new
+                            </a>*@
                         <div class="form-row my-2">
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Name">
+                                <input @bind="LabelName" type="text" class="form-control" placeholder="Name">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Value">
+                                <input @bind="LabelValue" type="text" class="form-control" placeholder="Value">
                             </div>
                             <div class="col">
-                                <a href="#" class="btn btn-danger">
-                                    <span class="fa fa-trash"></span>
-                                </a>
+                                <button @onclick="AddLabel" class="btn btn-success" disabled="@(string.IsNullOrWhiteSpace(LabelName) || string.IsNullOrWhiteSpace(LabelValue))">
+                                    <span class="fa fa-plus"></span>
+                                </button>
                             </div>
                         </div>
-                        <div class="form-row my-2">
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Name">
+                        @foreach (var label in Labels)
+                        {
+                            <div class="form-row my-2">
+                                <div class="col-sm-5">
+                                    <input value="@label.Name" type="text" class="form-control" placeholder="Name" readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input value="@label.Value" type="text" class="form-control" placeholder="Value" readonly>
+                                </div>
+                                <div class="col">
+                                    <a @onclick="e=> RemoveLabel(label)" class="btn btn-danger">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" placeholder="Value">
-                            </div>
-                            <div class="col">
-                                <a href="#" class="btn btn-danger">
-                                    <span class="fa fa-trash"></span>
-                                </a>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div class="tab-pane py-4" id="mounts" role="tabpanel" aria-labelledby="mountsTab">
                     <div class="form-group">
-                        <a @onclick="e => AddBindMount()" class="btn-sm btn-success">
+                        <a @onclick="AddBindMount" class="btn-sm btn-success">
                             <span class="fa fa-plus"></span> Add bind mount
                         </a>
-                        <a @onclick="e => AddVolume()" class="btn-sm btn-success mx-2">
+                        <a @onclick="AddVolume" class="btn-sm btn-success mx-2">
                             <span class="fa fa-plus"></span> Add named volume
                         </a>
-                        @for (int i = 0; i < Binds.Count; i++)
+                        @foreach (var bind in Binds)
                         {
-                            var index = i;
                             <div class="form-row my-2">
                                 <div class="col-sm-5">
-                                    <input @bind="Model.HostConfig.Mounts[index].Source" type="text" class="form-control" placeholder="Path in host machine">
+                                    <input @bind="bind.Source" type="text" class="form-control" placeholder="Path in host machine">
                                 </div>
                                 <div class="col-sm-5">
-                                    <input @bind="Model.HostConfig.Mounts[index].Target" type="text" class="form-control" placeholder="Path in container">
+                                    <input @bind="bind.Target" type="text" class="form-control" placeholder="Path in container">
                                 </div>
                                 <div class="col">
-                                    <a @onclick="e => Binds.RemoveAt(index)" href="#" class="btn btn-danger">
+                                    <a @onclick="e => RemoveBind(bind)" class="btn btn-danger">
                                         <span class="fa fa-trash"></span>
                                     </a>
                                 </div>
                             </div>
 
                         }
-                        @for (int i = 0; i < Volumes.Count; i++)
+                        @foreach (var volume in Volumes)
                         {
-                            var index = i;
                             <div class="form-row my-2">
                                 <div class="col-sm-5">
-                                    <select @onchange="e => { Volumes[index].Source = e.Value.ToString(); }" class="form-control" id="volumeSelect">
+                                    <select @onchange="e => { volume.Source = e.Value.ToString(); }" class="form-control" id="volumeSelect">
                                         <option hidden disabled selected value="">Select an volume</option>
-                                        @foreach (var volume in ExistingVolumes)
+                                        @foreach (var v in ExistingVolumes)
                                         {
-                                            <option value="@volume">@volume</option>
+                                            <option value="@v">@v</option>
                                         }
                                     </select>
                                 </div>
                                 <div class="col-sm-5">
-                                    <input @bind="Volumes[i].Target" type="text" class="form-control" placeholder="Path in container">
+                                    <input @bind="volume.Target" type="text" class="form-control" placeholder="Path in container">
                                 </div>
                                 <div class="col">
-                                    <a @onclick="e => Volumes.RemoveAt(index)" class="btn btn-danger">
+                                    <a @onclick="e => RemoveVolume(volume)" class="btn btn-danger">
                                         <span class="fa fa-trash"></span>
                                     </a>
                                 </div>

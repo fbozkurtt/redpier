@@ -5,6 +5,10 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+a {
+    cursor: pointer
+}
+
 .console {
     background-color: #1e1e1e;
     color: #d1d1d1;
@@ -174,9 +178,9 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
-.valid.modified:not([type=checkbox]) {
+/*.valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
-}
+}*/
 
 .invalid {
     outline: 1px solid red;
@@ -252,9 +256,9 @@ option:focus, option:hover, option.active {
     cursor: pointer;
 }
 
-    .page-item:disabled, page-item.disabled {
-        cursor: default;
-    }
+.page-item:disabled, page-item.disabled {
+    cursor: default;
+}
 
 .progress {
     height: 0.3rem;
@@ -265,6 +269,7 @@ option:focus, option:hover, option.active {
     z-index: 99;
     width: 100%;
 }
+
 .progress-bar {
     color: #f7f7f7;
     background-color: #db4646;

@@ -63,5 +63,26 @@ namespace Redpier.Web.UI.Services
             }
             return false;
         }
+
+        public async Task<bool> Pull(string imageName)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"/api/image/create", new
+                {
+                    Parameters = new ImagesCreateParameters()
+                    {
+                        FromImage = imageName
+                    }
+                });
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return false;
+        }
     }
 }

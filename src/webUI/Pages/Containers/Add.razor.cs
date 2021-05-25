@@ -176,6 +176,14 @@ namespace Redpier.Web.UI.Pages.Containers
             {
                 IsBusy = true;
 
+                if(PullImage)
+                {
+                    ToastService.ShowInfo($"Pulling image");
+                    var pullResult = await ImageService.Pull(Model.Image);
+                    if(pullResult)
+                        ToastService.ShowSuccess($"Image pulled");
+                }
+
                 if (OverrideDefaultCommand && !string.IsNullOrWhiteSpace(Command))
                     Model.Cmd = ContainerHelper.CommandStringToArray(Command);
 

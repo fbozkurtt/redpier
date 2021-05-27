@@ -10,7 +10,6 @@ namespace Redpier.Application.Queries.Docker.System
 {
     public class GetSystemInfoQuery : IRequest<SystemInfoResponse>
     {
-        [Required]
         public string Endpoint { get; set; }
 
     }
@@ -26,7 +25,8 @@ namespace Redpier.Application.Queries.Docker.System
 
         public async Task<SystemInfoResponse> Handle(GetSystemInfoQuery request, CancellationToken cancellationToken)
         {
-            return await _client.System.GetSystemInfoAsync(cancellationToken);
+            var result =  await _client.System.GetSystemInfoAsync(cancellationToken);
+            return result;
         }
     }
 }

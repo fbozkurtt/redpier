@@ -1,4 +1,6 @@
 ﻿@page "/system"
+@using Docker.DotNet.Models
+@inherits BaseComponent
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
@@ -10,32 +12,47 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Hostname</td>
-                    <td>docker-desktop</td>
-                </tr>
-                <tr>
-                    <td>OS</td>
-                    <td>linux x86_64 Docker Desktop</td>
-                </tr>
-                <tr>
-                    <td>Kernel</td>
-                    <td>4.19.121-linuxkit</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="fa fa-microchip"></span>
-                        CPU cores
-                    </td>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="fa fa-memory"></span>
-                        Memory
-                    </td>
-                    <td>1 GB</td>
-                </tr>
+                @if (Model != null)
+                {
+                    <tr>
+                        <td>Hostname</td>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td>OS</td>
+                        <td>@Model.OSType @Model.Architecture @Model.OperatingSystem</td>
+                    </tr>
+                    <tr>
+                        <td>Kernel</td>
+                        <td>@Model.KernelVersion</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="fa fa-microchip"></span>
+                            CPU Cores
+                        </td>
+                        <td>@Model.NCPU</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="fa fa-memory"></span>
+                            Memory
+                        </td>
+                        <td>@(Model.MemTotal / 1000000) MB</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -50,31 +67,63 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Version</td>
-                    <td>20.10.5</td>
-                </tr>
-                <tr>
-                    <td>Root directory</td>
-                    <td>/var/lib/docker</td>
-                </tr>
-                <tr>
-                    <td>Storage Driver</td>
-                    <td>overlay2</td>
-                </tr>
-                <tr>
-                    <td>Logging Driver</td>
-                    <td>json-file</td>
-                </tr>
-                <tr>
-                    <td>Volume Plugins</td>
-                    <td>local</td>
-                </tr>
-                <tr>
-                    <td>Network Plugins</td>
-                    <td>bridge, host, ipvlan, macvlan, null, overlay</td>
-                </tr>
+                @if (Model != null)
+                {
+                    <tr>
+                        <td>Version</td>
+                        <td>@Model.ServerVersion</td>
+                    </tr>
+                    <tr>
+                        <td>Root directory</td>
+                        <td>@Model.DockerRootDir</td>
+                    </tr>
+                    <tr>
+                        <td>Storage Driver</td>
+                        <td>@Model.Driver</td>
+                    </tr>
+                    <tr>
+                        <td>Logging Driver</td>
+                        <td>@Model.LoggingDriver</td>
+                    </tr>
+                    <tr>
+                        <td>Volume Plugins</td>
+                        <td>@Model.Plugins.Volume.Aggregate((a, b) => a + " " + b)</td>
+                    </tr>
+                    <tr>
+                        <td>Network Plugins</td>
+                        <td>@Model.Plugins.Network.Aggregate((a, b) => a + " " + b)</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
+
+@code{
+    [Inject]
+    public IEndpointService EndpointService { get; set; }
+
+    private SystemInfoResponse Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchData();
+        PageLoaded = true;
+    }
+    public async Task FetchData()
+    {
+        Model = await EndpointService.GetSystemInfo();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Docker.DotNet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Docker.System;
 using Redpier.Application.DTOs;
@@ -32,7 +33,6 @@ namespace Redpier.Web.API.Controllers
             return Ok();
         }
 
-
         [HttpGet("[action]")]
         public async Task<ActionResult> Ping(PingQuery query)
         {
@@ -40,5 +40,9 @@ namespace Redpier.Web.API.Controllers
 
             return Ok();
         }
+
+        [HttpGet("[action]")]
+        public async Task<SystemInfoResponse> Info()
+            => await Mediator.Send(new GetSystemInfoQuery());
     }
 }

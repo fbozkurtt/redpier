@@ -47,6 +47,7 @@ namespace Redpier.Web.UI
             builder.Services.AddScoped<IImageService, ImageService>();
             builder.Services.AddScoped<INetworkService, NetworkService>();
             builder.Services.AddScoped<IVolumeService, VolumeService>();
+            builder.Services.AddScoped<IEndpointService, EndpointService>();
 
             builder.Services.AddScoped<IServiceBase<ContainerListResponse>>(sp => sp.GetRequiredService<IContainerService>());
             builder.Services.AddScoped<IServiceBase<ImagesListResponse>>(sp => sp.GetRequiredService<IImageService>());

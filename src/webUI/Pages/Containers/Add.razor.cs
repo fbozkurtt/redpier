@@ -122,7 +122,7 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private bool PullImage { get; set; } = false;
 
-        private int MemoryLimit { get; set; }
+        private int MemoryLimit { get; set; } = 0;
 
         private long CpuLimit { get; set; } = 0;
 

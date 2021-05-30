@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Components;
 using Redpier.Web.UI.Interfaces;
 using Redpier.Web.UI.Helpers;
 using Redpier.Web.UI.Models;
+using Blazored.LocalStorage;
 
 namespace Redpier.Web.UI.Pages.Containers
 {
-    public partial class Add
+    public partial class AddContainer
     {
         [Inject]
         public IImageService ImageService { get; set; }
@@ -24,6 +25,9 @@ namespace Redpier.Web.UI.Pages.Containers
 
         [Inject]
         public IVolumeService VolumeService { get; set; }
+
+        [Inject]
+        public ILocalStorageService LocalStorage { get; set; }
 
         CreateContainerParameters Model { get; set; } = new CreateContainerParameters()
         {
@@ -156,6 +160,8 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private ConsoleType Console { get; set; } = ConsoleType.None;
 
+        private SystemInfoResponse SystemInfo { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             var images = await ImageService.GetAllAsync().ConfigureAwait(false);
@@ -167,6 +173,8 @@ namespace Redpier.Web.UI.Pages.Containers
             var volumes = await VolumeService.GetAllAsync().ConfigureAwait(false);
             ExistingVolumes = volumes.Select(v => v.Name).ToList();
 
+            SystemInfo = await LocalStorage.GetItemAsync<SystemInfoResponse>("systemInfo");
+
             PageLoaded = true;
         }
 
@@ -176,11 +184,11 @@ namespace Redpier.Web.UI.Pages.Containers
             {
                 IsBusy = true;
 
-                if(PullImage)
+                if (PullImage)
                 {
                     ToastService.ShowInfo($"Pulling image");
                     var pullResult = await ImageService.Pull(Model.Image);
-                    if(pullResult)
+                    if (pullResult)
                         ToastService.ShowSuccess($"Image pulled");
                 }
 

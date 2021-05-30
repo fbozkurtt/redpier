@@ -1,0 +1,67 @@
+﻿@page "/containers/logs/{id}"
+@inherits BaseComponent
+@using Docker.DotNet.Models;
+
+<div class="row" style="height: 50%">
+    <div class="col-sm-12" style="overflow-y: scroll">
+        @if (PageLoaded && Logs != null)
+        {
+            <a class="btn btn-primary mb-2">
+                <span class="fa fa-file-download"></span> Download as txt
+            </a>
+            <div class="text-nowrap mb-2" style="border:solid; border-width:thin;">
+                @foreach (var line in Logs)
+                {
+                    <p class="mb-0 px-1">@line</p>
+                }
+            </div>
+        }
+        else if(!PageLoaded)
+        {
+            <div class="text-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+
+    [Inject]
+    public IContainerService ContainerService { get; set; }
+
+    public string[] Logs { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Logs = await ContainerService.
+                GetLogs(Id,
+                new ContainerLogsParameters()
+                {
+                    ShowStderr = true,
+                    ShowStdout = true,
+                    Since = "0",
+                    Timestamps = true,
+                    Tail = "all"
+                })
+                .ConfigureAwait(false);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            ToastService.ShowError("An error occured while requesting logs");
+        }
+        PageLoaded = true;
+    }
+
+    public async Task DonwloadAsTxt()
+    {
+
+    }
+}

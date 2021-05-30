@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Redpier.Web.UI.Helpers;
 
 namespace Redpier.Web.UI.Services
 {
@@ -200,6 +201,33 @@ namespace Redpier.Web.UI.Services
                 }
                 var exception = await response.Content.ReadFromJsonAsync<ApiExceptionResponse>();
                 throw new Exception(exception.Detail);
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
+        }
+
+        public async Task<string[]> GetLogs(string containerId, ContainerLogsParameters parameters)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync(
+                    $"/api/container/logs?" +
+                    $"ShowStdout={parameters.ShowStdout.Value}" +
+                    $"&ShowStderr={parameters.ShowStderr.Value}" +
+                    $"&Since={parameters.Since}" +
+                    $"&Timestamps={parameters.Timestamps.Value}" +
+                    $"&Tail={parameters.Tail}" +
+                    $"&Id={containerId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var logs = await response.Content.ReadFromJsonAsync<string>();
+                    Console.WriteLine(logs);
+                    return LogHelper.FormatLogs(logs, true, parameters.Timestamps.Value);
+                }
             }
             catch (AccessTokenNotAvailableException ex)
             {

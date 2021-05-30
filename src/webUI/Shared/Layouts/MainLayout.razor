@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@inject ILocalStorageService localStorage
+@inject IToastService ToastService
 @using Blazored.Toast.Configuration
+@using Docker.DotNet.Models;
 
 <div class="page">
     <div class="sidebar">
@@ -27,3 +30,28 @@
                 SuccessClass="success-toast-override"
                 SuccessIcon="fa fa-check-circle"
                 ErrorIcon="fa fa-exclamation-circle" />
+
+@code{
+    [Inject]
+    public IEndpointService EndpointService { get; set; }
+
+
+    private SystemInfoResponse SystemInfo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchData();
+    }
+    public async Task FetchData()
+    {
+        try
+        {
+            SystemInfo = await EndpointService.GetSystemInfo();
+            await localStorage.SetItemAsync("systemInfo", SystemInfo);
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
+}

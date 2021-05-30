@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Redpier.Application.Commands.Docker.Containers;
 using Redpier.Application.Queries.Docker.Containers;
 using Redpier.Shared.Constants;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Controllers
@@ -23,11 +26,13 @@ namespace Redpier.Web.API.Controllers
             return await Mediator.Send(command);
         }
 
-        //[HttpGet]
-        //public async Task<Unit> Logs(GetContainerLogsQuery query)
-        //{
-        //    return await Mediator.Send(query);
-        //}
+        [HttpGet("[action]")]
+        public async Task<string> Logs([FromQuery] GetContainerLogsQuery query)
+        {
+            var result = await Mediator.Send(query);
+            StreamReader reader = new StreamReader(result);
+            return reader.ReadToEnd();
+        }
 
         //[HttpGet]
         //public async Task<Unit> Stats(GetContainerStatsQuery query)

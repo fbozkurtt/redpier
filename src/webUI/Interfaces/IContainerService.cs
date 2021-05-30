@@ -33,5 +33,7 @@ namespace Redpier.Web.UI.Interfaces
         Task<ContainerUpdateResponse> UpdateAsync(string containerId, ContainerUpdateParameters parameters);
 
         Task<CreateContainerResponse> CreateAsync(CreateContainerParameters parameters);
+
+        Task<string[]> GetLogs(string containerId, ContainerLogsParameters parameters);
     }
 }

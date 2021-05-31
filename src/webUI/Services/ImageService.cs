@@ -37,14 +37,34 @@ namespace Redpier.Web.UI.Services
             return null;
         }
 
-        public Task<ImageInspectResponse> Inspect(string name)
+        public async Task<ImageInspectResponse> Inspect(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/image/inspect?name={name}");
+
+                return await response.Content.ReadFromJsonAsync<ImageInspectResponse>();
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
         }
 
-        public Task<IList<ImageHistoryResponse>> GetHistory(string name)
+        public async Task<IList<ImageHistoryResponse>> GetHistory(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/image/history?name={name}");
+
+                return await response.Content.ReadFromJsonAsync<IList<ImageHistoryResponse>>();
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
+            return null;
         }
 
         public async Task<bool> Remove(string name, bool force = false)
@@ -83,6 +103,11 @@ namespace Redpier.Web.UI.Services
                 ex.Redirect();
             }
             return false;
+        }
+
+        public Task<bool> Push(ImagePushParameters parameters)
+        {
+            throw new NotImplementedException();
         }
     }
 }

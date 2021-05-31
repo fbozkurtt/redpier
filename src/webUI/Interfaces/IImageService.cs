@@ -15,5 +15,7 @@ namespace Redpier.Web.UI.Interfaces
         Task<bool> Remove(string name, bool force = false);
 
         Task<bool> Pull(string imageName);
+
+        Task<bool> Push(ImagePushParameters parameters);
     }
 }

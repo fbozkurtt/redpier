@@ -13,7 +13,6 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class PushImageCommand : IRequest
     {
-        [Required]
         public string Endpoint { get; set; }
 
         [Required]

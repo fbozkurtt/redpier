@@ -319,9 +319,21 @@ else
 
     public async Task FetchData()
     {
-        Container = await ContainerService.InspectAsync(Id);
-        Networks = await NetworkService.GetAllAsync();
-        _restartPolicy = Container.HostConfig.RestartPolicy.Name;
+        try
+        {
+            IsBusy = true;
+            Container = await ContainerService.InspectAsync(Id);
+            Networks = await NetworkService.GetAllAsync();
+            _restartPolicy = Container.HostConfig.RestartPolicy.Name;
+        }
+        catch
+        {
+            ToastService.ShowError("An error occured while getting data from server");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     public async Task Connect(string networkId)

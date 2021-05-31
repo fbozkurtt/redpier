@@ -11,7 +11,6 @@ namespace Redpier.Application.Queries.Docker.Images
 {
     public class GetImageHistoryQuery : IRequest<IList<ImageHistoryResponse>>
     {
-        [Required]
         public string Endpoint { get; set; }
 
         public string Name { get; set; }

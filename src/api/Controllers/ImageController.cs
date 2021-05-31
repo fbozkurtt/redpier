@@ -13,33 +13,23 @@ namespace Redpier.Web.API.Controllers
     {
         [HttpGet]
         public async Task<IList<ImagesListResponse>> GetImages()
-        {
-            return await Mediator.Send(new ListImagesQuery());
-        }
+            => await Mediator.Send(new ListImagesQuery());
 
         [HttpPost]
         public async Task<IList<ImagesListResponse>> GetImages(ListImagesQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+            => await Mediator.Send(query);
 
         [HttpGet("[action]")]
-        public async Task<ImageInspectResponse> Inspect(InspectImageQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+        public async Task<ImageInspectResponse> Inspect([FromQuery] InspectImageQuery query)
+            => await Mediator.Send(query);
 
         [HttpGet("[action]")]
         public async Task<IList<ImageSearchResponse>> Search(SearchImagesQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+            => await Mediator.Send(query);
 
         [HttpGet("[action]")]
-        public async Task<IList<ImageHistoryResponse>> History(GetImageHistoryQuery query)
-        {
-            return await Mediator.Send(query);
-        }
+        public async Task<IList<ImageHistoryResponse>> History([FromQuery] GetImageHistoryQuery query)
+            => await Mediator.Send(query);
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPost("[action]")]
@@ -80,8 +70,6 @@ namespace Redpier.Web.API.Controllers
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpDelete]
         public async Task<IList<IDictionary<string, string>>> Remove([FromQuery] RemoveImageCommand command)
-        {
-            return await Mediator.Send(command);
-        }
+            => await Mediator.Send(command);
     }
 }

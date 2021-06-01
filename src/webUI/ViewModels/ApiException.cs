@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Redpier.Web.UI.ViewModels
 {
-    public class ApiExceptionResponse
+    public class ApiException
     {
         public int? Status { get; set; }
 

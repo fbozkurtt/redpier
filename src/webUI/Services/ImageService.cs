@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Redpier.Web.UI.ViewModels;
 
 namespace Redpier.Web.UI.Services
 {
@@ -67,21 +68,22 @@ namespace Redpier.Web.UI.Services
             return null;
         }
 
-        public async Task<bool> Remove(string name, bool force = false)
+        public async Task RemoveAsync(string name, bool force = false)
         {
             try
             {
                 var response = await _httpClient.DeleteAsync($"/api/image?name={name}&force={force}");
 
-                //Console.WriteLine(await response.Content.ReadFromJsonAsync<IList<IDictionary<string, string>>>());
-
-                return response.IsSuccessStatusCode;
+                if (!response.IsSuccessStatusCode)
+                {
+                    var exception = await response.Content.ReadFromJsonAsync<ApiException>();
+                    throw new Exception(exception.Detail);
+                }
             }
             catch (AccessTokenNotAvailableException ex)
             {
                 ex.Redirect();
             }
-            return false;
         }
 
         public async Task<bool> Pull(string imageName)
@@ -108,6 +110,28 @@ namespace Redpier.Web.UI.Services
         public Task<bool> Push(ImagePushParameters parameters)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task TagAsync(string name, string repoName, string tag)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsync(
+                    $"/api/image/tag?name={name}" +
+                    $"&repositoryName={repoName}" +
+                    $"&tag={tag}",
+                    null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var exception = await response.Content.ReadFromJsonAsync<ApiException>();
+                    throw new Exception(exception.Detail);
+                }
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
         }
     }
 }

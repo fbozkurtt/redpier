@@ -60,7 +60,7 @@ namespace Redpier.Web.API.Controllers
 
         [Authorize(Roles = DefaultRoleNames.Admin)]
         [HttpPut("[action]")]
-        public async Task<ActionResult> Tag(TagImageCommand command)
+        public async Task<ActionResult> Tag([FromQuery] TagImageCommand command)
         {
             await Mediator.Send(command);
 

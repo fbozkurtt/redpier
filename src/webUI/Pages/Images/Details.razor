@@ -13,7 +13,7 @@
                 <table class="table table-sm table-borderless" style="border: none">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 30%"></th>
+                            <th scope="col" style="width: 20%"></th>
                             <th scope="col" style=""></th>
                         </tr>
                     </thead>
@@ -27,10 +27,10 @@
                                         <button class="btn btn-info" type="button" data-toggle="tooltip" data-placement="top" title="Push to registry">
                                             <span class="fa fa-upload"></span>
                                         </button>
-                                        <button class="btn btn-info" type="button" data-toggle="tooltip" data-placement="top" title="Pull from registry">
-                                            <span class="fa fa-download"></span>
-                                        </button>
-                                        <button class="btn btn-danger" type="button" data-toggle="tooltip" data-placement="top" title="Remove tag">
+                                        @*<button class="btn btn-info" type="button" data-toggle="tooltip" data-placement="top" title="Pull from registry">
+                                                <span class="fa fa-download"></span>
+                                            </button>*@
+                                        <button class="btn btn-danger" @onclick="e => UnTagImage(repoTag)" data-toggle="tooltip" data-placement="top" title="Remove tag">
                                             <span class="fa fa-trash"></span>
                                         </button>
                                     </div>
@@ -47,34 +47,50 @@
                 <div class="form-group row">
                     <label for="registry" class="col-lg-1 col-form-label">Registry:</label>
                     <div class="col-lg-11">
-                        <select class="form-control" id="registry" required>
-                            <option selected>do not specify</option>
-                            <option>DockerHub (fbozkurt)</option>
-                            <option>MyHub1</option>
-                            <option>MyHub2</option>
+                        <select class="form-control" id="network" @bind="Repository">
+                            <option selected value="">Do not specify</option>
+                            <option value="fbozkurt">DockerHub (fbozkurt)</option>
+                            <option value="localhost:7000">MyHub1</option>
+                            <option value="localhost:7001">MyHub2</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-sm-1 col-form-label">Name:</label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="name" placeholder="redpier, myapp, any-name" autocomplete="off" required>
+                        <input @bind="Name" type="text" class="form-control" id="name" placeholder="redpier, myapp, any-name" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="tag" class="col-sm-1 col-form-label">Tag:</label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="tag" placeholder="2.1.1, linux, arm64" autocomplete="off">
+                        <input @bind="Tag" type="text" class="form-control" id="tag" placeholder="2.1.1, linux, arm64" autocomplete="off">
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col">
-                        <span class="text-muted small">
-                            <b>output: </b><span id="exampleRegistry">registry</span>/<span id="exampleImage">image-name</span>:<span id="exampleTag">tag</span>
-                        </span>
+                @if (!string.IsNullOrWhiteSpace(Name))
+                {
+                    <div class="form-group row">
+                        <div class="col">
+                            <span class="text-muted small">
+                                <b>output: </b>
+                                @if (!string.IsNullOrWhiteSpace(Repository))
+                                {
+                                    <span>@(Repository ?? "registry" )/</span>
+                                }
+                                <span>@(Name ?? "image-name")</span>
+                                @if (!string.IsNullOrWhiteSpace(Tag))
+                                {
+                                    <span>:@(Tag ?? "tag")</span>
+                                }
+                                else
+                                {
+                                    <span>:latest</span>
+                                }
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary my-2">Tag image</button>
+                }
+                <button class="btn btn-primary my-2" @onclick="TagImage" disabled="@(string.IsNullOrWhiteSpace(Name) || IsBusy)">Tag image</button>
             </form>
         </div>
     </div>
@@ -87,13 +103,14 @@
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th colspan="2">Details</th>
+                            <th scope="col" style="width: 20%">Details</th>
+                            <th scope="col" style="width: 80%"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>Id</th>
-                            <td>@Image.ID</td>
+                            <td>@(Image.ID)</td>
                         </tr>
                         <tr>
                             <th>Size</th>
@@ -101,7 +118,7 @@
                         </tr>
                         <tr>
                             <th>Build</th>
-                            <td>@Image.Architecture</td>
+                            <td>@Image.Os, @Image.Architecture</td>
                         </tr>
                         <tr>
                             <th>Created</th>
@@ -118,31 +135,45 @@
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th colspan="2">Config</th>
+                            <th scope="col" style="width: 20%">Config</th>
+                            <th scope="col" style="width: 80%"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>CMD</th>
-                            <td>@Image.Config.Cmd.Aggregate((a, b) => a + " " + b)</td>
+                            @if (Image.Config.Cmd != null && Image.Config.Cmd.Count > 0)
+                            {
+                                <td>@Image.Config.Cmd.Aggregate((a, b) => a + " " + b)</td>
+                            }
                         </tr>
                         <tr>
                             <th>Entrypoint</th>
-                            <td>@Image.Config.Entrypoint.Aggregate((a, b) => a + " " + b)</td>
+                            @if (Image.Config.Entrypoint != null && Image.Config.Entrypoint.Count > 0)
+                            {
+                                <td>@Image.Config.Entrypoint.Aggregate((a, b) => a + " " + b)</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
                         </tr>
                         @*<tr>
-                            <th>Volumes</th>
-                            <td>
-                                <span class="badge badge-info py-2">/var/lib/registry</span>
-                                <span class="badge badge-info py-2">/data</span>
-                            </td>
-                        </tr>*@
+                                <th>Volumes</th>
+                                <td>
+                                    <span class="badge badge-info py-2">/var/lib/registry</span>
+                                    <span class="badge badge-info py-2">/data</span>
+                                </td>
+                            </tr>*@
                         <tr>
                             <th>Exposed ports</th>
                             <td>
-                                @foreach (var port in Image.Config.ExposedPorts)
+                                @if (Image.Config.ExposedPorts != null)
                                 {
-                                    <span class="badge badge-info py-2">@port.Key</span>
+                                    @foreach (var port in Image.Config.ExposedPorts)
+                                    {
+                                        <span class="badge badge-info py-2 mx-1">@port.Key</span>
+                                    }
                                 }
                             </td>
                         </tr>
@@ -180,20 +211,17 @@
                     </thead>
                     <thead>
                         <tr>
-                            <th scope="col">Index</th>
-                            <th scope="col">Size</th>
+                            <th scope="col" style="width: 20%">Size</th>
                             <th scope="col">Created by</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (PageLoaded & ImageHistory != null)
                         {
-                            int index = 1;
                             foreach (var record in ImageHistory)
                             {
                                 <tr>
-                                    <td>@(index++)</td>
-                                    <td>@record.Size</td>
+                                    <td>@((record.Size / (double)1000000).ToString("N2")) MB</td>
                                     <td>@record.CreatedBy</td>
                                 </tr>
                             }
@@ -201,19 +229,31 @@
                     </tbody>
                 </table>
             </div>
-            <nav aria-label="Image history pagination">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            @*<nav aria-label="Image history pagination">
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>*@
+        </div>
+    </div>
+}
+else if (!PageLoaded)
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <div class="text-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -227,6 +267,12 @@
     public ImageInspectResponse Image { get; set; }
 
     public List<ImageHistoryResponse> ImageHistory { get; set; }
+
+    private string Repository;
+
+    private string Name;
+
+    private string Tag;
 
     protected override async Task OnInitializedAsync()
     {
@@ -248,6 +294,61 @@
         }
         finally
         {
+            IsBusy = false;
+        }
+    }
+
+    public async Task TagImage()
+    {
+        try
+        {
+            IsBusy = true;
+
+            if (string.IsNullOrWhiteSpace(Name))
+                return;
+
+            if (Image != null)
+            {
+                var repoName = string.IsNullOrWhiteSpace(Repository) ? Name : Repository + "/" + Name;
+
+                await ImageService.TagAsync(Image.ID, repoName, Tag);
+
+                ToastService.ShowSuccess("Image tagged");
+
+                Repository = string.Empty;
+                Name = string.Empty;
+                Tag = string.Empty;
+
+                await FetchData();
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            await FetchData();
+            IsBusy = false;
+        }
+    }
+
+    public async Task UnTagImage(string repoTag)
+    {
+        try
+        {
+            IsBusy = true;
+            await ImageService.RemoveAsync(repoTag);
+            ToastService.ShowSuccess($"Tag remoed");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            await FetchData();
             IsBusy = false;
         }
     }

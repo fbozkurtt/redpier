@@ -7,6 +7,8 @@ using Redpier.Web.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Redpier.Web.API.Filters
 {
@@ -141,7 +143,7 @@ namespace Redpier.Web.API.Filters
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Title = "Arguments were insufficient.",
-                Detail = exception.Message
+                Detail = exception.Message,
             };
 
             context.Result = new ObjectResult(details)
@@ -181,7 +183,7 @@ namespace Redpier.Web.API.Filters
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5",
                 Title = "Docker API exception.",
-                Detail = exception.ResponseBody.Split("\"")[3]
+                Detail = exception.GetExceptionDetails()
             };
 
             context.Result = new ObjectResult(details)

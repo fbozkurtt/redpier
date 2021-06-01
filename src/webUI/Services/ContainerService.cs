@@ -199,7 +199,7 @@ namespace Redpier.Web.UI.Services
                 {
                     return await response.Content.ReadFromJsonAsync<CreateContainerResponse>();
                 }
-                var exception = await response.Content.ReadFromJsonAsync<ApiExceptionResponse>();
+                var exception = await response.Content.ReadFromJsonAsync<ApiException>();
                 throw new Exception(exception.Detail);
             }
             catch (AccessTokenNotAvailableException ex)

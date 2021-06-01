@@ -47,6 +47,9 @@ else
     [Parameter]
     public bool IsForMobile { get; set; } = false;
 
+    [Inject]
+    public IEndpointService EndpointService { get; set; }
+
     public PaginatedListViewModel<Endpoint> Endpoints;
 
     public Endpoint SelectedEndpoint { get; set; }
@@ -59,7 +62,7 @@ else
 
             if (response.IsSuccessStatusCode)
             {
-                Endpoints = await response.Content.ReadFromJsonAsync<PaginatedListViewModel<Endpoint>>();
+                Endpoints = await EndpointService.GetEndpointsAsync();
 
                 var savedEndpoint = await localStorage.GetItemAsync<Endpoint>("selectedEndpoint");
                 if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))

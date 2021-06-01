@@ -27,7 +27,7 @@
                 <th scope="col">Created</th>
             </TableHeader>
             <TableRow>
-                <td><a href=@($"/images/{image.ID}")>@image.ID</a></td>
+                <td><a href=@($"/images/{image.ID}")>@(image.ID.Substring(7, 12))</a></td>
                 <td>
                     @foreach (var tag in image.RepoTags)
                     {
@@ -54,19 +54,24 @@
             IsBusy = true;
             foreach (var image in SelectedItems)
             {
-                var result = await ImageService.Remove(image.ID, force);
-
-                if (result)
+                try
+                {
+                    await ImageService.RemoveAsync(image.ID, force);
                     ToastService.ShowSuccess($"Removed {image.ID}");
-                else
-                    ToastService.ShowWarning($"An error occured while removing {image.ID}");
+
+                }
+                catch (Exception ex)
+                {
+                    ToastService.ShowError($"{image.ID.Substring(7, 12)}: { ex.Message}");
+                }
 
                 ProgressBarValue += 1;
                 StateHasChanged();
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             ToastService.ShowError("An error occured while removing image(s)");
         }
         finally

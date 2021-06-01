@@ -3,8 +3,8 @@
 @inject IHttpClientFactory ClientFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
-@inject ILocalStorageService localStorage
-@inject IToastService toastService
+@inject ILocalStorageService LocalStorage
+@inject IToastService ToastService
 @attribute [AllowAnonymous]
 
 <div class="box" style="background-color: #fff0f0">
@@ -67,8 +67,8 @@
             {
                 string returnUrl;
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                await localStorage.SetItemAsync("JWT", loginResponse.Token);
-                await localStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
+                await LocalStorage.SetItemAsync("JWT", loginResponse.Token);
+                await LocalStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
 
                 //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginResponse.Token);
 
@@ -82,12 +82,12 @@
             {
                 Console.WriteLine(response.StatusCode);
                 //HideErrors = false;
-                toastService.ShowError("Incorrect username or password.", "Error");
+                ToastService.ShowError("Incorrect username or password.", "Error");
             }
 
             else
             {
-                toastService.ShowError("Something went wrong.", "Error");
+                ToastService.ShowError("Something went wrong.", "Error");
             }
 
             StateHasChanged();
@@ -95,7 +95,7 @@
 
         catch (Exception ex)
         {
-            toastService.ShowError(ex.Message,"Error");
+            ToastService.ShowError(ex.Message,"Error");
             Console.WriteLine(ex);
         }
 

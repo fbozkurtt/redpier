@@ -12,10 +12,12 @@ namespace Redpier.Web.UI.Interfaces
 
         Task<IList<ImageHistoryResponse>> GetHistory(string name);
 
-        Task<bool> Remove(string name, bool force = false);
+        Task RemoveAsync(string name, bool force = false);
 
-        Task<bool> Pull(string imageName);
+        Task<bool> Pull(string name);
 
         Task<bool> Push(ImagePushParameters parameters);
+
+        Task TagAsync(string name, string repoName, string tag);
     }
 }

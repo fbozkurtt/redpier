@@ -14,15 +14,14 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class TagImageCommand : IRequest, IMapFrom<ImageTagParameters>
     {
-        [Required]
         public string Endpoint { get; set; }
 
         [Required]
         public string Name { get; set; }
 
+        [Required]
         public string RepositoryName { get; set; }
 
-        [Required]
         public string Tag { get; set; }
 
         public bool? Force { get; set; }

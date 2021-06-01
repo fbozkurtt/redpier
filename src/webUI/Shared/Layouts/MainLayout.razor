@@ -25,7 +25,7 @@
 </div>
 
 <BlazoredToasts Position="ToastPosition.BottomRight"
-                Timeout="2"
+                Timeout="5"
                 IconType="IconType.FontAwesome"
                 SuccessClass="success-toast-override"
                 SuccessIcon="fa fa-check-circle"
@@ -51,7 +51,7 @@
         }
         catch (Exception ex)
         {
-            ToastService.ShowError(ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 }

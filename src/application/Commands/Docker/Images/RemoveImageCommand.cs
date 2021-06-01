@@ -15,7 +15,6 @@ namespace Redpier.Application.Commands.Docker.Images
     [Authorize(Roles = DefaultRoleNames.Admin)]
     public class RemoveImageCommand : IRequest<IList<IDictionary<string, string>>>, IMapFrom<ImageDeleteParameters>
     {
-        [Required]
         public string Endpoint { get; set; }
 
         [Required]

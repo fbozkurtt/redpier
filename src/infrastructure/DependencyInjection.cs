@@ -13,6 +13,7 @@ using Redpier.Infrastructure.Persistence.Context;
 using Redpier.Infrastructure.Services;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Redpier.Infrastructure
 {
@@ -61,6 +62,7 @@ namespace Redpier.Infrastructure
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
             })
                 .AddJwtBearer(options =>
                 {
@@ -73,6 +75,21 @@ namespace Redpier.Infrastructure
                         ValidIssuer = configuration["JWT:Issuer"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Secret"])),
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.Value.Contains("websocket"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

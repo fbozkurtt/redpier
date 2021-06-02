@@ -12,7 +12,7 @@ using Blazored.LocalStorage;
 
 namespace Redpier.Web.UI.Pages.Containers
 {
-    public partial class AddContainer
+    public partial class ContainerCreate
     {
         [Inject]
         public IImageService ImageService { get; set; }

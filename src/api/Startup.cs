@@ -8,6 +8,7 @@ using Redpier.Application;
 using Redpier.Application.Common.Interfaces;
 using Redpier.Infrastructure;
 using Redpier.Web.API.Filters;
+using Redpier.Web.API.Hubs;
 using Redpier.Web.API.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Diagnostics;
@@ -36,6 +37,8 @@ namespace Redpier.Web.API
             services.AddHttpContextAccessor();
 
             services.AddInfrastructure(Configuration, Environment);
+
+            services.AddSignalR();
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
@@ -104,6 +107,7 @@ namespace Redpier.Web.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ExecHub>("/api/websocket/exec");
                 endpoints.MapControllers();
             });
         }

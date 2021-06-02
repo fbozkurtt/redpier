@@ -1,0 +1,108 @@
+﻿@page "/containers/exec/{id}"
+@inherits BaseComponent
+@implements IAsyncDisposable
+@inject IAccessTokenProvider AccessTokenProvider;
+@inject IExecService ExecService;
+@using Microsoft.AspNetCore.SignalR.Client
+@using Docker.DotNet.Models;
+
+@*@layout EmptyLayout*@
+
+@*<ConsoleWindow></ConsoleWindow>*@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
+        <button @onclick="Connect">Connect</button>
+        <button @onclick="Disconnect">Disconnect</button>
+        <input type="text" @bind="messageInput" />
+        <button @onclick="Send">Send</button>
+        @foreach (var message in messages)
+        {
+            <p>@message</p>
+        }
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private HubConnection hubConnection;
+
+    private string execId;
+
+    private List<string> messages = new List<string>();
+
+    private string messageInput;
+
+    protected async Task Connect()
+    {
+        await Create();
+
+        var tokenResult = await AccessTokenProvider.RequestAccessToken();
+
+        if (tokenResult.Status.Equals(AccessTokenResultStatus.Success))
+        {
+            tokenResult.TryGetToken(out AccessToken accessToken);
+
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:5000/api/websocket/exec", options =>
+                        options.AccessTokenProvider = () => Task.FromResult(accessToken.Value)
+                    )
+                .Build();
+
+            await hubConnection.StartAsync().ConfigureAwait(false);
+
+            await hubConnection.SendAsync("start", new { ExecId = execId, Tty = true });
+
+            hubConnection.On<string, string>("receive", (stdout, srderr) =>
+            {
+                var message = $"{stdout} {srderr}";
+                messages.Add(message);
+                Console.WriteLine(message);
+                StateHasChanged();
+            });
+        }
+    }
+
+    async Task Create()
+    {
+        try
+        {
+            IsBusy = true;
+            execId = await ExecService.CreateAsync(Id,
+                new ContainerExecCreateParameters()
+                {
+                    AttachStderr = true,
+                    AttachStdin = true,
+                    AttachStdout = true,
+                    Tty = true,
+                    Cmd = new List<string>() { "sh" },
+                });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    async Task Send()
+    {
+        await hubConnection.SendAsync("send", messageInput);
+        messageInput = string.Empty;
+    }
+
+    protected async Task Disconnect()
+    {
+        execId = string.Empty;
+        await hubConnection.StopAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection.DisposeAsync();
+    }
+}

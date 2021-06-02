@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Blazored.Toast;
 using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Redpier.Web.UI.Components;
@@ -31,6 +32,7 @@ namespace Redpier.Web.UI
             builder.Services.AddScoped<AuthMessageHandler>();
             builder.Services.AddScoped<DockerEndpointHandler>();
             builder.Services.AddScoped<AccessTokenProvider>();
+            builder.Services.AddScoped<IAccessTokenProvider>(sp => sp.GetRequiredService<AccessTokenProvider>());
 
             builder.Services.AddHttpClient("api",
                     client => client.BaseAddress = new Uri("https://localhost:5000"))
@@ -48,6 +50,7 @@ namespace Redpier.Web.UI
             builder.Services.AddScoped<INetworkService, NetworkService>();
             builder.Services.AddScoped<IVolumeService, VolumeService>();
             builder.Services.AddScoped<IEndpointService, EndpointService>();
+            builder.Services.AddScoped<IExecService, ExecService>();
 
             builder.Services.AddScoped<IServiceBase<ContainerListResponse>>(sp => sp.GetRequiredService<IContainerService>());
             builder.Services.AddScoped<IServiceBase<ImagesListResponse>>(sp => sp.GetRequiredService<IImageService>());

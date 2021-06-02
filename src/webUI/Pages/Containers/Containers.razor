@@ -95,6 +95,7 @@
                         @{
                             foreach (var port in container.Ports.Where(p => p.PublicPort != 0).Take(3).ToList())
                             {
+                                //TODO
                                 <div class="badge badge-info p-1 mr-1">
                                     <a href="http://@port.IP:@port.PublicPort" target="_blank" class="text-white">@($"{port.PublicPort}:{port.PrivatePort}")</a>
                                 </div>
@@ -122,10 +123,10 @@
                     <td>-</td>
                     <td>@container.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     <td>
-                        <a href="/containers/logs/@container.ID" class="fa fa-file-alt px-1"></a>
-                        <a href="#" class="fa fa-info-circle px-1"></a>
-                        <a href="#" class="fa fa-chart-area px-1"></a>
-                        <a href="/containers/console/portainer" target="_blank" class="fa fa-terminal px-1"></a>
+                        <a href="/containers/logs/@container.ID" class="fa fa-file-alt px-1" data-toggle="tooltip" data-placement="top" title="Logs"></a>
+                        <a class="fa fa-info-circle px-1" data-toggle="tooltip" data-placement="top" title="Inspect"></a>
+                        <a class="fa fa-chart-area px-1" data-toggle="tooltip" data-placement="top" title="Stats"></a>
+                        <a href="/containers/exec/@container.ID" target="_blank" class="fa fa-terminal px-1" data-toggle="tooltip" data-placement="top" title="Console"></a>
                     </td>
                 </TableRow>
             </DataTableWithPagination>

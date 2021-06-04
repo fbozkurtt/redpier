@@ -23,20 +23,20 @@ namespace Redpier.Infrastructure.Services
 
         public IDockerClient CreateClient()
         {
-            var dockerEndpoint = Encoding.UTF8.GetString(
-                Convert.FromBase64String(_httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString()));
+            var endpointString = _httpContextAccessor.HttpContext.Request.Query["endpoint"].ToString();
 
-            if (String.IsNullOrEmpty(dockerEndpoint))
+            if (string.IsNullOrEmpty(endpointString))
                 throw new ArgumentNullException("endpoint");
 
-            //var dockerEndpoint = await _dbContext.DockerEndpoints.AsNoTracking().FirstAsync(w => w.Id == new Guid(dockerEndpointId));
+            var dockerEndpoint = Encoding.UTF8.GetString(
+                Convert.FromBase64String(endpointString));
 
-            //if (dockerEndpoint == null)
-            //    throw new NotFoundException(nameof(DockerEndpoint), nameof(DockerEndpoint.Id), dockerEndpointId);
+            if (dockerEndpoint == null)
+                throw new NotFoundException("Endpoint", "Uri", dockerEndpoint);
 
             return new DockerClientConfiguration(
-                        new Uri(dockerEndpoint)
-                        ).CreateClient();
+                        new Uri(dockerEndpoint))
+                .CreateClient();
         }
     }
 }

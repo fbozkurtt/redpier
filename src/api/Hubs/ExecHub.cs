@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Redpier.Application.Commands.Docker.Exec;
 using Redpier.Shared.Constants;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,40 +20,24 @@ namespace Redpier.Web.API.Hubs
     {
         private readonly ISender _mediator;
 
-        private MultiplexedStream _stream;
-
         public ExecHub(ISender mediator)
         {
             _mediator = mediator;
         }
 
-        [HubMethodName("start")]
-        public async Task StartAsync(StartContainerExecCommand command)
-        {
-            _stream = await _mediator.Send(command);
-        }
-
         [HubMethodName("send")]
-        public async Task SendAsync(string message)
+        public async Task<(string, string)> SendAsync(string id, string message, bool tty = true)
         {
+            var stream = await _mediator.Send(new StartContainerExecCommand() { ExecId = id, Tty = false });
             var bytes = Encoding.ASCII.GetBytes(message);
-            await _stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None);
+            await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None);
+            var output = await stream.ReadOutputToEndAsync(CancellationToken.None);
+            Console.WriteLine(output.stdout + " " + output.stderr);
+            return output;
         }
-
-        [HubMethodName("receive")]
-        public async Task<(string, string)> ReceiveAsync()
-            => await _stream.ReadOutputToEndAsync(CancellationToken.None);
 
         [HubMethodName("resize")]
         public async Task ResizeAsync(ResizeContainerExecTtyCommand command)
             => await _mediator.Send(command);
-
-        public override Task OnDisconnectedAsync(Exception ex)
-        {
-            _stream.CloseWrite();
-            _stream.Dispose();
-
-            return base.OnDisconnectedAsync(ex);
-        }
     }
 }

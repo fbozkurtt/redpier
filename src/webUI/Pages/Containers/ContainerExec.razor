@@ -44,14 +44,14 @@
             tokenResult.TryGetToken(out AccessToken accessToken);
 
             hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5000/api/websocket/exec", options =>
+                .WithUrl("https://localhost:5000/api/websocket/exec?endpoint=bnBpcGU6Ly8uL3BpcGUvZG9ja2VyX2VuZ2luZQ==", options =>
                         options.AccessTokenProvider = () => Task.FromResult(accessToken.Value)
                     )
                 .Build();
 
             await hubConnection.StartAsync().ConfigureAwait(false);
-
-            await hubConnection.SendAsync("start", new { ExecId = execId, Tty = true });
+            //var result = await hubConnection.InvokeAsync<bool>("start", new { ExecId = execId, Tty = true });
+            //Console.WriteLine(result);
 
             hubConnection.On<string, string>("receive", (stdout, srderr) =>
             {
@@ -68,6 +68,10 @@
         try
         {
             IsBusy = true;
+
+            if (!string.IsNullOrWhiteSpace(execId))
+                return;
+
             execId = await ExecService.CreateAsync(Id,
                 new ContainerExecCreateParameters()
                 {
@@ -91,8 +95,10 @@
 
     async Task Send()
     {
-        await hubConnection.SendAsync("send", messageInput);
-        messageInput = string.Empty;
+        var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, messageInput, true);
+        Console.WriteLine(output.Item1 + " || " + output.Item2);
+        //messageInput = string.Empty;
+        StateHasChanged();
     }
 
     protected async Task Disconnect()

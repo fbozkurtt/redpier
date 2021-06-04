@@ -26,7 +26,7 @@ namespace Redpier.Infrastructure
             var connectionString = new SqliteConnectionStringBuilder
             {
                 DataSource = configuration.GetSection("SQLite")["FilePath"],
-                Password = configuration.GetSection("SQLite")["Password"]
+                //Password = configuration.GetSection("SQLite")["Password"]
             };
 
             services.AddDbContext<ApplicationDbContext>(options =>

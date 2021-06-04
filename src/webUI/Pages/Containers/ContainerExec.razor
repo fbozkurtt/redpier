@@ -5,15 +5,16 @@
 @inject IExecService ExecService;
 @using Microsoft.AspNetCore.SignalR.Client
 @using Docker.DotNet.Models;
+@using Redpier.Web.UI.Extensions;
 
 @*@layout EmptyLayout*@
 
 @*<ConsoleWindow></ConsoleWindow>*@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
-        <button @onclick="Connect">Connect</button>
-        <button @onclick="Disconnect">Disconnect</button>
-        <input type="text" @on="Send" @bind="messageInput" />
+        <button @onclick="Connect" disabled="@(connectionState.Equals(ConnectionState.Connecting) || connectionState.Equals(ConnectionState.Connected))">Connect</button>
+        <button @onclick="Disconnect" disabled="@(connectionState.Equals(ConnectionState.Connecting) || connectionState.Equals(ConnectionState.Disconnected))">Disconnect</button>
+        <textarea @onkeydown="Send" @onkeypress="Send" />
         @foreach (var message in messages)
         {
             <p>@message</p>
@@ -32,10 +33,15 @@
 
     private string messageInput;
 
-    protected async Task Connect()
+    public enum ConnectionState
     {
-        await Create();
+        Disconnected = 0,
+        Connecting = 1,
+        Connected = 2
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
         var tokenResult = await AccessTokenProvider.RequestAccessToken();
 
         if (tokenResult.Status.Equals(AccessTokenResultStatus.Success))
@@ -48,10 +54,6 @@
                     )
                 .Build();
 
-            await hubConnection.StartAsync().ConfigureAwait(false);
-            //var result = await hubConnection.InvokeAsync<bool>("start", new { ExecId = execId, Tty = true });
-            //Console.WriteLine(result);
-
             hubConnection.On<string, string>("receive", (stdout, srderr) =>
             {
                 var message = $"{stdout} {srderr}";
@@ -60,6 +62,28 @@
                 StateHasChanged();
             });
         }
+
+        //hubConnection.Closed += (error) =>
+        //{
+        //    Console.WriteLine(error);
+        //    connectionState = ConnectionState.Disconnected;
+
+        //    return Task.CompletedTask;
+        //};
+    }
+
+    private ConnectionState connectionState = ConnectionState.Disconnected;
+
+    protected async Task Connect()
+    {
+        connectionState = ConnectionState.Connecting;
+
+        await Create();
+
+        await hubConnection.StartAsync().ContinueWith(Task =>
+        {
+            connectionState = ConnectionState.Connected;
+        });
     }
 
     async Task Create()
@@ -94,17 +118,23 @@
 
     async Task Send(KeyboardEventArgs e)
     {
-        Console.WriteLine(e.Key);
-        //var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, e.Key, true);
+        Console.WriteLine($"Code: {e.Code}, Key: {e.Key}, Type: {e.Type}");
+        var result = e.TryGetChar(out char key);
+        if(result)
+            Console.WriteLine((int)key);
+        //var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, e, true);
         //Console.WriteLine(output.Item1 + " || " + output.Item2);
-        ////messageInput = string.Empty;
+        //messageInput = string.Empty;
         //StateHasChanged();
     }
 
     protected async Task Disconnect()
     {
         execId = string.Empty;
-        await hubConnection.StopAsync();
+        await hubConnection.StopAsync().ContinueWith(Task =>
+        {
+            connectionState = ConnectionState.Disconnected;
+        });
     }
 
     public async ValueTask DisposeAsync()

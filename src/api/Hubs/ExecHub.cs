@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Redpier.Application.Commands.Docker.Exec;
@@ -26,9 +27,8 @@ namespace Redpier.Web.API.Hubs
         }
 
         [HubMethodName("send")]
-        public async Task<(string, string)> SendAsync(string id, string code, bool tty = true)
+        public async Task<(string, string)> SendAsync(string id, char key, bool tty = true)
         {
-            char key = Convert.ToChar(code);
             var stream = await _mediator.Send(new StartContainerExecCommand() { ExecId = id, Tty = false });
             var bytes = BitConverter.GetBytes(key);
             await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None);

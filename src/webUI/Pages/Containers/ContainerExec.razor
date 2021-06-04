@@ -13,8 +13,7 @@
     <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
         <button @onclick="Connect">Connect</button>
         <button @onclick="Disconnect">Disconnect</button>
-        <input type="text" @bind="messageInput" />
-        <button @onclick="Send">Send</button>
+        <input type="text" @on="Send" @bind="messageInput" />
         @foreach (var message in messages)
         {
             <p>@message</p>
@@ -93,12 +92,13 @@
         }
     }
 
-    async Task Send()
+    async Task Send(KeyboardEventArgs e)
     {
-        var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, messageInput, true);
-        Console.WriteLine(output.Item1 + " || " + output.Item2);
-        //messageInput = string.Empty;
-        StateHasChanged();
+        Console.WriteLine(e.Key);
+        //var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, e.Key, true);
+        //Console.WriteLine(output.Item1 + " || " + output.Item2);
+        ////messageInput = string.Empty;
+        //StateHasChanged();
     }
 
     protected async Task Disconnect()

@@ -26,13 +26,16 @@ namespace Redpier.Web.API.Hubs
         }
 
         [HubMethodName("send")]
-        public async Task<(string, string)> SendAsync(string id, string message, bool tty = true)
+        public async Task<(string, string)> SendAsync(string id, string code, bool tty = true)
         {
+            char key = Convert.ToChar(code);
             var stream = await _mediator.Send(new StartContainerExecCommand() { ExecId = id, Tty = false });
-            var bytes = Encoding.ASCII.GetBytes(message);
+            var bytes = BitConverter.GetBytes(key);
             await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None);
+            stream.CloseWrite();
             var output = await stream.ReadOutputToEndAsync(CancellationToken.None);
             Console.WriteLine(output.stdout + " " + output.stderr);
+            stream.Dispose();
             return output;
         }
 

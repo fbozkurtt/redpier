@@ -1,5 +1,6 @@
 ﻿@inject HttpClient Client
-@inject ILocalStorageService localStorage
+@inject ILocalStorageService LocalStorage
+@inject IToastService ToastService;
 
 @if (!IsForMobile)
 {
@@ -9,7 +10,11 @@
             @foreach (var endpoint in Endpoints.Items)
             {
                 <li>
-                    <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="async () => { await SelectEndpoint(endpoint); }">
+                    <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="e => SelectEndpoint(endpoint)">
+                        <span class="fa fa-circle"
+                              style="color: @(SelectedEndpoint.Status.Equals(Status.Online) ? "limegreen" : "orangered")" 
+                              hidden="@(!SelectedEndpoint.Id.Equals(endpoint.Id))">
+                        </span>
                         <span>@endpoint.Name</span>
                         <span class="@(SelectedEndpoint.Id.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
                     </a>
@@ -56,34 +61,37 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await FetchData();
+    }
+
+    public async Task FetchData()
+    {
+
         try
         {
-            var response = await Client.GetAsync("/api/endpoint?pagesize=5");
+            Endpoints = await EndpointService.GetEndpointsAsync();
 
-            if (response.IsSuccessStatusCode)
+            var savedEndpoint = await EndpointService.GetSelectedEndpointAsync();
+            if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))
             {
-                Endpoints = await EndpointService.GetEndpointsAsync();
-
-                var savedEndpoint = await localStorage.GetItemAsync<Endpoint>("selectedEndpoint");
-                if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))
-                {
-                    SelectedEndpoint = savedEndpoint;
-                }
-                else
-                {
-                    await SelectEndpoint(Endpoints.Items.First());
-                }
+                SelectedEndpoint = savedEndpoint;
             }
+            else
+            {
+                await SelectEndpoint(Endpoints.Items.First());
+            }
+            if (await EndpointService.PingAsync())
+                SelectedEndpoint.Status = Status.Online;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            ToastService.ShowError(ex.Message);
         }
     }
 
     public async Task SelectEndpoint(Endpoint endpoint)
     {
-        await localStorage.SetItemAsync("selectedEndpoint", endpoint);
+        await EndpointService.SetSelectedEndpointAsync(endpoint);
         SelectedEndpoint = endpoint;
     }
 }

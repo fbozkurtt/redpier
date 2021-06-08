@@ -46,7 +46,7 @@
     {
         try
         {
-            SystemInfo = await EndpointService.GetSystemInfo();
+            SystemInfo = await EndpointService.GetSystemInfoAsync();
             await localStorage.SetItemAsync("systemInfo", SystemInfo);
         }
         catch (Exception ex)

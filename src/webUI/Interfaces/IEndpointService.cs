@@ -4,13 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Endpoint = Redpier.Web.UI.ViewModels.Endpoint;
 
 namespace Redpier.Web.UI.Interfaces
 {
     public interface IEndpointService
     {
-        Task<SystemInfoResponse> GetSystemInfo();
+        Task<SystemInfoResponse> GetSystemInfoAsync();
 
-        Task<PaginatedListViewModel<ViewModels.Endpoint>> GetEndpointsAsync(int pageNumber = 1, int pageSize = 5, bool all = true);
+        Task<PaginatedListViewModel<Endpoint>> GetEndpointsAsync(int pageNumber = 1, int pageSize = 5, bool all = true);
+
+        Task<bool> PingAsync();
+
+        Task SetSelectedEndpointAsync(Endpoint endpoint);
+
+        Task<Endpoint> GetSelectedEndpointAsync();
     }
 }

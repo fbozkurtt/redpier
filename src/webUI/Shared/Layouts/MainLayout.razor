@@ -35,13 +35,13 @@
     [Inject]
     public IEndpointService EndpointService { get; set; }
 
-
     private SystemInfoResponse SystemInfo { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await FetchData();
     }
+
     public async Task FetchData()
     {
         try

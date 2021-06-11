@@ -41,7 +41,7 @@ namespace Redpier.Web.UI.Shared.Components
         [Parameter]
         public bool IsBusy { get; set; }
 
-        public PaginatedList<TItem> Page { get; set; }
+        private PaginatedList<TItem> Page { get; set; }
 
         public async Task RefreshContent()
         {

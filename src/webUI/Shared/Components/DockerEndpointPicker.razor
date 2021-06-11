@@ -1,4 +1,5 @@
-﻿@inject HttpClient Client
+﻿@implements IDisposable
+@inject HttpClient Client
 @inject ILocalStorageService LocalStorage
 @inject IToastService ToastService;
 
@@ -12,11 +13,15 @@
                 <li>
                     <a class="dropdown-item text-truncate" style="cursor: pointer" @onclick="e => SelectEndpoint(endpoint)">
                         <span class="fa fa-circle"
-                              style="color: @(SelectedEndpoint.Status.Equals(Status.Online) ? "limegreen" : "orangered")" 
-                              hidden="@(!SelectedEndpoint.Id.Equals(endpoint.Id))">
+                              style="color: @(selectedEndpoint.Status.Equals(Status.Online) ? "#25e000" : "#ff3333")"
+                              hidden="@(!selectedEndpoint.Id.Equals(endpoint.Id))">
+                        </span>
+                        <span class="fa fa-circle"
+                              style="color: #8f8f8f"
+                              hidden="@selectedEndpoint.Id.Equals(endpoint.Id)">
                         </span>
                         <span>@endpoint.Name</span>
-                        <span class="@(SelectedEndpoint.Id.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
+                        <span class="@(selectedEndpoint.Id.Equals(endpoint.Id) ? "fa fa-check" : "")"></span>
                     </a>
                 </li>
             }
@@ -49,6 +54,10 @@ else
 }
 
 @code{
+    private Endpoint selectedEndpoint;
+
+    private System.Threading.Timer timer;
+
     [Parameter]
     public bool IsForMobile { get; set; } = false;
 
@@ -57,10 +66,13 @@ else
 
     public PaginatedListViewModel<Endpoint> Endpoints;
 
-    public Endpoint SelectedEndpoint { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
+        timer = new System.Threading.Timer(async (object stateInfo) =>
+        {
+            await Ping();
+            StateHasChanged();
+        }, new System.Threading.AutoResetEvent(true), 1000, 5000);
         await FetchData();
     }
 
@@ -74,14 +86,14 @@ else
             var savedEndpoint = await EndpointService.GetSelectedEndpointAsync();
             if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))
             {
-                SelectedEndpoint = savedEndpoint;
+                selectedEndpoint = savedEndpoint;
             }
             else
             {
                 await SelectEndpoint(Endpoints.Items.First());
             }
             if (await EndpointService.PingAsync())
-                SelectedEndpoint.Status = Status.Online;
+                selectedEndpoint.Status = Status.Online;
         }
         catch (Exception ex)
         {
@@ -89,9 +101,27 @@ else
         }
     }
 
+    public async Task Ping()
+    {
+        try
+        {
+            var result = await EndpointService.PingAsync();
+            selectedEndpoint.Status = result ? Status.Online : Status.Offline;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
     public async Task SelectEndpoint(Endpoint endpoint)
     {
         await EndpointService.SetSelectedEndpointAsync(endpoint);
-        SelectedEndpoint = endpoint;
+        selectedEndpoint = endpoint;
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
     }
 }

@@ -205,7 +205,7 @@
                             <a @onclick="AddVolume" class="btn-sm btn-success mx-2">
                                 <span class="fa fa-plus"></span> Add named volume
                             </a>
-                            @foreach (var bind in Binds)
+                            @foreach (var bind in MountBinds)
                             {
                                 <div class="form-row my-2">
                                     <div class="col-sm-5">
@@ -247,6 +247,39 @@
                         </div>
                     </div>
                     <div class="tab-pane py-4" id="network" role="tabpanel" aria-labelledby="networkTab">
+                        <div class="form-section-title">
+                            Port Binding
+                        </div>
+                        <div class="form-group pb-2">
+                            <a @onclick="AddPortBinding" class="btn-sm btn-success">
+                                <span class="fa fa-plus"></span> Add port binding
+                            </a>
+                            @foreach (var bind in PortBindings)
+                            {
+                                <div class="form-row my-2">
+                                    <div class="col-sm-4">
+                                        <input @bind="bind.HostPort" type="text" class="form-control" placeholder="Host port number" required>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input @bind="bind.ContainerPort" type="text" class="form-control" placeholder="Container port number" required>
+                                    </div>
+                                    <div class="col">
+                                        <select @bind="bind.Protocol" class="form-control">
+                                            <option value="tcp">TCP</option>
+                                            <option value="udp">UDP</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <a @onclick="e => RemovePortBind(bind)" class="btn btn-danger">
+                                            <span class="fa fa-trash"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="form-section-title">
+                            IP Configuration
+                        </div>
                         <div class="form-group row">
                             <label for="network" class="col-lg-1 col-form-label">Network:</label>
                             <div class="col-lg-11">

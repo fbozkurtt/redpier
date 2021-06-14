@@ -148,11 +148,13 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private string SecondDns { get; set; }
 
-        private List<Mount> Binds { get; set; } = new List<Mount>();
+        private List<Mount> MountBinds { get; set; } = new List<Mount>();
 
         private List<Mount> Volumes { get; set; } = new List<Mount>();
 
         private List<Label> Labels = new List<Label>();
+
+        private List<Port> PortBindings = new List<Port>();
 
         private string LabelName;
 
@@ -213,8 +215,19 @@ namespace Redpier.Web.UI.Pages.Containers
                 if (Volumes.Count > 0)
                     Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(Volumes).ToList();
 
-                if (Binds.Count > 0)
-                    Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(Binds).ToList();
+                if (MountBinds.Count > 0)
+                    Model.HostConfig.Mounts = Model.HostConfig.Mounts.Concat(MountBinds).ToList();
+
+                if (PortBindings.Count > 0)
+                {
+                    foreach (var port in PortBindings)
+                    {
+                        if (!Model.HostConfig.PortBindings.ContainsKey(port.GetKey()))
+                            Model.HostConfig.PortBindings.Add(port.GetKey(), new List<PortBinding>() { new PortBinding() { HostPort = port.HostPort } });
+                        else
+                            Model.HostConfig.PortBindings[port.GetKey()].Add(new PortBinding() { HostPort = port.HostPort });
+                    }
+                }
 
                 if (Labels.Count > 0)
                 {
@@ -251,7 +264,7 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private void AddBindMount()
         {
-            Binds.Add(new Mount() { Type = "bind" });
+            MountBinds.Add(new Mount() { Type = "bind" });
         }
 
         private void AddLabel()
@@ -261,6 +274,11 @@ namespace Redpier.Web.UI.Pages.Containers
             Labels.Add(new Label() { Name = LabelName, Value = LabelValue });
             LabelName = string.Empty;
             LabelValue = string.Empty;
+        }
+
+        private void AddPortBinding()
+        {
+            PortBindings.Add(new Port());
         }
 
         private void RemoveLabel(Label label)
@@ -275,7 +293,7 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private void RemoveBind(Mount bind)
         {
-            Binds.Remove(bind);
+            MountBinds.Remove(bind);
         }
 
         private void ResetNetworkConfig()
@@ -284,6 +302,11 @@ namespace Redpier.Web.UI.Pages.Containers
             {
                 EndpointsConfig = new Dictionary<string, EndpointSettings>()
             };
+        }
+
+        private void RemovePortBind(Port portBinding)
+        {
+            PortBindings.Remove(portBinding);
         }
 
         private void SetConsole()
@@ -315,6 +338,15 @@ namespace Redpier.Web.UI.Pages.Containers
         {
             public string Name { get; set; }
             public string Value { get; set; }
+        }
+
+        private class Port
+        {
+            public string ContainerPort { get; set; }
+            public string HostPort { get; set; }
+            public string Protocol { get; set; } = "tcp";
+
+            public string GetKey() => this.ContainerPort + "/" + this.Protocol;
         }
     }
 }

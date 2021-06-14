@@ -54,7 +54,7 @@
                 <tbody>
                     <tr>
                         <th>Image</th>
-                        <td>@Container.Config.Image</td>
+                        <td><a href=@($"/images/{Container.Image}")>@Container.Config.Image</a></td>
                     </tr>
                     <tr>
                         <th>Ports</th>
@@ -63,9 +63,13 @@
                             {
                                 @if (port.Value != null)
                                 {
-                                    <div>
-                                        @port.Value.First().HostIP:@port.Value.First().HostPort <i class="fa fa-long-arrow-alt-right"></i> @port.Key
-                                    </div>
+                                    @foreach (var value in port.Value)
+                                    {
+                                        //TODO
+                                        <div>
+                                            @value.HostIP.Replace(":::", "localhost"):@value.HostPort <i class="fa fa-long-arrow-alt-right"></i> @port.Key
+                                        </div>
+                                    }
                                 }
                             }
                         </td>
@@ -77,14 +81,11 @@
                                 <tbody>
                                     @if (Container.Config.Cmd != null)
                                     {
-                                        @foreach (var cmd in Container.Config.Cmd)
-                                        {
-                                            <tr>
-                                                <td class="text-muted">
-                                                    @cmd
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td class="text-muted">
+                                                @string.Join(' ', Container.Config.Cmd)
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -97,14 +98,11 @@
                                 <tbody>
                                     @if (Container.Config.Entrypoint != null)
                                     {
-                                        @foreach (var ep in Container.Config.Entrypoint)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @ep
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td class="text-muted">
+                                                @string.Join(' ', Container.Config.Entrypoint)
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>

@@ -30,8 +30,12 @@ namespace Redpier.Web.UI.Helpers
                     {
                         var tokens = lines[i].Split(' ');
                         var timeStamp = tokens.First();
-                        var time = DateTime.Parse(timeStamp);
-                        tokens[0] = time.ToString("yyyy-MM-dd HH:mm");
+
+                        if(DateTime.TryParse(timeStamp, out var time))
+                        {
+                            tokens[0] = time.ToString("yyyy-MM-dd HH:mm");
+                        }
+
                         lines[i] = string.Join(' ', tokens);
                         Console.WriteLine(lines[i]);
                     }

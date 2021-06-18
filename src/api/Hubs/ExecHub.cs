@@ -27,16 +27,40 @@ namespace Redpier.Web.API.Hubs
         }
 
         [HubMethodName("send")]
-        public async Task<(string, string)> SendAsync(string id, char key, bool tty = true)
+        public async Task<string> SendAsync(string id, string command, bool tty = true)
         {
-            var stream = await _mediator.Send(new StartContainerExecCommand() { ExecId = id, Tty = false });
-            var bytes = BitConverter.GetBytes(key);
-            await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None);
-            stream.CloseWrite();
-            var output = await stream.ReadOutputToEndAsync(CancellationToken.None);
-            Console.WriteLine(output.stdout + " " + output.stderr);
-            stream.Dispose();
-            return output;
+            try
+            {
+                string stdout = string.Empty;
+                var stream = await _mediator.Send(
+                    new StartContainerExecCommand()
+                    { 
+                        ExecId = id,
+                        Tty = tty
+                    });
+
+                var bytes = Encoding.ASCII.GetBytes(command);
+                await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None).ContinueWith(async (state) => {
+
+                    var output = await stream.ReadOutputToEndAsync(CancellationToken.None);
+                    Console.WriteLine(output.stdout + " " + output.stderr);
+                    stdout = output.stdout;
+                });
+                stream.CloseWrite();
+
+                //var (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None);
+
+
+                stream.Dispose();
+
+                return stdout;
+
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+                return string.Empty;
+            }
         }
 
         [HubMethodName("resize")]

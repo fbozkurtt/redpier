@@ -14,11 +14,12 @@
     <div class="col-lg-12 col-md-12 col-xs-12 table-responsive">
         <button @onclick="Connect" disabled="@(connectionState.Equals(ConnectionState.Connecting) || connectionState.Equals(ConnectionState.Connected))">Connect</button>
         <button @onclick="Disconnect" disabled="@(connectionState.Equals(ConnectionState.Connecting) || connectionState.Equals(ConnectionState.Disconnected))">Disconnect</button>
-        <textarea @onkeydown="Send" @onkeypress="Send" />
+        <textarea @bind="messageInput"/>
         @foreach (var message in messages)
         {
             <p>@message</p>
         }
+        <button @onclick="Send">Send</button>
     </div>
 </div>
 @code {
@@ -54,11 +55,10 @@
                     )
                 .Build();
 
-            hubConnection.On<string, string>("receive", (stdout, srderr) =>
+            hubConnection.On<string>("receive", (response) =>
             {
-                var message = $"{stdout} {srderr}";
-                messages.Add(message);
-                Console.WriteLine(message);
+                messages.Add(response);
+                Console.WriteLine(response);
                 StateHasChanged();
             });
         }
@@ -116,16 +116,24 @@
         }
     }
 
-    async Task Send(KeyboardEventArgs e)
+    //private async Task Send(KeyboardEventArgs e)
+    //{
+    //    Console.WriteLine($"Code: {e.Code}, Key: {e.Key}, Type: {e.Type}");
+    //    if(e.TryGetChar(out char key))
+    //    {
+    //        var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, key, true);
+    //        Console.WriteLine(output.Item1 + " || " + output.Item2);
+    //        messageInput = string.Empty;
+    //        StateHasChanged();
+    //    }
+    //}
+
+    private async Task Send()
     {
-        Console.WriteLine($"Code: {e.Code}, Key: {e.Key}, Type: {e.Type}");
-        var result = e.TryGetChar(out char key);
-        if(result)
-            Console.WriteLine((int)key);
-        //var output = await hubConnection.InvokeAsync<(string, string)>("send", execId, e, true);
-        //Console.WriteLine(output.Item1 + " || " + output.Item2);
-        //messageInput = string.Empty;
-        //StateHasChanged();
+        var output = await hubConnection.InvokeAsync<string>("send", execId, messageInput, true);
+        Console.WriteLine("output: {0}", output);
+        messageInput = string.Empty;
+        StateHasChanged();
     }
 
     protected async Task Disconnect()

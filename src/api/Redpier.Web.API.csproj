@@ -14,6 +14,10 @@
     <AssemblyName>Redpier</AssemblyName>
     <UserSecretsId>7c151042-9ec5-47e0-80b8-5d8c92585cef</UserSecretsId>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Remove="Data\**" />

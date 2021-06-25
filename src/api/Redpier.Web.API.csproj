@@ -1,66 +1,74 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <Version>1.0.0</Version>
-    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-    <NoWin32Manifest>true</NoWin32Manifest>
-    <PackageIcon>Icon.ico</PackageIcon>
-    <PackageId>Redpier</PackageId>
-    <Authors>Furkan Bozkurt</Authors>
-    <Company>Redpier</Company>
-    <Product>Redpier</Product>
-    <RepositoryUrl>https://github.com/fbozkurtt/redpier.git</RepositoryUrl>
-    <AssemblyName>Redpier</AssemblyName>
-    <UserSecretsId>7c151042-9ec5-47e0-80b8-5d8c92585cef</UserSecretsId>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Remove="Data\**" />
-    <Compile Remove="logs\**" />
-    <Content Remove="Data\**" />
-    <Content Remove="logs\**" />
-    <EmbeddedResource Remove="Data\**" />
-    <EmbeddedResource Remove="logs\**" />
-    <None Remove="Data\**" />
-    <None Remove="logs\**" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Version>1.0.0</Version>
+		<ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+		<NoWin32Manifest>true</NoWin32Manifest>
+		<PackageIcon>Icon.ico</PackageIcon>
+		<PackageId>Redpier</PackageId>
+		<Authors>Furkan Bozkurt</Authors>
+		<Company>Redpier</Company>
+		<Product>Redpier</Product>
+		<RepositoryUrl>https://github.com/fbozkurtt/redpier.git</RepositoryUrl>
+		<AssemblyName>Redpier</AssemblyName>
+		<UserSecretsId>7c151042-9ec5-47e0-80b8-5d8c92585cef</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="RedpierDb.db" />
-    <None Remove="RedpierDb.db-shm" />
-    <None Remove="RedpierDb.db-wal" />
-    <None Include="Resources\Icon.ico">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>false</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<ServerGarbageCollection>false</ServerGarbageCollection>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Compile Remove="Data\**" />
+		<Compile Remove="logs\**" />
+		<Content Remove="Data\**" />
+		<Content Remove="logs\**" />
+		<EmbeddedResource Remove="Data\**" />
+		<EmbeddedResource Remove="logs\**" />
+		<None Remove="Data\**" />
+		<None Remove="logs\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="RedpierDb.db" />
+		<None Remove="RedpierDb.db-shm" />
+		<None Remove="RedpierDb.db-wal" />
+		<None Include="Resources\Icon.ico">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\application\Redpier.Application.csproj" />
-    <ProjectReference Include="..\infrastructure\Redpier.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\application\Redpier.Application.csproj" />
+		<ProjectReference Include="..\infrastructure\Redpier.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 </Project>

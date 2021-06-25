@@ -12,12 +12,10 @@ namespace Redpier.Infrastructure.Services
 {
     public class DockerClientService : IDockerClientService
     {
-        private readonly IApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DockerClientService(IApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public DockerClientService(IHttpContextAccessor httpContextAccessor)
         {
-            _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
         }
 

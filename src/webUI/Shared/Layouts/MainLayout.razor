@@ -42,12 +42,19 @@
         await FetchData();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            await FetchData();
+    }
+
     public async Task FetchData()
     {
         try
         {
             SystemInfo = await EndpointService.GetSystemInfoAsync();
-            await localStorage.SetItemAsync("systemInfo", SystemInfo);
+            if (SystemInfo != null)
+                await localStorage.SetItemAsync("systemInfo", SystemInfo);
         }
         catch (Exception ex)
         {

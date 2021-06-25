@@ -355,7 +355,7 @@
                                     <label for="cpuLimit" class="col-form-label">CPU limit (Threads):</label>
                                 </div>
                                 <div class="col-lg-8">
-                                    <input @onchange="e=> { CpuLimit = long.Parse(e.Value.ToString()); }" type="range" class="form-control-range ml-auto mt-2" min="0" max="@SystemInfo.NCPU" id="cpuLimit" step="0.25">
+                                    <input @oninput="e => { CpuLimit = decimal.Parse(e.Value.ToString()); }" type="range" class="form-control-range ml-auto mt-2" min="0" max="@SystemInfo.NCPU" id="cpuLimit" step="0.25">
                                     <label class="text-muted"><span hidden="@(CpuLimit > 0)">Unlimited</span><span hidden="@(CpuLimit == 0)">@CpuLimit</span></label>
                                 </div>
                             </div>

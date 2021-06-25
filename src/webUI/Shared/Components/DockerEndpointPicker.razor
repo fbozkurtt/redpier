@@ -83,6 +83,9 @@ else
         {
             Endpoints = await EndpointService.GetEndpointsAsync();
 
+            if (Endpoints == null)
+                return;
+
             var savedEndpoint = await EndpointService.GetSelectedEndpointAsync();
             if (savedEndpoint != default && Endpoints.Items.ToList().Contains(savedEndpoint))
             {
@@ -97,7 +100,8 @@ else
         }
         catch (Exception ex)
         {
-            ToastService.ShowError(ex.Message);
+            //ToastService.ShowError(ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 

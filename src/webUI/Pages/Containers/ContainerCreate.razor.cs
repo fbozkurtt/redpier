@@ -128,7 +128,7 @@ namespace Redpier.Web.UI.Pages.Containers
 
         private int MemoryLimit { get; set; } = 0;
 
-        private long CpuLimit { get; set; } = 0;
+        private decimal CpuLimit { get; set; } = 0;
 
         private string NetworkMode
         {
@@ -204,7 +204,7 @@ namespace Redpier.Web.UI.Pages.Containers
                     Model.HostConfig.Memory = MemoryLimit * 1024 * 1024;
 
                 if (CpuLimit > 0)
-                    Model.HostConfig.NanoCPUs = CpuLimit * 1000000000;
+                    Model.HostConfig.NanoCPUs = (long)CpuLimit * 1000000000;
 
                 if (!string.IsNullOrWhiteSpace(FirstDns))
                     Model.HostConfig.DNS.Add(FirstDns);

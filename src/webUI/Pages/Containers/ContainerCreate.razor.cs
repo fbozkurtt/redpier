@@ -167,13 +167,16 @@ namespace Redpier.Web.UI.Pages.Containers
         protected override async Task OnInitializedAsync()
         {
             var images = await ImageService.GetAllAsync().ConfigureAwait(false);
-            LocalImages = images.Select(i => i.RepoTags).Aggregate((a, b) => a.Concat(b).ToList()).ToList();
+            if (images != null && images.Count > 0)
+                LocalImages = images.Select(i => i.RepoTags).Aggregate((a, b) => a.Concat(b).ToList()).ToList();
 
             var networks = await NetworkService.GetAllAsync().ConfigureAwait(false);
-            Networks = networks.Select(n => n.Name).ToList();
+            if (networks != null && networks.Count > 0)
+                Networks = networks.Select(n => n.Name).ToList();
 
             var volumes = await VolumeService.GetAllAsync().ConfigureAwait(false);
-            ExistingVolumes = volumes.Select(v => v.Name).ToList();
+            if (volumes != null && volumes.Count > 0)
+                ExistingVolumes = volumes.Select(v => v.Name).ToList();
 
             SystemInfo = await LocalStorage.GetItemAsync<SystemInfoResponse>("systemInfo");
 

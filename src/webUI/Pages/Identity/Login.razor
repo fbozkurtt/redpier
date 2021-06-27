@@ -67,7 +67,7 @@
             if (response.IsSuccessStatusCode)
             {
                 string returnUrl;
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                var loginResponse = await response.Content.ReadFromJsonAsync<GetTokenResponse>();
                 await LocalStorage.SetItemAsync("JWT", loginResponse.Token);
                 await LocalStorage.SetItemAsync("JWT.Expires", loginResponse.Expires);
 

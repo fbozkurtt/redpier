@@ -11,7 +11,7 @@ namespace Redpier.Web.API.Controllers
     {
         [AllowAnonymous]
         [HttpPost]
-        public async Task<LoginResponse> Token(GetTokenCommand command)
+        public async Task<GetTokenResponse> Token(GetTokenCommand command)
         {
             return await Mediator.Send(command);
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Redpier.Application.Commands.Docker.Exec;
 using Redpier.Shared.Constants;
+using Redpier.Web.API.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -26,44 +27,63 @@ namespace Redpier.Web.API.Hubs
             _mediator = mediator;
         }
 
+
         [HubMethodName("send")]
         public string SendAsync(string id, string command, bool tty = true)
         {
-            try
-            {
-                var cns = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-                string stdout = string.Empty;
+            //try
+            //{
+            //    string stdout = string.Empty;
 
-                var stream = _mediator.Send(
-                    new StartContainerExecCommand()
-                    { 
-                        ExecId = id,
-                        Tty = tty
-                    }).GetAwaiter().GetResult();
+            //    var stream =  _mediator.Send(
+            //        new StartContainerExecCommand()
+            //        {
+            //            ExecId = id,
+            //            Tty = tty
+            //        }).GetAwaiter().GetResult();
 
-                var bytes = Encoding.ASCII.GetBytes(command);
+            //    if(stream == null)
+            //        Console.WriteLine("stream is null");
+            //    var bytes = Encoding.ASCII.GetBytes(command);
+            //    stream.Write(bytes, 0, bytes.Length);
+            //    stream.CloseWrite();
 
-                stream.WriteAsync(bytes, 0, bytes.Length, cns.Token).GetAwaiter().GetResult();
-                stream.CloseWrite();
+            //    var output = stream.ReadOutputToEnd().stdout;
 
-                var output = stream.ReadOutputToEndAsync(cns.Token).GetAwaiter().GetResult();
-                Console.WriteLine("output: " + output.stdout);
-                stdout = output.stdout;
+            //    Console.WriteLine("output: " + output);
 
-                stream.Dispose();
+            //    //stdout = output;
+            //    stream.Dispose();
 
-                return stdout;
+            //    return output;
 
-            }
-            catch(Exception ex)
-            {
-                Log.Error(ex.Message);
-                return string.Empty;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex.Message);
+            //    return string.Empty;
+            //}
+            return null;
         }
 
         [HubMethodName("resize")]
         public async Task ResizeAsync(ResizeContainerExecTtyCommand command)
             => await _mediator.Send(command);
+
+        public override Task OnConnectedAsync()
+        {
+            Log.Information($"New Docker Exec connection established by the user \"{Context.User.Identity.Name}\"");
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            if (exception == null)
+                Log.Information($"Docker Exec connection aborted by the user \"{Context.User.Identity.Name}\"");
+            else
+                Log.Error($"An error occured during Docker Exec connection of the user \"{Context.User.Identity.Name}\":\n{exception.Message}");
+
+            return base.OnDisconnectedAsync(exception);
+        }
     }
 }

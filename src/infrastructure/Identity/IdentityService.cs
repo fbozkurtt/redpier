@@ -128,7 +128,7 @@ namespace Redpier.Infrastructure.Identity
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = identity,
-                    Expires = DateTime.UtcNow.AddHours(Double.TryParse(_configuration["JWT:Expires"], out double expires) ? expires : 1),
+                    Expires = DateTime.UtcNow.AddHours(double.Parse(_configuration["JWT:Expires"])),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII
                             .GetBytes(_configuration["JWT:Secret"])), SecurityAlgorithms.HmacSha256Signature),
                     Issuer = _configuration["JWT:Issuer"],

@@ -14,6 +14,7 @@ namespace Redpier.Web.UI.Components
             _localStorage = localStorage;
         }
 
+        //TODO: return URL
         public async ValueTask<AccessTokenResult> RequestAccessToken()
         {
             var token = await _localStorage.GetItemAsync<string>("JWT");

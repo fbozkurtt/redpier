@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="FakesAssemblies\**" />
+    <Compile Remove="lib\**" />
     <EmbeddedResource Remove="FakesAssemblies\**" />
+    <EmbeddedResource Remove="lib\**" />
     <None Remove="FakesAssemblies\**" />
+    <None Remove="lib\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +36,12 @@
   <ItemGroup>
     <ProjectReference Include="..\domain\Redpier.Domain.csproj" />
     <ProjectReference Include="..\shared\Redpier.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Docker.DotNet">
+      <HintPath>bin\Docker.DotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Redpier.Application.Commands.Identity
 {
-    public class GetTokenCommand : IRequest<LoginResponse>
+    public class GetTokenCommand : IRequest<GetTokenResponse>
     {
         [Required]
         public string Username { get; set; }
@@ -17,7 +17,7 @@ namespace Redpier.Application.Commands.Identity
         public string Password { get; set; }
     }
 
-    public class GetTokenCommandHandler : IRequestHandler<GetTokenCommand, LoginResponse>
+    public class GetTokenCommandHandler : IRequestHandler<GetTokenCommand, GetTokenResponse>
     {
         private readonly IIdentityService _identityService;
 
@@ -26,7 +26,7 @@ namespace Redpier.Application.Commands.Identity
             _identityService = identityService;
         }
 
-        public async Task<LoginResponse> Handle(GetTokenCommand request, CancellationToken cancellationToken)
+        public async Task<GetTokenResponse> Handle(GetTokenCommand request, CancellationToken cancellationToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -34,7 +34,7 @@ namespace Redpier.Application.Commands.Identity
                 request.Username,
                 request.Password);
 
-            return new LoginResponse()
+            return new GetTokenResponse()
             {
                 Token = tokenHandler.WriteToken(token),
                 Username = request.Username,

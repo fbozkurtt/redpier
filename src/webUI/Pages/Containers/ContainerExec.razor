@@ -132,7 +132,7 @@
     {
         var output = await hubConnection.InvokeAsync<string>("send", execId, messageInput, true);
         Console.WriteLine("output: {0}", output);
-        messageInput = string.Empty;
+        //messageInput = string.Empty;
         StateHasChanged();
     }
 

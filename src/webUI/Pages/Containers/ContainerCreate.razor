@@ -91,7 +91,7 @@
                             <div class="form-group row">
                                 <label for="image" class="col-lg-1 col-form-label">Image:</label>
                                 <div class="col-lg-11">
-                                    <select @bind="Model.Image" class="form-control" id="image" required>
+                                    <select @bind="Model.Image" class="form-control" id="image" required disabled="@(LocalImages.Count == 0)">
                                         <option hidden disabled selected value="">Select an image</option>
                                         @foreach (var image in LocalImages)
                                         {

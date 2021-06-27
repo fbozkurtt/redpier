@@ -2,7 +2,7 @@
 
 namespace Redpier.Shared.Models
 {
-    public class LoginResponse
+    public class GetTokenResponse
     {
         public string Username { get; set; }
 

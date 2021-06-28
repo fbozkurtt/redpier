@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Redpier.Application.Commands.Docker.Exec;
 using Redpier.Shared.Constants;
-using Redpier.Web.API.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -29,41 +28,43 @@ namespace Redpier.Web.API.Hubs
 
 
         [HubMethodName("send")]
-        public string SendAsync(string id, string command, bool tty = true)
+        public async Task<string> SendAsync(string id, string command, bool tty = true)
         {
-            //try
-            //{
-            //    string stdout = string.Empty;
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                var cancellationTaskSource = new TaskCompletionSource<object?>();
+                string stdout = string.Empty;
 
-            //    var stream =  _mediator.Send(
-            //        new StartContainerExecCommand()
-            //        {
-            //            ExecId = id,
-            //            Tty = tty
-            //        }).GetAwaiter().GetResult();
+                var stream = _mediator.Send(
+                    new StartContainerExecCommand()
+                    {
+                        ExecId = id,
+                        Tty = tty
+                    }).GetAwaiter().GetResult();
 
-            //    if(stream == null)
-            //        Console.WriteLine("stream is null");
-            //    var bytes = Encoding.ASCII.GetBytes(command);
-            //    stream.Write(bytes, 0, bytes.Length);
-            //    stream.CloseWrite();
+                var bytes = Encoding.ASCII.GetBytes(command);
 
-            //    var output = stream.ReadOutputToEnd().stdout;
+                await stream.WriteAsync(bytes, 0, bytes.Length, cts.Token);
+                stream.CloseWrite();
 
-            //    Console.WriteLine("output: " + output);
 
-            //    //stdout = output;
-            //    stream.Dispose();
+                var result = await Task.WhenAny(stream.ReadOutputToEndAsync(cts.Token), cancellationTaskSource.Task);
+                stream.Dispose();
+                if (result == cancellationTaskSource.Task)
+                    return default;
+                else
+                {
+                    var output = await (Task<(string, string)>)result;
+                    return output.Item1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
 
-            //    return output;
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error(ex.Message);
-            //    return string.Empty;
-            //}
-            return null;
+            return default;
         }
 
         [HubMethodName("resize")]

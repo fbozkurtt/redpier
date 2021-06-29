@@ -52,9 +52,7 @@ namespace Redpier.Web.API
                         await ApplicationDbContextSeed.SeedDefaultRolesAsync(roleManager);
                         await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
 
-
                         Log.Information("Database seeded with default values.");
-
                     }
 
                     catch (Exception ex)
